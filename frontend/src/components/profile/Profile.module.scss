@@ -1,0 +1,56 @@
+.profile {
+	.normal {
+		background-color: white;
+		box-shadow: 0 0 10px 1px #e1e1e1;
+		box-sizing: border-box;
+		border-radius: 3px;
+		padding: 10px;
+		margin: 10px;
+		width: 300px;
+		cursor: pointer;
+
+		.header {
+			font-size: 24px;
+			font-weight: 300;
+			margin-bottom: 20px;
+		}
+		.codecs {
+			margin-top: 5px;
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			.codec {
+				background-color: #4f566f;
+				border-radius: 2px;
+				color: white;
+				font-size: 11px;
+				padding: 1px 3px;
+				margin: 2px;
+				border: 1px solid #4f566f;
+				line-height: 1;
+				cursor: default;
+			}
+		}
+	}
+
+	.add {
+		background-color: #f5f5f5;
+		box-shadow: 0 0 10px 1px #e1e1e1;
+		box-sizing: border-box;
+		border-radius: 3px;
+		padding: 10px;
+		margin: 10px;
+		width: 300px;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		.box {
+			padding: 5px 20px;
+			border: 1px solid #e5e5e5;
+			border-radius: 4px;
+			background-color: white;
+			color: #adadad;
+		}
+	}
+}

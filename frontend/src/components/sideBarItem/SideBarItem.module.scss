@@ -1,0 +1,47 @@
+.sideBarItem {
+	color: white;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	transition: border-left 0.3s ease-in-out;
+	border-left: 3px solid transparent;
+	cursor: pointer;
+	.mainItem {
+		width: 100%;
+		height: 45px;
+		padding-left: 22px;
+		display: flex;
+		align-items: center;
+		justify-content: flex-start;
+		font-size: 14px;
+
+		.svg {
+			margin-right: 7px;
+		}
+	}
+	.mainItem:hover {
+		cursor: pointer;
+		color: #35c5f4;
+	}
+	.childItem {
+		height: 40px;
+		width: 100%;
+		margin-left: 17px;
+		display: flex;
+		align-items: center;
+		justify-content: flex-start;
+		font-size: 14px;
+		padding-left: 40px;
+	}
+	.childItem:hover {
+		cursor: pointer;
+		color: #35c5f4;
+
+		// SELECTED MAIN COLOR
+		//color: #2193b5;
+		// SELECTED BACKGROUND COLOR
+		//background-color: #252833;
+		// SELECTED BORDER
+		//border-left: 3px solid #2193b5;
+	}
+}

@@ -1,0 +1,34 @@
+.media {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+	width: 100%;
+	.mediaContent {
+		display: flex;
+		flex-direction: row;
+		overflow: scroll;
+		background-color: #fafbfc;
+
+		.contentContainer {
+			overflow: scroll;
+			background-color: rgb(250, 251, 252);
+			display: flex;
+			flex-direction: column;
+			.content {
+				margin: 15px;
+				display: flex;
+				flex-direction: row;
+				flex-wrap: wrap;
+				background-color: #fafbfc;
+			}
+
+			.footerContent {
+				margin: 15px;
+				display: flex;
+				flex-direction: row;
+				flex-wrap: wrap;
+				background-color: #fafbfc;
+			}
+		}
+	}
+}

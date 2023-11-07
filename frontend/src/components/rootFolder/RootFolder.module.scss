@@ -1,0 +1,32 @@
+.rootFolder {
+	display: flex;
+	flex-direction: column;
+	margin-top: 40px;
+	.header {
+		font-size: 21px;
+		margin-bottom: 21px;
+		width: 100%;
+		border-bottom: 1px solid #e5e5e5;
+		line-height: inherit;
+		padding: 0;
+	}
+	.table {
+		display: table;
+		font-size: 14px;
+		color: #515253;
+	}
+	.button {
+		width: fit-content;
+		color: white;
+		background-color: #5d9cec;
+		margin: 10px;
+		padding: 10px 20px;
+		border-radius: 4px;
+		font-size: 16px;
+		border: 1px #5899eb solid;
+		cursor: pointer;
+	}
+	.button:hover {
+		background-color: #5899eb;
+	}
+}

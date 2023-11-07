@@ -1,0 +1,27 @@
+.settings {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	background-color: #fafbfc;
+	padding: 20px;
+	.setting {
+		display: flex;
+		flex-direction: column;
+		.header {
+			font-size: 21px;
+			width: 100%;
+			border-bottom: 1px solid #e5e5e5;
+			line-height: inherit;
+			padding: 0;
+			cursor: pointer;
+			color: #3a3f51;
+			font-weight: bold;
+		}
+		.body {
+			margin-top: 10px;
+			margin-bottom: 30px;
+			font-size: 14px;
+			color: #555;
+		}
+	}
+}

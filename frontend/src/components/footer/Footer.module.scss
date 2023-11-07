@@ -1,0 +1,35 @@
+.footer {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+
+	.keyContainer {
+		display: flex;
+		flex-direction: column;
+		width: 50%;
+		display: flex;
+		flex-direction: column;
+		.key {
+			display: flex;
+			flex-direction: row;
+			font-size: 12px;
+			margin-bottom: 4px;
+			line-height: 16px;
+			.bubble {
+				height: 16px;
+				width: 30px;
+				border-radius: 4px;
+				margin-right: 4px;
+				line-height: 16px;
+			}
+		}
+	}
+	.dataContainer {
+		width: 50%;
+		.data {
+			font-size: 12px;
+			margin-bottom: 4px;
+			line-height: 16px;
+		}
+	}
+}

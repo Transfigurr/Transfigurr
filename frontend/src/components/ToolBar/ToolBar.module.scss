@@ -1,0 +1,27 @@
+.toolBar {
+	display: flex;
+	flex-direction: row;
+	min-height: 60px;
+	width: 100%;
+	background-color: #4f566f;
+	.left {
+		display: flex;
+		flex-direction: row;
+		width: 50%;
+		padding-left: 20px;
+	}
+	.right {
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-end;
+		padding-right: 20px;
+		width: 50%;
+	}
+	.seperator {
+		width: 1px;
+		height: 40px;
+		margin: 10px 20px;
+		border-right: 1px solid #e5e5e5;
+		opacity: 0.35;
+	}
+}

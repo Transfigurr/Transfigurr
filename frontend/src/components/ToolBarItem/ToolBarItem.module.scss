@@ -1,0 +1,29 @@
+.toolBarOption {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 60px;
+	width: 60px;
+	color: white;
+	cursor: pointer;
+	.svg {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		max-height: 21px;
+		max-width: 21px;
+		opacity: 0.75;
+	}
+	.text {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 11px;
+		height: 24px;
+		color: #8895aa;
+	}
+}
+.toolBarOption:hover {
+	color: #35c5f4;
+}

@@ -1,0 +1,55 @@
+.status {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	background-color: #fafbfc;
+	padding: 20px;
+	.health {
+		display: flex;
+		flex-direction: column;
+		.header {
+			font-size: 21px;
+			margin-bottom: 21px;
+			width: 100%;
+			border-bottom: 1px solid #e5e5e5;
+			line-height: inherit;
+			padding: 0;
+		}
+	}
+	.diskSpace {
+		display: flex;
+		flex-direction: column;
+		.header {
+			font-size: 21px;
+			margin-bottom: 21px;
+			width: 100%;
+			border-bottom: 1px solid #e5e5e5;
+			line-height: inherit;
+			padding: 0;
+		}
+	}
+	.about {
+		display: flex;
+		flex-direction: column;
+		.header {
+			font-size: 21px;
+			margin-bottom: 21px;
+			width: 100%;
+			border-bottom: 1px solid #e5e5e5;
+			line-height: inherit;
+			padding: 0;
+		}
+	}
+	.moreInfo {
+		display: flex;
+		flex-direction: column;
+		.header {
+			font-size: 21px;
+			margin-bottom: 21px;
+			width: 100%;
+			border-bottom: 1px solid #e5e5e5;
+			line-height: inherit;
+			padding: 0;
+		}
+	}
+}

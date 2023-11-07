@@ -1,0 +1,25 @@
+.profiles {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	background-color: #fafbfc;
+	padding: 20px;
+	.codecProfiles {
+		display: flex;
+		flex-direction: column;
+		.header {
+			font-size: 21px;
+			margin-bottom: 21px;
+			width: 100%;
+			border-bottom: 1px solid #e5e5e5;
+			line-height: inherit;
+			padding: 0;
+		}
+		.profileContainer {
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			box-sizing: border-box;
+		}
+	}
+}

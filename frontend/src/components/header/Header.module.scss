@@ -1,0 +1,32 @@
+.header {
+	display: flex;
+	min-height: 60px;
+	background-color: #2193b5;
+	align-items: center;
+	.left {
+		width: 50%;
+		.logo {
+			height: 32px;
+			width: 32px;
+			padding-left: 20px;
+			.svg {
+				height: 32px;
+				width: 32px;
+			}
+		}
+	}
+	.right {
+		display: flex;
+		width: 50%;
+		justify-content: flex-end;
+		align-items: flex-end;
+		.profile {
+			cursor: pointer;
+			padding-right: 15px;
+			color: white;
+		}
+		.profile:hover {
+			color: black;
+		}
+	}
+}
