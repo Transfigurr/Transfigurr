@@ -7,7 +7,7 @@ on:
 
 jobs:
   push_to_registries:
-    name: Publish
+    name: publish
     runs-on: ubuntu-latest
     permissions:
       packages: write
