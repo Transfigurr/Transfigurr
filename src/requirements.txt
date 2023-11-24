@@ -1,0 +1,7 @@
+uvicorn
+fastapi
+ffmpeg-python
+python-dotenv
+requests
+httpx
+pytest

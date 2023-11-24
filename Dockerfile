@@ -1,5 +1,5 @@
 # Stage 1: Build the React frontend
-FROM node as frontend
+FROM node:slim as frontend
 WORKDIR /frontend
 COPY frontend/package*.json ./
 RUN npm install
@@ -7,7 +7,7 @@ COPY frontend/ ./
 RUN npm run build
 
 # Stage 2: Build the FastAPI backend
-FROM python as backend
+FROM python:slim as backend
 WORKDIR /
 COPY src /src
 
@@ -17,7 +17,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Stage 3: Combine frontend and backend
-FROM python
+FROM python:slim
 WORKDIR /
 
 # Copy the built frontend static files
@@ -32,7 +32,7 @@ WORKDIR /
 
 
 # Install uvicorn in the final stage
-RUN pip install uvicorn fastapi ffmpeg-python python-dotenv requests httpx pytest
+RUN pip install -r src/requirements.txt
 
 # Expose the port the app runs on
 EXPOSE 8000

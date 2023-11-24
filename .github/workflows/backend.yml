@@ -18,5 +18,5 @@ jobs:
           python-version: 3.8
       - name: Install packages and test
         run: |
-            pip install uvicorn fastapi ffmpeg-python python-dotenv requests httpx pytest
+            pip install -r src/requirements.txt
             pytest --exitfirst || echo "No tests to run"
