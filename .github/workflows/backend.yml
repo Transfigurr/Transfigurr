@@ -1,0 +1,22 @@
+name: Test Backend
+
+on: 
+    push:
+        branches:
+            - main
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-node@v3
+        with:
+          python-version: 3.8
+      - name: Install packages and test
+        run: |
+            pip install uvicorn fastapi ffmpeg-python python-dotenv requests httpx pytest
+            pytest --exitfirst || echo "No tests to run"

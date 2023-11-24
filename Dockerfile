@@ -32,7 +32,7 @@ WORKDIR /
 
 
 # Install uvicorn in the final stage
-RUN pip install uvicorn fastapi ffmpeg-python python-dotenv requests
+RUN pip install uvicorn fastapi ffmpeg-python python-dotenv requests httpx pytest
 
 # Expose the port the app runs on
 EXPOSE 8000
