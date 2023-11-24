@@ -10,7 +10,6 @@ RUN npm run build
 FROM python as backend
 WORKDIR /
 COPY src /src
-COPY .env /
 
 # Install ffmpeg
 RUN apt-get update && \

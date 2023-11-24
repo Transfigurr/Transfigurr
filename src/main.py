@@ -47,7 +47,7 @@ app.add_middleware(
 )
 
 
-config = dotenv_values(".env")  # config = {"USER": "foo", "EMAIL": "foo@example.org"}
+config = dotenv_values("src/.env")  # config = {"USER": "foo", "EMAIL": "foo@example.org"}
 API_KEY = config['API_KEY']
 
 
