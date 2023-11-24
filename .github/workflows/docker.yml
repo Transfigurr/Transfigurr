@@ -1,4 +1,4 @@
-name: Publish Docker image
+name: Build Docker Image
 
 on: 
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   push_to_registries:
-    name: Push Docker image to multiple registries
+    name: Publish
     runs-on: ubuntu-latest
     permissions:
       packages: write
