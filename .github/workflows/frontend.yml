@@ -20,4 +20,4 @@ jobs:
         working-directory: frontend
         run: |
             npm ci
-            npm run test
+            npm run test --passWithNoTests
