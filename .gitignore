@@ -21,7 +21,8 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
+*env
 *movies
 *series
 *metadata
+*config

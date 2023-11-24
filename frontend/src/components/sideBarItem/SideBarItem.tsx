@@ -1,16 +1,17 @@
 import styles from "./SideBarItem.module.scss";
-
 const SideBarItem = ({
 	options,
 	selected,
 	selectedItem,
 	setSelectedItem,
 }: any) => {
-	//const [selectedItem, setSelectedItem] = useState<number>(-1);
-
-	const onItemClick = (option: number) => {
-		setSelectedItem(option);
+	const onItemClick = (index: number) => {
+		window.location.href = options.children[index].link;
 	};
+	const onParentClick = () => {
+		window.location.href = options.link;
+	};
+
 	return (
 		<div
 			className={styles.sideBarItem}
@@ -20,6 +21,7 @@ const SideBarItem = ({
 				className={styles.mainItem}
 				style={selected ? { color: "#35c5f4", backgroundColor: "#252833" } : {}}
 				onClick={() => {
+					onParentClick();
 					setSelectedItem(-1);
 				}}
 			>

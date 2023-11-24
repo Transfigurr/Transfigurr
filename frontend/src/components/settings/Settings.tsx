@@ -3,7 +3,10 @@ const Settings = ({ setSelectedItem }: any) => {
 	return (
 		<div className={styles.settings}>
 			<div className={styles.setting}>
-				<div className={styles.header} onClick={() => setSelectedItem(0)}>
+				<div
+					className={styles.header}
+					onClick={() => (window.location.href = "/settings/media-management")}
+				>
 					Media Management
 				</div>
 				<div className={styles.body}>
@@ -11,7 +14,10 @@ const Settings = ({ setSelectedItem }: any) => {
 				</div>
 			</div>
 			<div className={styles.setting}>
-				<div className={styles.header} onClick={() => setSelectedItem(1)}>
+				<div
+					className={styles.header}
+					onClick={() => (window.location.href = "/settings/profiles")}
+				>
 					Profiles
 				</div>
 				<div className={styles.body}>
@@ -19,7 +25,10 @@ const Settings = ({ setSelectedItem }: any) => {
 				</div>
 			</div>
 			<div className={styles.setting}>
-				<div className={styles.header} onClick={() => setSelectedItem(2)}>
+				<div
+					className={styles.header}
+					onClick={() => (window.location.href = "/settings/general")}
+				>
 					General
 				</div>
 				<div className={styles.body}>

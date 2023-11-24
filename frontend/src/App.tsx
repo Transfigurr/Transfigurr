@@ -17,73 +17,120 @@ import Backup from "./components/backup/Backup";
 import Updates from "./components/updates/Updates";
 import Events from "./components/events/Events";
 import LogFiles from "./components/logFiles/LogFiles";
-import { useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+
+import {
+	BrowserRouter as Router,
+	Route,
+	Routes,
+	Link,
+	useNavigate,
+	Outlet,
+	useParams,
+	useLocation,
+	BrowserRouter,
+} from "react-router-dom";
+import Series from "./components/series/Series";
 
 function App() {
 	const [selectedItem, setSelectedItem] = useState<number>(-1);
 	const [selectedOption, setSelectedOption] = useState<number>(0);
-
-	const page = () => {
-		if (selectedOption === 0) {
-			if (selectedItem === -1) {
-				return <MediaComponent />;
-			} else if (selectedItem === 0) {
-				return <LibraryImport />;
-			} else if (selectedItem === 1) {
-				return <MassEditor />;
-			}
-		} else if (selectedOption === 1) {
-			if (selectedItem === -1) {
-				setSelectedItem(0);
-			} else if (selectedItem === 0) {
-				return <Queue />;
-			} else if (selectedItem === 1) {
-				return <History />;
-			}
-		} else if (selectedOption === 2) {
-			if (selectedItem === -1) {
-				return <Settings setSelectedItem={setSelectedItem} />;
-			} else if (selectedItem === 0) {
-				return <MediaManagement />;
-			} else if (selectedItem === 1) {
-				return <Profiles />;
-			} else if (selectedItem === 2) {
-				return <General />;
-			} else if (selectedItem === 3) {
-				return <UI />;
-			}
-		} else if (selectedOption === 3) {
-			if (selectedItem === -1) {
-				setSelectedItem(0);
-			} else if (selectedItem === 0) {
-				return <Status />;
-			} else if (selectedItem === 1) {
-				return <Tasks />;
-			} else if (selectedItem === 2) {
-				return <Backup />;
-			} else if (selectedItem === 3) {
-				return <Updates />;
-			} else if (selectedItem === 4) {
-				return <Events />;
-			} else if (selectedItem === 5) {
-				return <LogFiles />;
-			}
-		}
-	};
 	return (
-		<div className={styles.app}>
-			<HeaderComponent />
-			<div className={styles.content}>
-				<SideBar
-					selectedOption={selectedOption}
-					setSelectedOption={setSelectedOption}
-					selectedItem={selectedItem}
-					setSelectedItem={setSelectedItem}
-				/>
-				{page()}
+		<Router>
+			<div className={styles.app}>
+				<HeaderComponent />
+				<div className={styles.content}>
+					<div className={styles.sideBar}>
+						<SideBar
+							selectedOption={selectedOption}
+							setSelectedOption={setSelectedOption}
+							selectedItem={selectedItem}
+							setSelectedItem={setSelectedItem}
+						/>
+					</div>
+					<div className={styles.page}>
+						<Page
+							setSelectedOption={setSelectedOption}
+							setSelectedItem={setSelectedItem}
+						/>
+					</div>
+				</div>
 			</div>
-		</div>
+		</Router>
 	);
+
+	function Page({ setSelectedOption, setSelectedItem }: any) {
+		const location: any = useLocation();
+		const pathname: string = location.pathname;
+		const sidebar: any = {
+			"/": [0, -1],
+			"/library-import": [0, 0],
+			"/mass-editor": [0, 1],
+			"/activity": [1, -1],
+			"/activity/queue": [1, 0],
+			"/activity/history": [1, 1],
+
+			"/settings": [2, -1],
+			"/settings/media-management": [2, 0],
+			"/settings/profiles": [2, 1],
+			"/settings/general": [2, 2],
+			"/system": [3, -1],
+			"/system/status": [3, 0],
+		};
+
+		setSelectedOption(pathname in sidebar ? sidebar[pathname][0] : 0);
+		setSelectedItem(pathname in sidebar ? sidebar[pathname][1] : -1);
+
+		return (
+			<Routes>
+				<Route path="/" element={<MediaComponent />} />
+				<Route path="/series/:seriesName" element={<SeriesSelect />} />
+				<Route path="/library-import" element={<LibraryImport />} />
+				<Route path="/mass-editor" element={<MassEditor />} />
+
+				<Route path="/activity" element={<Activity />} />
+				<Route path="/activity/queue" element={<Queue />} />
+				<Route path="/activity/history" element={<History />} />
+
+				<Route path="/settings" element={<Settings />} />
+				<Route
+					path="/settings/media-management"
+					element={<MediaManagement />}
+				/>
+				<Route path="/settings/profiles" element={<Profiles />} />
+				<Route path="/settings/general" element={<General />} />
+				<Route path="/settings/status" element={<Status />} />
+				<Route path="/system" element={<Status />} />
+
+				<Route path="/system/status" element={<Status />} />
+
+				{<Route path="*" element={<NotFound />} />}
+			</Routes>
+		);
+	}
+
+	function Activity() {
+		const navigate = useNavigate();
+
+		useEffect(() => {
+			navigate("/activity/queue");
+		}, [navigate]);
+		return null;
+	}
+	function SeriesSelect() {
+		const { seriesName } = useParams();
+
+		return <Series seriesName={seriesName} />;
+	}
+
+	function NotFound() {
+		const navigate = useNavigate();
+
+		useEffect(() => {
+			navigate("/");
+		}, [navigate]);
+		return null;
+	}
 }
 
 export default App;

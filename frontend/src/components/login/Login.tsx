@@ -133,7 +133,7 @@ const LoginComponent = () => {
 							<span>&copy;</span>
 							<span id="year"></span>
 							<span>-</span>
-							<span>Encodarr</span>
+							<span>Encoderr</span>
 						</div>
 					</div>
 				</div>

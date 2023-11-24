@@ -8,6 +8,8 @@ import AppsIcon from "@mui/icons-material/Apps";
 import RssFeedIcon from "@mui/icons-material/RssFeed";
 import SyncIcon from "@mui/icons-material/Sync";
 import SwitchLeftIcon from "@mui/icons-material/SwitchLeft";
+import { useEffect, useState } from "react";
+import useProfiles from "../../hooks/useProfiles";
 
 const MassEditor = () => {
 	const leftToolBarItems: any = [
@@ -24,6 +26,16 @@ const MassEditor = () => {
 		<ToolBarItem text="Filter" icon={<FilterAltIcon fontSize="medium" />} />,
 	];
 
+	const [series, setSeries] = useState([]);
+
+	const profiles = useProfiles();
+
+	useEffect(() => {
+		fetch("http://localhost:8000/api/data/series")
+			.then((response) => response.json())
+			.then((data) => setSeries(data))
+			.catch((error) => console.error(error));
+	}, []);
 	return (
 		<div className={styles.massEditor}>
 			<ToolBar
@@ -31,6 +43,26 @@ const MassEditor = () => {
 				middleToolBarItems={middleToolBarItems}
 				rightToolBarItems={rightToolBarItems}
 			/>
+			<table>
+				<thead>
+					<tr>
+						<th>Series Title</th>
+						<th>Codec Profile</th>
+						<th>Path</th>
+						<th>Size on Disk</th>
+					</tr>
+				</thead>
+				<tbody>
+					{series?.map((s: any, index: any) => (
+						<tr>
+							<td>{s.name}</td>
+							<td>{profiles[s.profile]["name"]}</td>
+							<td>{s.series_path}</td>
+							<td>{s.size}</td>
+						</tr>
+					))}
+				</tbody>
+			</table>
 		</div>
 	);
 };
