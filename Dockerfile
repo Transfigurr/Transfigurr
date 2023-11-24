@@ -27,8 +27,6 @@ COPY --from=frontend /frontend/build /frontend/build
 # Copy the built backend
 COPY --from=backend / /
 
-# Copy the config files
-COPY config /config
 
 # Set the working directory to the root of the project
 WORKDIR /
