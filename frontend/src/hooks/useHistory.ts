@@ -6,7 +6,7 @@ const useHistory = () => {
 
 	useEffect(() => {
 		// Create a new WebSocket connection when the component mounts
-		const newSocket: any = new WebSocket("ws://localhost:8000/ws");
+		const newSocket: any = new WebSocket("ws://localhost:8000/ws/history");
 
 		// Event handler when the WebSocket connection is opened
 		newSocket.onopen = () => {
