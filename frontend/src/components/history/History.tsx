@@ -1,5 +1,4 @@
 import styles from "./History.module.scss";
-
 import ToolBarItem from "../ToolBarItem/ToolBarItem";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
@@ -8,7 +7,6 @@ import RssFeedIcon from "@mui/icons-material/RssFeed";
 import SyncIcon from "@mui/icons-material/Sync";
 import SwitchLeftIcon from "@mui/icons-material/SwitchLeft";
 import ToolBar from "../ToolBar/ToolBar";
-
 import useHistory from "../../hooks/useHistory";
 import useProfiles from "../../hooks/useProfiles";
 
@@ -28,8 +26,8 @@ const History = () => {
 	];
 
 	const history = useHistory();
-	const profiles = useProfiles();
-
+	const profiles: any = useProfiles();
+	console.log(history);
 	return (
 		<div className={styles.history}>
 			<ToolBar
@@ -57,8 +55,16 @@ const History = () => {
 							</td>
 							<td>{episode.episode_name}</td>
 							<td>{episode.video_codec}</td>
-							<td>{profiles[episode.profile]["codec"]}</td>
-							<td>{profiles[episode.profile]["name"]}</td>
+							<td>
+								{profiles && episode.profile in profiles
+									? profiles[episode.profile]["codec"]
+									: ""}
+							</td>
+							<td>
+								{profiles && episode.profile in profiles
+									? profiles[episode.profile]["name"]
+									: ""}
+							</td>
 						</tr>
 					))}
 				</tbody>

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 @dataclass
-class Episode:
+class episode_model:
     series_name: str = None
     season_name: str = None
     file_path: str = None

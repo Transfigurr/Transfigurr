@@ -1,9 +1,8 @@
 import styles from "./SeriesModals.module.scss";
-import useProfiles from "../../hooks/useProfiles";
 
 const SeriesModals = ({ type, content, setContent, data }: any) => {
 	const EditContent = () => {
-		const p = useProfiles();
+		const p = data;
 		const profiles: any = [];
 		for (let i in p) {
 			profiles.push(p[i]);
@@ -26,9 +25,9 @@ const SeriesModals = ({ type, content, setContent, data }: any) => {
 					<label>
 						Select an Option
 						<select
-							value={content.profile}
+							value={content.profile_id}
 							onChange={(e) => {
-								setContent({ ...content, profile: e.target.value });
+								setContent({ ...content, profile_id: e.target.value });
 							}}
 						>
 							{profiles.map((profile: any) => (

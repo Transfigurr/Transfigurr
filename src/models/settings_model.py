@@ -2,6 +2,6 @@ from dataclasses import dataclass
 from typing import List, Dict
 
 @dataclass
-class Settings:
+class settings_model:
    root_folder: str = None
    

@@ -1,12 +1,11 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 
-const useProfiles = () => {
-	const [socket, setSocket] = useState<any>(null);
-	const [profiles, setProfiles] = useState();
-
+const useSettingsWS = () => {
+	const [socket, setSocket] = useState(null);
+	const [settings, setSettings] = useState([]);
 	useEffect(() => {
 		// Create a new WebSocket connection when the component mounts
-		const newSocket = new WebSocket("ws://localhost:8000/ws/profiles");
+		const newSocket: any = new WebSocket("ws://localhost:8000/ws/settings");
 
 		// Event handler when the WebSocket connection is opened
 		newSocket.onopen = () => {
@@ -14,9 +13,9 @@ const useProfiles = () => {
 		};
 
 		// Event handler for received messages
-		newSocket.onmessage = (event) => {
+		newSocket.onmessage = (event: any) => {
 			if (newSocket.readyState === WebSocket.OPEN) {
-				setProfiles(JSON.parse(event.data));
+				setSettings(JSON.parse(event.data));
 			}
 		};
 
@@ -35,7 +34,7 @@ const useProfiles = () => {
 	}, []); // The empty dependency array ensures that this effect runs only once on mount
 
 	// Expose the socket and queue state to the components using this hook
-	return profiles;
+	return settings;
 };
 
-export default useProfiles;
+export default useSettingsWS;

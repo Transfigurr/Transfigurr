@@ -8,7 +8,7 @@ import ToolBarItem from "../ToolBarItem/ToolBarItem";
 import SyncIcon from "@mui/icons-material/Sync";
 
 const Profiles = () => {
-	const profiles = useProfiles();
+	const profiles: any = useProfiles();
 	const [modalType, setModalType] = useState("");
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [selectedProfile, setSelectedProfile] = useState<any>({});
@@ -32,6 +32,7 @@ const Profiles = () => {
 			},
 			body: JSON.stringify({ profile: content }),
 		});
+		setIsModalOpen(false);
 	};
 
 	const [content, setContent] = useState({
@@ -44,12 +45,13 @@ const Profiles = () => {
 	const leftToolBarItems: any = [
 		<ToolBarItem text="Advanced" icon={<SyncIcon fontSize="large" />} />,
 	];
-
-	const profilesArray: [] = [];
+	const profilesArray: any = [];
 
 	for (let i in profiles) {
 		profilesArray.push(profiles[i]);
 	}
+
+	const dummy = (dummy: any) => {};
 
 	return (
 		<div className={styles.profiles}>
@@ -66,6 +68,7 @@ const Profiles = () => {
 							data={selectedProfile}
 							content={content}
 							setContent={setContent}
+							setShouldSubscribe={dummy}
 						/>
 					</div>
 				</div>

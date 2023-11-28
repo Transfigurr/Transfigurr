@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
 
-const useHistory = () => {
+const useSingleSeries = (series_name: any) => {
 	const [socket, setSocket] = useState(null);
-	const [history, setHistory] = useState([]);
+	const [series, setSeries] = useState({});
+	const [shouldSubscribe, setShouldSubscribe] = useState(true); // Flag to control subscription
+
 	useEffect(() => {
 		// Create a new WebSocket connection when the component mounts
-		const newSocket: any = new WebSocket("ws://localhost:8000/ws/history");
+		const newSocket: any = new WebSocket(
+			"ws://localhost:8000/ws/series/single/" + series_name
+		);
 
 		// Event handler when the WebSocket connection is opened
 		newSocket.onopen = () => {
@@ -14,8 +18,8 @@ const useHistory = () => {
 
 		// Event handler for received messages
 		newSocket.onmessage = (event: any) => {
-			if (newSocket.readyState === WebSocket.OPEN) {
-				setHistory(JSON.parse(event.data));
+			if (newSocket.readyState === WebSocket.OPEN && shouldSubscribe) {
+				setSeries(JSON.parse(event.data));
 			}
 		};
 
@@ -31,10 +35,9 @@ const useHistory = () => {
 		return () => {
 			newSocket.close();
 		};
-	}, []); // The empty dependency array ensures that this effect runs only once on mount
-
+	}, [series_name, shouldSubscribe]); // Include series_name and shouldSubscribe in the dependency array
 	// Expose the socket and queue state to the components using this hook
-	return history;
+	return { series, setShouldSubscribe };
 };
 
-export default useHistory;
+export default useSingleSeries;

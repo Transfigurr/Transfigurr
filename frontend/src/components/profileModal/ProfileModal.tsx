@@ -5,7 +5,7 @@ import useSpeeds from "../../hooks/useSpeeds";
 const ProfileModal = ({ content, setContent }: any) => {
 	const codecs = useCodecs();
 	const speeds = useSpeeds();
-
+	console.log(codecs);
 	return (
 		<div className={styles.content}>
 			<label>

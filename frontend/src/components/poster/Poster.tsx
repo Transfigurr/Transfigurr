@@ -1,27 +1,17 @@
 import { useEffect, useState } from "react";
 import styles from "./Poster.module.scss";
-
-const PosterComponent = ({ id, data }: any) => {
+import useSingleSeries from "../../hooks/useSingleSeries";
+const PosterComponent = ({ name }: any) => {
 	const status = "Monitored";
 	const profile = "AV1";
 	const progress = "80%";
-
-	const [imageList, setImageList] = useState([]);
-	useEffect(() => {
-		// Fetch the list of image URLs from the FastAPI backend
-		fetch("http://localhost:8000/api/image_collection")
-			.then((response) => response.json())
-			.then((data) => setImageList(data.image_files))
-			.catch((error) => console.error("Error fetching image list:", error));
-	}, []);
-
-	console.log(data);
+	const series = useSingleSeries(name);
 	return (
 		<div className={styles.cardArea}>
 			<div className={styles.card}>
 				<div className={styles.cardContent}>
 					{
-						//<div className={styles.ended}></div>
+						//<div className={styles.ended}xp></div>
 					}
 					{}
 
@@ -29,10 +19,10 @@ const PosterComponent = ({ id, data }: any) => {
 						className={styles.img}
 						src={
 							"http://localhost:8000/config/metadata/series/" +
-							data.name +
+							name +
 							"/poster.jpg"
 						}
-						alt={data.name}
+						alt={name}
 					></img>
 					<div className={styles.footer}>
 						<div className={styles.progressBar}>
@@ -49,5 +39,4 @@ const PosterComponent = ({ id, data }: any) => {
 		</div>
 	);
 };
-
 export default PosterComponent;

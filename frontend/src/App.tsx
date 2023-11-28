@@ -119,8 +119,7 @@ function App() {
 	}
 	function SeriesSelect() {
 		const { seriesName } = useParams();
-
-		return <Series seriesName={seriesName} />;
+		return <Series series_name={seriesName} />;
 	}
 
 	function NotFound() {

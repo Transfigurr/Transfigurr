@@ -12,8 +12,9 @@ import useQueue from "../../hooks/useQueue";
 import useProfiles from "../../hooks/useProfiles";
 
 const Queue = () => {
-	const { queue } = useQueue();
-	const profiles = useProfiles();
+	const queue = useQueue();
+	console.log(queue);
+	const profiles: any = useProfiles();
 	const leftToolBarItems: any = [
 		<ToolBarItem text="Update" icon={<SyncIcon fontSize="large" />} />,
 		<ToolBarItem text="RSS Sync" icon={<RssFeedIcon fontSize="medium" />} />,
@@ -27,7 +28,7 @@ const Queue = () => {
 		<ToolBarItem text="Sort" icon={<SwitchLeftIcon fontSize="medium" />} />,
 		<ToolBarItem text="Filter" icon={<FilterAltIcon fontSize="medium" />} />,
 	];
-	console.log(profiles);
+	console.log("profiles", profiles);
 	return (
 		<div className={styles.queue}>
 			<ToolBar
@@ -47,14 +48,16 @@ const Queue = () => {
 					</tr>
 				</thead>
 				<tbody>
-					{queue?.map((episode: any, index: any) => (
+					{queue?.map((q: any) => (
 						<tr>
-							<td>{episode.series_name}</td>
+							<td>{q.episode.series_name}</td>
 							<td>
-								{episode.season_number}x{episode.episode_number}
+								{q.episode.season_number}x{q.episode.episode_number}
 							</td>
-							<td>{episode.episode_name}</td>
-							<td>{episode.video_codec}</td>
+							<td>{q.episode.episode_name}</td>
+							<td>{q.episode.codec}</td>
+							<td>{profiles ? profiles[q.profile]?.codec : ""}</td>
+							<td>{profiles ? profiles[q.profile]?.name : ""}</td>
 						</tr>
 					))}
 				</tbody>
