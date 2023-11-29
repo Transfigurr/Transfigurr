@@ -11,6 +11,20 @@ default_codecs = [
     "266"
 ]
 
+default_speeds = [
+    "Any",
+    "ultrafast",
+    "superfast",
+    "veryfast",
+    "faster",
+    "fast",
+    "medium",
+    "slow",
+    "slower",
+    "veryslow",
+    "placebo"
+]
+
 
 @router.get("/api/codecs")
 async def getCodecs():

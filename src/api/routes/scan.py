@@ -1,3 +1,4 @@
+import asyncio
 from dataclasses import asdict
 import os
 import re
@@ -8,7 +9,7 @@ from src.api.routes.profiles import getProfiles
 import httpx
 import aiofiles
 
-from src.api.utils import analyze_media_file, get_config_folder, get_series_folder, get_series_metadata_folder, open_json, write_json
+from src.api.utils import analyze_media_file, get_series_folder, get_series_metadata_folder
 from src.models.episode_model import episode_model
 from src.models.profile_model import profile_model
 from src.models.season_model import season_model
@@ -129,8 +130,6 @@ async def scan_all_series():
     return
 
         
-
-
 @router.get("/api/scan/series/{series_name}")
 async def scan_series(series_name):
     if series_name == ".DS_Store":
@@ -164,7 +163,7 @@ async def scan_series(series_name):
         await global_state.get_series_config(series_name)
         if await global_state.get_tvdb(series_name) == {}:
             print('about to fetch metadata for', series_name)
-            await get_series_metadata(series_name)
+            asyncio.create_task(get_series_metadata(series_name))
         return
     
 @router.get('/api/scan/queue')

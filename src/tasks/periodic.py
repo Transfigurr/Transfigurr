@@ -1,11 +1,11 @@
 import asyncio
+from functools import partial
 import os
-from fastapi import BackgroundTasks
-
+from fastapi import BackgroundTasks 
 import ffmpeg
 from src.api.routes.profiles import getProfiles
 from src.api.routes.scan import scan_all_series, scan_queue
-from src.api.utils import get_config_folder, open_json, write_json
+from src.api.utils import get_config_folder, get_root_folder, get_transcode_folder, open_json, write_json
 from src.global_state import GlobalState
 
 global_state = GlobalState()
@@ -21,7 +21,6 @@ async def process_episodes_in_queue_periodic():
     while True:
         q = await global_state.get_queue()
         w = True
-        await asyncio.sleep(5)
         while q and w:
             await asyncio.sleep(5)
             await process_episode(q[-1])
@@ -40,8 +39,8 @@ async def process_episode(episode):
     vcodec = profile['codec']
 
     input_file = file_path + file_name
-    output_file = file_path + 'temp' + file_name
+    output_file = os.path.join(await get_transcode_folder(), file_name)
     loop = asyncio.get_event_loop()
-    await loop.run_in_executor(None, lambda: ffmpeg.input(input_file).output(output_file, vcodec='libx265', preset=preset).run())
-    #os.rename(output_file, input_file)
+    #await loop.run_in_executor(None, lambda: ffmpeg.input(input_file).output(output_file, vcodec='libx264', preset='ultrafast').run())
+    #await loop.run_in_executor(None, partial(os.replace, output_file, input_file))
     return

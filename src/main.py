@@ -72,7 +72,7 @@ async def test2():
 @app.on_event("startup")
 async def startup_event():
     task1 = asyncio.create_task(scan_queue_periodic())
-    task2 = asyncio.create_task(test2())
+    task2 = asyncio.create_task(process_episodes_in_queue_periodic())
 
 
 

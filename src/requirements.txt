@@ -6,3 +6,4 @@ requests
 httpx
 pytest
 aiofiles
+motor

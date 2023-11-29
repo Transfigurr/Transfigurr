@@ -3,6 +3,8 @@ from src.api.utils import get_config_folder, get_series_metadata_folder, open_js
 from src.defaults.default_profiles import default_profiles
 from src.defaults.default_config import default_config
 from src.defaults.default_settings import default_settings
+from src.defaults.default_codecs import default_codecs
+
 class GlobalState:
 
 # HISTORY
@@ -18,9 +20,6 @@ class GlobalState:
 
     async def set_profiles(self, p):
         await write_json(await get_config_folder(), 'profiles.json', p)
-
-
-
 
 
 # SERIES_LIST
@@ -70,3 +69,10 @@ class GlobalState:
     
     async def set_settings(self, s):
         return await write_json(await get_config_folder(), 'settings.json', s)
+    
+# CODECS
+    async def get_codecs(self):
+        return await open_json(await get_config_folder(), 'codecs.json', default_codecs)
+    
+    async def set_codecs(self, c):
+        return await write_json(await get_config_folder(), 'codecs.json', c)

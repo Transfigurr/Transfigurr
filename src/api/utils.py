@@ -41,6 +41,9 @@ async def get_series_folder():
 async def get_series_metadata_folder():
     return await get_root_folder() + '/config/metadata/series'
 
+async def get_transcode_folder():
+    return await get_root_folder() + '/transcode'
+
 async def open_json(folder,file_path,default):
     await verify_folders()
     await asyncio.get_event_loop().run_in_executor(None, partial(os.makedirs, folder, exist_ok=True))
