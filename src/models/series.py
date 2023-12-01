@@ -6,9 +6,14 @@ from sqlalchemy import Column, Integer, String
 
 
 from src.models.base import Base
+from sqlalchemy import Column, Integer, String, ForeignKey
+from dataclasses import dataclass
+from typing import List
+from sqlalchemy.orm import relationship
+from src.models.base import Base
 
 @dataclass
-class series_model(Base):
+class Series(Base):
     __tablename__ = 'series'
 
     id: str = Column(String, primary_key=True)
@@ -19,5 +24,5 @@ class series_model(Base):
     last_air_date: str = Column(String)
     networks: List[str] = Column(String)
     overview: str = Column(String)
-
-    seasons = relationship('season_model', back_populates='series', cascade="all, delete-orphan")  
+    seasons = relationship('Season', back_populates='series', cascade="all, delete-orphan")  
+    profile_id: int = Column(Integer, ForeignKey('profiles.id'))

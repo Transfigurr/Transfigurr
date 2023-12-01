@@ -4,7 +4,7 @@ from sqlalchemy import Column, Integer, String
 from src.models.base import Base
 
 @dataclass
-class codecs_model(Base):
+class Codec(Base):
     __tablename__ = 'codecs'
 
     id: int = Column(Integer, primary_key=True)

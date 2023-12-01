@@ -4,21 +4,21 @@ import os
 import re
 from dotenv import dotenv_values
 from fastapi import APIRouter
-from src.api.routes.profiles import get_all_profiles
+from src.api.routes.profile_routes import get_all_profiles
 
 import httpx
 import aiofiles
 
 from src.api.utils import analyze_media_file, get_series_folder, get_series_metadata_folder
-from src.models.episode_model import episode_model
-from src.models.profile_model import profile_model
-from src.models.season_model import season_model
-from src.models.series_model import series_model
-from src.models.settings_model import settings_model
+from src.models.episode import Episode
+from src.models.profile import Profile
+from src.models.season import Season
+from src.models.series import Series
+from src.models.setting import Setting
 
-from src.api.routes.series import set_series, get_all_series
-from src.api.routes.season import set_season
-from src.api.routes.episode import set_episode
+from src.api.routes.series_routes import set_series, get_all_series
+from src.api.routes.season_routes import set_season
+from src.api.routes.episode_routes import set_episode
 
 router = APIRouter()
 config = dotenv_values("src/.env")
@@ -38,7 +38,7 @@ async def get_all_series_metadata():
 async def get_series_metadata(series_name):
     print('getting metadata for', series_name)
     async with httpx.AsyncClient() as client:
-        series: series_model = series_model()
+        series: Series = Series()
         series_folder = await get_series_metadata_folder()
         metadata_folder_path = os.path.join(series_folder, series_name)
         tmdb_url = f"https://api.themoviedb.org/3/search/tv"
@@ -88,7 +88,7 @@ async def get_series_metadata(series_name):
                     if season_response.status_code == 200:
                         season_data = season_response.json()
                         for season in season_data.get('seasons'):
-                            newSeason: season_model = season_model()
+                            newSeason: Season = Season()
                             newSeason.name = season['name']
                             newSeason.season_number = season['season_number']
                             newSeason.episode_count = season['episode_count']
@@ -100,7 +100,7 @@ async def get_series_metadata(series_name):
                                 episode_url = f"https://api.themoviedb.org/3/tv/{series.id}/season/{newSeason.season_number}/episode/{episode_number}"
                                 episode_response = await client.get(episode_url, params=params)
                                 if episode_response.status_code == 200:
-                                    episode= episode_model()
+                                    episode= Episode()
                                     episode_data = episode_response.json()
                                     episode.series_name = series.name
                                     episode.season_name = newSeason.name
@@ -133,7 +133,8 @@ async def scan_series(series_name):
     series_path = os.path.join(await get_series_folder(), series_name)
     if os.path.isdir(series_path) and series_name != '.DS_Store':
         # Create a new Series instance
-        series = series_model(id=series_name, name=series_name)
+        
+        series = Series(id=series_name, name=series_name, profile_id=0)
 
         for season_name in os.listdir(series_path):
             if season_name == ".DS_Store":
@@ -142,7 +143,7 @@ async def scan_series(series_name):
             season_path = os.path.join(series_path, season_name)
 
             # Create a new Season instance and link it to the Series
-            season = season_model(
+            season = Season(
                 id=str(series_name)+str(season_number), 
                 season_number=season_number, 
                 name=season_name, 
@@ -165,7 +166,7 @@ async def scan_series(series_name):
                         analysis_data = await analyze_media_file(episode_path)
 
                         # Create a new Episode instance and link it to the Season
-                        episode = episode_model(id=str(series_name)+str(season_number)+str(episode_number), episode_number=episode_number, filename=file, video_codec=analysis_data)
+                        episode = Episode(id=str(series_name)+str(season_number)+str(episode_number), episode_number=episode_number, filename=file, video_codec=analysis_data)
                         episode.season = season
                         await set_episode(asdict(episode))
                     else:

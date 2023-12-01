@@ -3,31 +3,29 @@ import os
 from fastapi import BackgroundTasks, FastAPI, staticfiles
 from dotenv import dotenv_values
 from fastapi.middleware.cors import CORSMiddleware
-from src.api.routes import metadata, scan, settings, profiles, codecs, series
+from src.api.routes import codec_routes, profile_routes, scan_routes, series_routes, settings_routes
 from fastapi.staticfiles import StaticFiles
 from starlette.responses import FileResponse
 from src.api.utils import verify_folders
-from src.api.ws import queue, history, profilesWS, seriesWS, singleSeriesWS, settingsWS
+from src.api.ws import history_websocket, profiles_websocket, queue_websocket, series_websocket, settings_websocket
 from src.tasks.periodic import process_episodes_in_queue_periodic, scan_queue, scan_queue_periodic
 app = FastAPI()
     
 # routes
-app.include_router(queue.router)
-app.include_router(history.router)
-app.include_router(profilesWS.router)
-app.include_router(series.router)
+#app.include_router(queue.router)
+#app.include_router(history.router)
+app.include_router(profiles_websocket.router)
+app.include_router(series_routes.router)
 
 
-app.include_router(metadata.router)
-app.include_router(scan.router)
-app.include_router(settings.router)
-app.include_router(codecs.router)
+app.include_router(scan_routes.router)
+app.include_router(settings_routes.router)
+app.include_router(codec_routes.router)
 
 # ws
-app.include_router(seriesWS.router)
-app.include_router(singleSeriesWS.router)
-app.include_router(settingsWS.router)
-app.include_router(profiles.router)
+app.include_router(series_websocket.router)
+app.include_router(settings_websocket.router)
+app.include_router(profile_routes.router)
 
 
 

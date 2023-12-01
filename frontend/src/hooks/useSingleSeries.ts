@@ -7,7 +7,7 @@ const useSingleSeries = (series_name: any) => {
 	useEffect(() => {
 		// Create a new WebSocket connection when the component mounts
 		const newSocket: any = new WebSocket(
-			"ws://localhost:8000/ws/series/single/" + series_name
+			"ws://localhost:8000/ws/series/" + series_name
 		);
 
 		// Event handler when the WebSocket connection is opened

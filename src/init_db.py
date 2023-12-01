@@ -3,19 +3,17 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from sqlalchemy import create_engine, inspect
-from sqlalchemy.sql import text
-
 from src.seeds.seed_codecs import seed_codecs
 from src.seeds.seed_profiles import seed_profiles
 from src.seeds.seed_settings import seed_settings
 
 
-from src.models.codecs_model import codecs_model
-from src.models.profile_model import profile_model
-from src.models.settings_model import settings_model
-from src.models.series_model import series_model
-from src.models.season_model import season_model
-from src.models.episode_model import episode_model
+from src.models.codec import Codec
+from src.models.profile import Profile
+from src.models.setting import Setting
+from src.models.series import Series
+from src.models.season import Season
+from src.models.episode import Episode
 
 from src.models.base import Base
 

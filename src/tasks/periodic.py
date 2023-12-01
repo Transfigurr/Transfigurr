@@ -3,8 +3,8 @@ from functools import partial
 import os
 from fastapi import BackgroundTasks 
 import ffmpeg
-from src.api.routes.profiles import get_all_profiles
-from src.api.routes.scan import scan_all_series, scan_queue
+from src.api.routes.profile_routes import get_all_profiles
+from src.api.routes.scan_routes import scan_all_series, scan_queue
 from src.api.utils import get_config_folder, get_root_folder, get_transcode_folder, open_json, write_json
 
 

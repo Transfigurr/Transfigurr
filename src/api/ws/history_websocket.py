@@ -6,7 +6,7 @@ from src.global_state import GlobalState
 global_state = GlobalState()
 router = APIRouter()
 @router.websocket("/ws/history")
-async def historyWS(websocket: WebSocket):
+async def history_websocket(websocket: WebSocket):
     await websocket.accept()
     try:
         while True:

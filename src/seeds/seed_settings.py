@@ -1,9 +1,9 @@
 from sqlalchemy import insert
-from src.models.settings_model import settings_model
+from src.models.setting import Setting
 
 def seed_settings(conn):
     for setting in default_settings:
-        conn.execute(insert(settings_model).values(setting))
+        conn.execute(insert(Setting).values(setting))
 default_settings = [
     {
         "id": 0,

@@ -1,9 +1,9 @@
 from sqlalchemy import insert
-from src.models.codecs_model import codecs_model
+from src.models.codec import Codec
 
 def seed_codecs(conn):
     for codec in default_codecs:
-        query = insert(codecs_model).values(codec)
+        query = insert(Codec).values(codec)
         conn.execute(query)
 
 default_codecs = [

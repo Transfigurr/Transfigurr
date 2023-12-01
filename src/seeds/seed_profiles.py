@@ -1,10 +1,10 @@
 from sqlalchemy import insert
-from src.models.profile_model import profile_model
+from src.models.profile import Profile
 
 
 def seed_profiles(conn):
     for profile in default_profiles:
-        conn.execute(insert(profile_model).values(profile))
+        conn.execute(insert(Profile).values(profile))
 
 default_profiles = [
      {

@@ -4,7 +4,7 @@ from sqlalchemy import Column, Integer, String
 from src.models.base import Base
 
 @dataclass
-class settings_model(Base):
+class Setting(Base):
     __tablename__ = 'settings'
 
     id: int = Column(Integer, primary_key=True)
