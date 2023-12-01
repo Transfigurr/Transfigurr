@@ -4,7 +4,7 @@ import os
 import re
 from dotenv import dotenv_values
 from fastapi import APIRouter
-from src.api.routes.profiles import getProfiles
+from src.api.routes.profiles import get_all_profiles
 
 import httpx
 import aiofiles
@@ -15,9 +15,10 @@ from src.models.profile_model import profile_model
 from src.models.season_model import season_model
 from src.models.series_model import series_model
 from src.models.settings_model import settings_model
-from src.global_state import GlobalState
 
-global_state = GlobalState()
+from src.api.routes.series import set_series, get_all_series
+from src.api.routes.season import set_season
+from src.api.routes.episode import set_episode
 
 router = APIRouter()
 config = dotenv_values("src/.env")
@@ -27,9 +28,10 @@ API_KEY = config['API_KEY']
 
 @router.get("/api/scan/series/metadata")
 async def get_all_series_metadata():
-    series_list = await global_state.get_series()
-    for series_name in series_list:
-        await get_series_metadata(series_name)
+    series_list = await get_all_series()
+    for series in series_list:
+        print(series)
+        await get_series_metadata(series['id'])
     return
 
 @router.get("/api/scan/series/metadata/{series_name}") 
@@ -117,16 +119,10 @@ async def get_series_metadata(series_name):
 async def scan_all_series():
     print('scanning all series')
     series_folder = await get_series_folder()
-    series_result = await global_state.get_series_list()
-    series = set()
-    for i in series_result:
-        series.add(i)
     for series_name in os.listdir(series_folder):
         if series_name == ".DS_Store":
             continue
         await scan_series(series_name)
-        series.add(series_name)
-        await global_state.set_series_list(list(series))
     return
 
         
@@ -136,15 +132,27 @@ async def scan_series(series_name):
         return
     series_path = os.path.join(await get_series_folder(), series_name)
     if os.path.isdir(series_path) and series_name != '.DS_Store':
-        series = {"name": series_name, "series_path": series_path, "seasons": {}}
+        # Create a new Series instance
+        series = series_model(id=series_name, name=series_name)
+
         for season_name in os.listdir(series_path):
             if season_name == ".DS_Store":
                 continue
             season_number = int("".join(re.findall(r'\d+', season_name)))
             season_path = os.path.join(series_path, season_name)
+
+            # Create a new Season instance and link it to the Series
+            season = season_model(
+                id=str(series_name)+str(season_number), 
+                season_number=season_number, 
+                name=season_name, 
+                series_id=series_name)
+            
+            season.series = series
+            await set_season(asdict(season))
+
             if os.path.isdir(season_path) and season_name != '.DS_Store':
                 files = [f for f in os.listdir(season_path) if os.path.isfile(os.path.join(season_path, f))]
-                episodes = {}
                 for file in files:
                     pattern = r"(?:S(\d{2})E(\d{2})|E(\d{2}))"
                     match = re.search(pattern, file)
@@ -155,24 +163,31 @@ async def scan_series(series_name):
                             episode_number = int(match.group(3))
                         episode_path = os.path.join(season_path, file)
                         analysis_data = await analyze_media_file(episode_path)
-                        episodes[episode_number] = {'episode_name': file, 'season': season_number, 'episode_number': episode_number,'filename': file, 'path': season_path + '/', 'codec': analysis_data}
+
+                        # Create a new Episode instance and link it to the Season
+                        episode = episode_model(id=str(series_name)+str(season_number)+str(episode_number), episode_number=episode_number, filename=file, video_codec=analysis_data)
+                        episode.season = season
+                        await set_episode(asdict(episode))
                     else:
                         print('missing')
-                series["seasons"][season_number] = {"season": season_number, "name": season_name, "episodes": episodes}
-        await global_state.set_series(series_name, series)
-        await global_state.get_series_config(series_name)
-        if await global_state.get_tvdb(series_name) == {}:
-            print('about to fetch metadata for', series_name)
-            asyncio.create_task(get_series_metadata(series_name))
+
+        # Save the Series instance to the database
+        await set_series(asdict(series))
+        #await global_state.get_series_config(series_name)
+
+        #if await global_state.get_tvdb(series_name) == {}:
+           #print('about to fetch metadata for', series_name)
+            #asyncio.create_task(get_series_metadata(series_name))
         return
     
 @router.get('/api/scan/queue')
 async def scan_queue():
     print('scanning queue')
     await scan_all_series()
+    return
     q = []
-    series_names = await global_state.get_series_list()
-    profiles = await getProfiles()
+    series_names = await global_state.get_all_series()
+    profiles = await get_all_profiles()
     for series_name in series_names:
         if series_name == ".DS_Store":
             continue

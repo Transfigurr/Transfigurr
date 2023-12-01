@@ -1,10 +1,8 @@
 import asyncio
 import json
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
-from src.api.routes.profiles import getProfiles
-from src.global_state import GlobalState
+from src.api.routes.profiles import get_all_profiles
 
-global_state = GlobalState()
 router = APIRouter()
 
 @router.websocket("/ws/profiles")
@@ -13,7 +11,7 @@ async def profilesWS(websocket: WebSocket):
     try:
         while True:
             # Convert the entire queue to a JSON string
-            data = json.dumps(await getProfiles())
+            data = json.dumps(await get_all_profiles())
             try:
                 # Send the JSON string to the client
                 await websocket.send_text(data)

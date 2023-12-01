@@ -2,10 +2,8 @@ import asyncio
 import json
 import logging
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
-from src.api.utils import get_config_folder, open_json
-from src.global_state import GlobalState
+from src.api.routes.series import get_all_series
 
-global_state = GlobalState()
 router = APIRouter()
 
 @router.websocket("/ws/series")
@@ -13,9 +11,10 @@ async def seriesWS(websocket: WebSocket):
     try:
         await websocket.accept()
         while True:
-            series_json = json.dumps(await global_state.get_series_list())
+            series_json = json.dumps(await get_all_series())
             await websocket.send_text(series_json)
-            await asyncio.sleep(1)
+            await asyncio.sleep(10)
+
     except WebSocketDisconnect:
         logging.info("WebSocket disconnected")
     except asyncio.CancelledError:

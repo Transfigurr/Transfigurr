@@ -25,18 +25,19 @@ const Profiles = () => {
 		setIsModalOpen(true);
 	};
 	const onModalSave = async () => {
-		await fetch(`http://localhost:8000/api/profiles/${content.id}`, {
+		await fetch(`http://localhost:8000/api/profiles`, {
 			method: "PUT",
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ profile: content }),
+			body: JSON.stringify(content),
 		});
 		setIsModalOpen(false);
+		console.log(content);
 	};
-
+	console.log(profiles);
 	const [content, setContent] = useState({
-		id: selectedProfile?.id,
+		id: String,
 		name: selectedProfile?.name,
 		codec: selectedProfile?.codec,
 		codecs: selectedProfile?.codecs,
@@ -50,7 +51,7 @@ const Profiles = () => {
 	for (let i in profiles) {
 		profilesArray.push(profiles[i]);
 	}
-
+	console.log(profiles);
 	const dummy = (dummy: any) => {};
 
 	return (

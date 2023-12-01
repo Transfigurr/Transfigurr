@@ -1,78 +1,41 @@
 import os
-from src.api.utils import get_config_folder, get_series_metadata_folder, open_json, write_json
-from src.defaults.default_profiles import default_profiles
-from src.defaults.default_config import default_config
-from src.defaults.default_settings import default_settings
-from src.defaults.default_codecs import default_codecs
+import sqlalchemy
+from sqlalchemy import MetaData
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.future import select
+from sqlalchemy.sql import select
+metadata = MetaData()
+
+def instance_to_dict(instance):
+    return {c.key: getattr(instance, c.key)
+            for c in sqlalchemy.inspect(instance).mapper.column_attrs}
 
 class GlobalState:
+    def __init__(self):
+        self.engine = create_async_engine("sqlite+aiosqlite:///config/db/database.db")
 
-# HISTORY
-    async def get_history(self):
-        return await open_json(await get_config_folder(), 'history.json', [])
-
-    async def set_history(self, h):
-        await write_json(await get_config_folder(), 'history.json', h)
-
-# PROFILES
-    async def get_profiles(self):
-        return await open_json(await get_config_folder(), 'profiles.json', default_profiles)
-
-    async def set_profiles(self, p):
-        await write_json(await get_config_folder(), 'profiles.json', p)
-
-
-# SERIES_LIST
-    async def get_series_list(self):
-        return await open_json(await get_config_folder(), 'series.json', [])
-    
-    async def set_series_list(self, s):
-        return await write_json(await get_config_folder(), 'series.json', s)
-    
-# SERIES CONFIG
-    async def get_series_config(self, series_name):
-        folder_path = os.path.join(await get_series_metadata_folder(), series_name)
-        return await open_json(folder_path, 'config.json', default_config)
-    
-    async def set_series_config(self, series_name, c):
-        folder_path = os.path.join(await get_series_metadata_folder(), series_name)
-        return await write_json(folder_path, 'config.json', c)
-    
-# Series
-    async def get_series(self, series_name):
-        folder_path = os.path.join(await get_series_metadata_folder(), series_name)
-        return await open_json(folder_path, 'local.json', [])
-    
-    async def set_series(self, series_name, s):
-        folder_path = os.path.join(await get_series_metadata_folder(), series_name)
-        return await write_json(folder_path, 'local.json', s)
-    
-
-# TVDB
-    async def get_tvdb(self, series_name):
-        folder_path = os.path.join(await get_series_metadata_folder(), series_name)
-        return await open_json(folder_path, 'tvdb.json', {})
-    
-    async def set_tvdb(self, series_name, t):
-        folder_path = os.path.join(await get_series_metadata_folder(), series_name)
-        return await write_json(folder_path, 'tvdb.json', t)
-    
-# QUEUE
-    async def get_queue(self):
-        return await open_json(await get_config_folder(), 'queue.json', [])
-    async def set_queue(self, q):    
-        return await write_json(await get_config_folder(), 'queue.json', q)
-    
-# SETTINGS
-    async def get_settings(self):
-        return await open_json(await get_config_folder(), 'settings.json', default_settings)
-    
-    async def set_settings(self, s):
-        return await write_json(await get_config_folder(), 'settings.json', s)
-    
-# CODECS
-    async def get_codecs(self):
-        return await open_json(await get_config_folder(), 'codecs.json', default_codecs)
-    
-    async def set_codecs(self, c):
-        return await write_json(await get_config_folder(), 'codecs.json', c)
+    async def get_all_from_table(self, model):
+        async with self.engine.begin() as conn:
+            async with AsyncSession(self.engine) as async_session:
+                res = await async_session.execute(select(model))
+                objects = res.scalars().all()
+                return [instance_to_dict(obj) for obj in objects]
+            
+    async def get_object_from_table(self, model, id):
+        async with self.engine.begin() as conn:
+                async with AsyncSession(self.engine) as async_session:
+                    result = await async_session.execute(select(model).where(model.id == id))
+                    obj = result.scalars().first()
+                    return instance_to_dict(obj)
+                
+    async def set_object_to_table(self, model, o):
+        async with AsyncSession(self.engine) as async_session:
+            result = await async_session.execute(select(model).where(model.id == o['id']))
+            obj = result.scalars().first()
+            if obj:
+                for key, value in o.items():
+                    setattr(obj, key, value)
+            else:
+                obj = model(**o)
+                async_session.add(obj)
+            await async_session.commit()

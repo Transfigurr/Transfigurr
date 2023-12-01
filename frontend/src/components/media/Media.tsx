@@ -16,6 +16,7 @@ import useSeries from "../../hooks/useSeries";
 import useSingleSeries from "../../hooks/useSingleSeries";
 const ExplorerComponent = () => {
 	const series = useSeries();
+	console.log(series);
 
 	const leftToolBarItems: any = [
 		<ToolBarItem text="Update" icon={<SyncIcon fontSize="large" />} />,
@@ -48,8 +49,11 @@ const ExplorerComponent = () => {
 				<div className={styles.contentContainer}>
 					<div className={styles.content}>
 						{series.map((value) => (
-							<div className={styles.poster} onClick={() => posterClick(value)}>
-								<PosterComponent name={value} />
+							<div
+								className={styles.poster}
+								onClick={() => posterClick(value["name"])}
+							>
+								<PosterComponent name={value["name"]} />
 							</div>
 						))}
 					</div>

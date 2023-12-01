@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 const useSingleSeries = (series_name: any) => {
 	const [socket, setSocket] = useState(null);
 	const [series, setSeries] = useState({});
-	const [shouldSubscribe, setShouldSubscribe] = useState(true); // Flag to control subscription
 
 	useEffect(() => {
 		// Create a new WebSocket connection when the component mounts
@@ -18,7 +17,7 @@ const useSingleSeries = (series_name: any) => {
 
 		// Event handler for received messages
 		newSocket.onmessage = (event: any) => {
-			if (newSocket.readyState === WebSocket.OPEN && shouldSubscribe) {
+			if (newSocket.readyState === WebSocket.OPEN) {
 				setSeries(JSON.parse(event.data));
 			}
 		};
@@ -35,9 +34,9 @@ const useSingleSeries = (series_name: any) => {
 		return () => {
 			newSocket.close();
 		};
-	}, [series_name, shouldSubscribe]); // Include series_name and shouldSubscribe in the dependency array
+	}, [series_name]); // Include series_name and shouldSubscribe in the dependency array
 	// Expose the socket and queue state to the components using this hook
-	return { series, setShouldSubscribe };
+	return series;
 };
 
 export default useSingleSeries;

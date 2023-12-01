@@ -1,7 +1,7 @@
 import asyncio
 import json
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
-from src.api.routes.settings import getSettings
+from src.api.routes.settings import get_all_settings
 from src.api.utils import get_config_folder, open_json
 from src.global_state import GlobalState
 
@@ -14,7 +14,7 @@ async def settingsWS(websocket: WebSocket):
     try:
         while True:
             # Convert the entire queue to a JSON string
-            settings_json = await open_json(await getSettings())
+            settings_json = await open_json(await get_all_settings())
             try:
                 # Send the JSON string to the client
                 await websocket.send_text(json.dumps(settings_json))

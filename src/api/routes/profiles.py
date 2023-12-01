@@ -1,24 +1,20 @@
 
 from fastapi import APIRouter, Request
 from src.global_state import GlobalState
+from src.models.profile_model import profile_model
 
-from src.api.utils import get_config_folder, open_json, write_json
 router = APIRouter()
-
 global_state = GlobalState()
 
-# Profiles
 @router.get("/api/profiles")
-async def getProfiles():
-    return await global_state.get_profiles()
+async def get_all_profiles():
+    return await global_state.get_all_from_table(profile_model) 
 
+@router.get("/api/profiles/{profile_id}")
+async def get_profile(profile_id):
+    return await global_state.get_object_from_table(profile_model, profile_id) 
 
-
-@router.put("/api/profiles/{profile_id}")
-async def updateProfile(profile_id, request: Request):
-    profiles = await getProfiles()
-    req = await request.json()
-    newProfile = req['profile']
-    profiles[profile_id] = newProfile
-    await global_state.set_profiles(profiles)
-    return
+@router.put('/api/profiles')
+async def set_profile(request: Request):
+    profile = await request.json()
+    return await global_state.set_object_to_table(profile_model, profile) 

@@ -12,18 +12,15 @@ import Modal from "../modal/Modal";
 import Season from "../season/Season";
 import useProfilesAPI from "../../hooks/useProfilesAPI";
 import useSingleSeries from "../../hooks/useSingleSeries";
-import useMetadata from "../../hooks/useMetadata";
 
 const Series = ({ series_name }: any) => {
 	series_name = series_name.replace(/-/g, " ");
 	const [modalType, setModalType] = useState("");
 	const profiles: any = useProfilesAPI();
 
-	const { series, setShouldSubscribe }: any = useSingleSeries(series_name);
-	const metadata: any = useMetadata(series_name);
+	const series: any = useSingleSeries(series_name);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const handleEditClick = () => {
-		setShouldSubscribe(false);
 		setContent({
 			monitored: series?.monitored,
 			profile_id: series?.profile_id,
@@ -51,18 +48,18 @@ const Series = ({ series_name }: any) => {
 		<ToolBarItem text="Filter" icon={<FilterAltIcon fontSize="medium" />} />,
 	];
 
-	const status = metadata?.status;
-	const network = metadata?.networks;
-	const genre = metadata?.genre;
-	const firstAirDate = metadata?.first_air_date?.split("-")[0].trim();
-	const lastAirDate = metadata?.last_air_date?.split("-")[0].trim();
-	const overview = metadata?.overview;
+	const status = series?.status;
+	const network = series?.networks;
+	const genre = series?.genre;
+	const firstAirDate = series?.first_air_date?.split("-")[0].trim();
+	const lastAirDate = series?.last_air_date?.split("-")[0].trim();
+	const overview = series?.overview;
 	const runYears =
 		status === "Ended" ? firstAirDate + "-" + lastAirDate : firstAirDate + "-";
 	const seasons: any = [];
-	if (metadata) {
-		for (let seasonNumber in metadata?.seasons) {
-			seasons.unshift(<Season seasonData={metadata?.seasons[seasonNumber]} />);
+	if (series) {
+		for (let seasonNumber in series?.seasons) {
+			seasons.unshift(<Season seasonData={series?.seasons[seasonNumber]} />);
 		}
 	} else {
 		for (let seasonNumber in series?.seasons) {
@@ -78,7 +75,6 @@ const Series = ({ series_name }: any) => {
 			},
 			body: JSON.stringify(content),
 		});
-		setShouldSubscribe(true);
 		setIsModalOpen(false);
 	};
 	const [content, setContent] = useState({
@@ -97,7 +93,7 @@ const Series = ({ series_name }: any) => {
 				<div className={styles.modalBackdrop}>
 					<div className={styles.modalContent}>
 						<Modal
-							header={"Edit - " + metadata?.name}
+							header={"Edit - " + series?.name}
 							type={"edit"}
 							isOpen={isModalOpen}
 							setIsOpen={setIsModalOpen}
@@ -105,7 +101,6 @@ const Series = ({ series_name }: any) => {
 							data={profiles}
 							content={content}
 							setContent={setContent}
-							setShouldSubscribe={setShouldSubscribe}
 						/>
 					</div>
 				</div>
@@ -132,10 +127,10 @@ const Series = ({ series_name }: any) => {
 						alt={"poster"}
 					/>
 					<div className={styles.details}>
-						<div className={styles.titleRow}>{metadata?.name}</div>
+						<div className={styles.titleRow}>{series?.name}</div>
 						<div className={styles.seriesDetails}>
 							<span className={styles.runtime}>
-								{metadata?.episode_run_time} Minutes
+								{series?.episode_run_time} Minutes
 							</span>
 							<span className={styles.genre}>{genre}</span>
 							<span className={styles.runYears}>{runYears}</span>

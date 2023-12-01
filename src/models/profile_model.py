@@ -1,9 +1,13 @@
 from dataclasses import dataclass
+from sqlalchemy import Column, Integer, String
+
+from src.models.base import Base
 
 @dataclass
-class profile_model:
-    id: int = None
-    name: str = None
-    codec: str = None
-    codecs: list = None
-    speed: str = None
+class profile_model(Base):
+    __tablename__ = 'profiles'
+
+    id: int = Column(Integer, primary_key=True)
+    name: str = Column(String)
+    codec: str = Column(String)
+    speed: str = Column(String)

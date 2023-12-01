@@ -1,21 +1,18 @@
-from fastapi import APIRouter, Request
-
-from src.api.utils import get_config_folder, open_json, write_json
-
+from fastapi import APIRouter
 from src.global_state import GlobalState
+from src.models.settings_model import settings_model
 
-global_state = GlobalState()
 router = APIRouter()
-
-
+global_state = GlobalState()
 
 @router.get("/api/settings")
-async def getSettings():
-    return await global_state.get_settings()
+async def get_all_settings():
+    return await global_state.get_all_from_table(settings_model) 
 
-@router.put("/api/settings")
-async def updateSettings(request: Request):
-    req = await request.json()
-    newSettings = req['settings']
-    await global_state.set_settings(newSettings)
-    return
+@router.get("/api/settings/{settings_id}")
+async def get_settings(settings_id):
+    return await global_state.get_object_from_table(settings_model, settings_id) 
+
+@router.put('/api/settings/{settings_id}')
+async def set_settings(settings_id):
+    return await global_state.set_object_to_table(settings_model, settings_id) 

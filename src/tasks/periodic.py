@@ -3,12 +3,10 @@ from functools import partial
 import os
 from fastapi import BackgroundTasks 
 import ffmpeg
-from src.api.routes.profiles import getProfiles
+from src.api.routes.profiles import get_all_profiles
 from src.api.routes.scan import scan_all_series, scan_queue
 from src.api.utils import get_config_folder, get_root_folder, get_transcode_folder, open_json, write_json
-from src.global_state import GlobalState
 
-global_state = GlobalState()
 
 
 async def scan_queue_periodic():
@@ -18,8 +16,9 @@ async def scan_queue_periodic():
 
 async def process_episodes_in_queue_periodic():
     print("process epi task started")
+    return
     while True:
-        q = await global_state.get_queue()
+        q = await get_queue()
         w = True
         while q and w:
             await asyncio.sleep(5)
@@ -30,7 +29,7 @@ async def process_episodes_in_queue_periodic():
 
 async def process_episode(episode):
 
-    profiles = await getProfiles()
+    profiles = await get_all_profiles()
     profile = profiles[episode['profile']]
     file_path = episode['episode']['path']
     file_name = episode['episode']['filename']

@@ -31,6 +31,11 @@ async def get_root_folder():
     root_folder = current_file.parents[2]
     return str(root_folder)
 
+def get_root_folder2():
+    current_file = Path(__file__).resolve()
+    root_folder = current_file.parents[2]
+    return str(root_folder)
+
 async def get_config_folder():
     return await get_root_folder() + '/config'
 

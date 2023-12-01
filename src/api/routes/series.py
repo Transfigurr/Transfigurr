@@ -1,21 +1,19 @@
 
-import os
-from fastapi import APIRouter, Request
+from fastapi import APIRouter
 from src.global_state import GlobalState
+from src.models.series_model import series_model
 
-from src.api.utils import get_config_folder, get_series_metadata_folder, open_json, write_json
 router = APIRouter()
-
 global_state = GlobalState()
 
-# Profiles
-@router.get("/api/profiles")
-async def getProfiles():
-    return await global_state.get_profiles()
+@router.get("/api/series")
+async def get_all_series():
+    return await global_state.get_all_from_table(series_model) 
 
+@router.get("/api/series/{series_name}")
+async def get_series(series_name):
+    return await global_state.get_object_from_table(series_model, series_name) 
 
-
-@router.put("/api/series/{series_name}")
-async def updateSeries(series_name, request: Request):
-    await global_state.set_series_config(series_name, await request.json())
-    return
+@router.put('/api/series/{series_name}')
+async def set_series(series_name):
+    return await global_state.set_object_to_table(series_model, series_name) 

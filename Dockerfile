@@ -30,9 +30,13 @@ COPY --from=backend / /
 # Set the working directory to the root of the project
 WORKDIR /
 
-
 # Install uvicorn in the final stage
 RUN pip install -r src/requirements.txt
+
+# Initialize the database
+RUN mkdir -p /config/db
+RUN touch /config/db/database.db
+RUN python src/init_db.py
 
 # Expose the port the app runs on
 EXPOSE 8000

@@ -6,4 +6,6 @@ requests
 httpx
 pytest
 aiofiles
-motor
+databases[sqlite]
+sqlalchemy
+greenlet

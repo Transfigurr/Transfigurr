@@ -11,11 +11,9 @@ const Modal = ({
 	onSave,
 	content,
 	setContent,
-	setShouldSubscribe,
 }: any) => {
 	const onClose = () => {
 		setIsOpen(false);
-		setShouldSubscribe(true);
 	};
 
 	const onDelete = () => {};
@@ -25,13 +23,11 @@ const Modal = ({
 
 		const handleKeyDown = (event: KeyboardEvent) => {
 			if (event.key === "Escape") {
-				setShouldSubscribe(true);
 				setIsOpen(false);
 			}
 		};
 		const handleOutsideClick = (event: any) => {
 			if (event.target.classList.value.includes(modalBackdropClass)) {
-				setShouldSubscribe(true);
 				setIsOpen(false);
 			}
 		};
