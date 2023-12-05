@@ -2,18 +2,17 @@ import asyncio
 import json
 import logging
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
-from src.api.routes.queue_routes import get_all_queue, get_queue
-router = APIRouter()
+from src.api.controllers.episode_controller import get_all_episodes, get_episode
 
-@router.websocket("/ws/queue/{queue_id}")
-async def queue_websocket(websocket: WebSocket, queue_id):
+router = APIRouter()
+@router.websocket("/ws/episodes/{episode_id}")
+async def series_websocket(websocket: WebSocket, series_id):
     try:
         await websocket.accept()
         while True:
-            queue_json = json.dumps(await get_queue(queue_id))
-            await websocket.send_text(queue_json)
+            data = json.dumps(await get_episode(series_id))
+            await websocket.send_text(data)
             await asyncio.sleep(10)
-
     except WebSocketDisconnect:
         logging.info("WebSocket disconnected")
     except asyncio.CancelledError:
@@ -22,13 +21,13 @@ async def queue_websocket(websocket: WebSocket, queue_id):
         logging.error(f"Error occurred: {e}")
         await websocket.close(code=1000)
 
-@router.websocket("/ws/queue")
-async def queue_websocket(websocket: WebSocket):
+@router.websocket("/ws/episodes")
+async def series_websocket(websocket: WebSocket):
     try:
         await websocket.accept()
         while True:
-            queue_json = json.dumps(await get_all_queue())
-            await websocket.send_text(queue_json)
+            data = json.dumps(await get_all_episodes())
+            await websocket.send_text(data)
             await asyncio.sleep(10)
 
     except WebSocketDisconnect:

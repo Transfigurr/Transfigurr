@@ -4,8 +4,9 @@ import useSpeeds from "../../hooks/useSpeeds";
 
 const ProfileModal = ({ content, setContent }: any) => {
 	const codecs = useCodecs();
-	const speeds = useSpeeds();
+	const speeds: any = [];
 	console.log(codecs);
+	console.log(speeds);
 	return (
 		<div className={styles.content}>
 			<label>
@@ -23,18 +24,27 @@ const ProfileModal = ({ content, setContent }: any) => {
 					onChange={(e) => setContent({ ...content, codec: e.target.value })}
 				>
 					{codecs.map((codec: any) => (
-						<option value={codec}>{codec}</option>
+						<option value={codec.id}>{codec.name}</option>
 					))}
 				</select>
 			</label>
 			<label>
-				Codecs to encode
+				Wanted Codec
 				<select
+					multiple
 					value={content.codecs}
-					onChange={(e) => setContent({ ...content, codecs: e.target.value })}
+					onChange={(e) => {
+						const selectedValues = Array.from(
+							e.target.selectedOptions,
+							(option) => option.value
+						);
+						setContent({ ...content, codecs: selectedValues });
+					}}
 				>
 					{codecs.map((codec: any) => (
-						<option value={codec}>{codec}</option>
+						<option key={codec.id} value={codec.id}>
+							{codec.name}
+						</option>
 					))}
 				</select>
 			</label>

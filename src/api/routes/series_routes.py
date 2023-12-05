@@ -1,19 +1,16 @@
 
-from fastapi import APIRouter
-from src.global_state import GlobalState
-from src.models.series import Series
-
+from fastapi import APIRouter, Request
+from src.api.controllers.series_controller import get_all_series, get_full_series, get_series, set_series
 router = APIRouter()
-global_state = GlobalState()
 
 @router.get("/api/series")
-async def get_all_series():
-    return await global_state.get_all_from_table(Series) 
+async def get_all_series_route():
+    return await get_all_series()
 
-@router.get("/api/series/{series_name}")
-async def get_series(series_name):
-    return await global_state.get_object_from_table(Series, series_name) 
+@router.get("/api/series/{series_id}")
+async def get_series_route(series_id):
+    return await get_series(series_id) 
 
-@router.put('/api/series/{series_name}')
-async def set_series(series_name):
-    return await global_state.set_object_to_table(Series, series_name) 
+@router.put('/api/series/{series_id}')
+async def set_series_route(request: Request):
+    return await set_series(await request.json())

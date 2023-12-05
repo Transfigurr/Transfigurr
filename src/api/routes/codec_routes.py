@@ -1,37 +1,9 @@
 
-import json
 from fastapi import APIRouter
+
+from src.api.controllers.codec_controller import get_all_codecs
 router = APIRouter()
 
-
-default_codecs = [
-    "Any",
-    "264",
-    "265",
-    "266"
-]
-
-default_speeds = [
-    "Any",
-    "ultrafast",
-    "superfast",
-    "veryfast",
-    "faster",
-    "fast",
-    "medium",
-    "slow",
-    "slower",
-    "veryslow",
-    "placebo"
-]
-
-
 @router.get("/api/codecs")
-async def getCodecs():
-    return default_codecs    
-
-
-
-@router.get("/api/codecs/speeds")
-async def get_codec_speeds():
-    return ['ultrafast',"superfast",'veryfast','faster', 'fast', 'medium', 'slow', 'slower', 'veryslow', 'placebo']
+async def get_all_codecs_route():
+    return await get_all_codecs()    

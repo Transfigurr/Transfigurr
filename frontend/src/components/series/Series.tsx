@@ -12,23 +12,26 @@ import Modal from "../modal/Modal";
 import Season from "../season/Season";
 import useProfilesAPI from "../../hooks/useProfilesAPI";
 import useSingleSeries from "../../hooks/useSingleSeries";
-
+import useSeasons from "../../hooks/useSeason";
+import useEpisodes from "../../hooks/useEpisodes";
 const Series = ({ series_name }: any) => {
 	series_name = series_name.replace(/-/g, " ");
 	const [modalType, setModalType] = useState("");
+
 	const profiles: any = useProfilesAPI();
 
 	const series: any = useSingleSeries(series_name);
+	console.log(series);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const handleEditClick = () => {
 		setContent({
 			monitored: series?.monitored,
 			profile_id: series?.profile_id,
+			id: series?.id,
 		});
 		setModalType("edit");
 		setIsModalOpen(true);
 	};
-	console.log(series);
 	const leftToolBarItems: any = [
 		<ToolBarItem text="Update" icon={<SyncIcon fontSize="large" />} />,
 		<ToolBarItem text="RSS Sync" icon={<RssFeedIcon fontSize="medium" />} />,
@@ -56,18 +59,10 @@ const Series = ({ series_name }: any) => {
 	const overview = series?.overview;
 	const runYears =
 		status === "Ended" ? firstAirDate + "-" + lastAirDate : firstAirDate + "-";
-	const seasons: any = [];
-	if (series) {
-		for (let seasonNumber in series?.seasons) {
-			seasons.unshift(<Season seasonData={series?.seasons[seasonNumber]} />);
-		}
-	} else {
-		for (let seasonNumber in series?.seasons) {
-			seasons.unshift(<Season seasonData={series?.seasons[seasonNumber]} />);
-		}
-	}
 
 	const onSave = async () => {
+		console.log(content);
+		content.id = series.id;
 		await fetch(`http://localhost:8000/api/series/${series.name}`, {
 			method: "PUT",
 			headers: {
@@ -80,6 +75,7 @@ const Series = ({ series_name }: any) => {
 	const [content, setContent] = useState({
 		monitored: series?.monitored,
 		profile_id: series?.profile_id,
+		id: series?.id,
 	});
 	return (
 		<div className={styles.series}>
@@ -109,7 +105,7 @@ const Series = ({ series_name }: any) => {
 				<img
 					className={styles.backdrop}
 					src={
-						"http://localhost:8000/config/metadata/series/" +
+						"http://localhost:8000/config/artwork/series/" +
 						series_name +
 						"/backdrop.jpg"
 					}
@@ -120,7 +116,7 @@ const Series = ({ series_name }: any) => {
 					<img
 						className={styles.poster}
 						src={
-							"http://localhost:8000/config/metadata/series/" +
+							"http://localhost:8000/config/artwork/series/" +
 							series_name +
 							"/poster.jpg"
 						}
@@ -154,7 +150,11 @@ const Series = ({ series_name }: any) => {
 					</div>
 				</div>
 			</div>
-			<div className={styles.seasonsContainer}>{seasons}</div>
+			<div className={styles.seasonsContainer}>
+				{Object.values(series.seasons || {}).map((season: any) => {
+					return <Season season={season} />;
+				})}
+			</div>
 		</div>
 	);
 };

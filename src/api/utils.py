@@ -8,6 +8,8 @@ import os
 import aiofiles
 import aiofiles.os as aos
 
+
+
 file_locks = defaultdict(asyncio.Lock)
 
 async def verify_folders():
@@ -38,6 +40,9 @@ def get_root_folder2():
 
 async def get_config_folder():
     return await get_root_folder() + '/config'
+
+async def get_series_artwork_folder():
+    return await get_root_folder() + '/config/artwork/series'
 
 
 async def get_series_folder():
@@ -78,3 +83,9 @@ async def analyze_media_file(file_path):
     except Exception as e:
         print(f"Error analyzing the media file: {e}")
         return None
+    
+
+
+
+
+    

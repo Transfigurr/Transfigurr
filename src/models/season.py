@@ -16,6 +16,3 @@ class Season(Base):
     episode_count: str = Column(Integer)
 
     series_id: str = Column(String, ForeignKey('series.id'))
-    series = relationship('Series', back_populates='seasons')
-
-    episodes = relationship('Episode', back_populates='season')

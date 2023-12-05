@@ -1,34 +1,35 @@
 import asyncio
 import os
-from fastapi import BackgroundTasks, FastAPI, staticfiles
-from dotenv import dotenv_values
+from fastapi import FastAPI, staticfiles
 from fastapi.middleware.cors import CORSMiddleware
-from src.api.routes import codec_routes, profile_routes, scan_routes, series_routes, settings_routes
 from fastapi.staticfiles import StaticFiles
 from starlette.responses import FileResponse
-from src.api.utils import verify_folders
-from src.api.ws import history_websocket, profiles_websocket, queue_websocket, series_websocket, settings_websocket
-from src.tasks.periodic import process_episodes_in_queue_periodic, scan_queue, scan_queue_periodic
+from src.api.utils import get_root_folder
+
+from src.api.routes import codec_routes, profile_routes, scan_routes, series_routes, settings_routes, season_routes
+from src.api.websockets import episode_websocket, profiles_websocket, queue_websocket, series_websocket, settings_websocket, season_websocket
+from src.tasks.periodic import process_episodes_in_queue_periodic, scan_queue_periodic, start_watchdog
+
+# Create app
 app = FastAPI()
-    
-# routes
-#app.include_router(queue.router)
-#app.include_router(history.router)
-app.include_router(profiles_websocket.router)
-app.include_router(series_routes.router)
 
-
+# Add Routes
+app.include_router(season_routes.router)
 app.include_router(scan_routes.router)
 app.include_router(settings_routes.router)
 app.include_router(codec_routes.router)
+app.include_router(profile_routes.router)
+app.include_router(series_routes.router)
 
-# ws
+# Add Websockets
 app.include_router(series_websocket.router)
 app.include_router(settings_websocket.router)
-app.include_router(profile_routes.router)
+app.include_router(season_websocket.router)
+app.include_router(queue_websocket.router)
+app.include_router(profiles_websocket.router)
+app.include_router(episode_websocket.router)
 
-
-
+# CORS
 origins = [
     "http://localhost.tiangolo.com",
     "https://localhost.tiangolo.com",
@@ -38,6 +39,7 @@ origins = [
 
 ]
 
+# Add CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -51,30 +53,17 @@ os.makedirs("../config", exist_ok=True)
 app.mount("/config", staticfiles.StaticFiles(directory="config"), name="config")
 app.mount("/static", StaticFiles(directory="frontend/build/static"), name="static")
 
-
-
-async def test():
-    while True:
-        # Your scanning logic here
-        await asyncio.sleep(10)  # sleep for 10 seconds
-
-async def test2():
-    while True:
-        print("Processing episodes...")
-        # Your processing logic here
-        await asyncio.sleep(10)  # sleep for 1
-
-
-
-
+# Start tasks
 @app.on_event("startup")
 async def startup_event():
-    task1 = asyncio.create_task(scan_queue_periodic())
-    task2 = asyncio.create_task(process_episodes_in_queue_periodic())
+    asyncio.create_task(scan_queue_periodic())
+    asyncio.create_task(process_episodes_in_queue_periodic())
 
+    loop = asyncio.get_event_loop()
+    loop.run_in_executor(None, start_watchdog, await get_root_folder() + '/series')
 
-
-# catch all routes for static html
+    
+# Serve frontend
 @app.get("/")
 @app.get("/{path:path}")
 async def index():

@@ -18,7 +18,7 @@ const PosterComponent = ({ name }: any) => {
 					<img
 						className={styles.img}
 						src={
-							"http://localhost:8000/config/metadata/series/" +
+							"http://localhost:8000/config/artwork/series/" +
 							name +
 							"/poster.jpg"
 						}

@@ -9,7 +9,7 @@ from src.seeds.seed_settings import seed_settings
 
 
 from src.models.codec import Codec
-from src.models.profile import Profile
+from src.models.profile import Profile, profile_codec
 from src.models.setting import Setting
 from src.models.series import Series
 from src.models.season import Season

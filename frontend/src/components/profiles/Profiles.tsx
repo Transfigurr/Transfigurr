@@ -6,6 +6,7 @@ import useProfiles from "../../hooks/useProfiles";
 import ToolBar from "../ToolBar/ToolBar";
 import ToolBarItem from "../ToolBarItem/ToolBarItem";
 import SyncIcon from "@mui/icons-material/Sync";
+import useCodecs from "../../hooks/useCodecs";
 
 const Profiles = () => {
 	const profiles: any = useProfiles();
@@ -18,14 +19,15 @@ const Profiles = () => {
 			id: profile?.id,
 			name: profile?.name,
 			codec: profile?.codec,
-			codecs: profile?.codecs,
+			codecs: [],
 			speed: profile?.speed,
 		});
 		setModalType("profile");
 		setIsModalOpen(true);
 	};
+	const codecs = useCodecs();
 	const onModalSave = async () => {
-		await fetch(`http://localhost:8000/api/profiles`, {
+		await fetch(`http://localhost:8000/api/profiles/${content.id}`, {
 			method: "PUT",
 			headers: {
 				"Content-Type": "application/json",
@@ -40,7 +42,7 @@ const Profiles = () => {
 		id: String,
 		name: selectedProfile?.name,
 		codec: selectedProfile?.codec,
-		codecs: selectedProfile?.codecs,
+		codecs: [],
 		speed: selectedProfile?.speeds,
 	});
 	const leftToolBarItems: any = [

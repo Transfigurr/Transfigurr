@@ -24,5 +24,4 @@ class Series(Base):
     last_air_date: str = Column(String)
     networks: List[str] = Column(String)
     overview: str = Column(String)
-    seasons = relationship('Season', back_populates='series', cascade="all, delete-orphan")  
     profile_id: int = Column(Integer, ForeignKey('profiles.id'))
