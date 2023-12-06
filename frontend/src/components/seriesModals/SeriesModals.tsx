@@ -7,6 +7,8 @@ const SeriesModals = ({ type, content, setContent, data }: any) => {
 		for (let i in p) {
 			profiles.push(p[i]);
 		}
+		console.log(content);
+		console.log(data);
 		return (
 			<div className={styles.content}>
 				<div>

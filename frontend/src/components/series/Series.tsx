@@ -17,13 +17,14 @@ import useEpisodes from "../../hooks/useEpisodes";
 const Series = ({ series_name }: any) => {
 	series_name = series_name.replace(/-/g, " ");
 	const [modalType, setModalType] = useState("");
-
 	const profiles: any = useProfilesAPI();
 
 	const series: any = useSingleSeries(series_name);
 	console.log(series);
+
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const handleEditClick = () => {
+		console.log(series);
 		setContent({
 			monitored: series?.monitored,
 			profile_id: series?.profile_id,
@@ -61,7 +62,7 @@ const Series = ({ series_name }: any) => {
 		status === "Ended" ? firstAirDate + "-" + lastAirDate : firstAirDate + "-";
 
 	const onSave = async () => {
-		console.log(content);
+		console.log("content", content);
 		content.id = series.id;
 		await fetch(`http://localhost:8000/api/series/${series.name}`, {
 			method: "PUT",

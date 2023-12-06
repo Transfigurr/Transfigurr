@@ -6,8 +6,9 @@ from fastapi.staticfiles import StaticFiles
 from starlette.responses import FileResponse
 from src.api.utils import get_root_folder
 
-from src.api.routes import codec_routes, profile_routes, scan_routes, series_routes, settings_routes, season_routes
+from src.api.routes import codec_routes, encoder_routes, profile_routes, scan_routes, series_routes, settings_routes, season_routes
 from src.api.websockets import episode_websocket, profiles_websocket, queue_websocket, series_websocket, settings_websocket, season_websocket
+from src.models import container
 from src.tasks.periodic import process_episodes_in_queue_periodic, scan_queue_periodic, start_watchdog
 
 # Create app
@@ -20,6 +21,8 @@ app.include_router(settings_routes.router)
 app.include_router(codec_routes.router)
 app.include_router(profile_routes.router)
 app.include_router(series_routes.router)
+app.include_router(encoder_routes.router)
+
 
 # Add Websockets
 app.include_router(series_websocket.router)

@@ -5,13 +5,14 @@ from src.api.controllers.episode_controller import get_episode, remove_episode, 
 from src.api.controllers.season_controller import remove_season, set_season
 from src.api.controllers.series_controller import get_all_series, get_full_series, get_series, remove_series, set_series
 from src.api.routes.scan_routes import get_series_metadata
-from src.api.utils import analyze_media_file, get_series_folder
+from src.api.utils import analyze_media_file, get_series_folder, verify_folders
 from src.models.episode import Episode
 from src.models.season import Season
 from src.models.series import Series
 
 
 async def scan_all_series():
+    await verify_folders()
     series_folder = await get_series_folder()
     for series_name in os.listdir(series_folder):
         if series_name == ".DS_Store":
@@ -24,7 +25,8 @@ async def scan_all_series():
 async def scan_series(series_id):
     if series_id in [".DS_Store", '']:
         return
-
+    
+    old_series = await get_series(series_id)
     series_path = os.path.join(await get_series_folder(), series_id)
     if not os.path.isdir(series_path):
         return
@@ -34,7 +36,8 @@ async def scan_series(series_id):
     series = Series(**series_dict)
     series.id = series_id
     series.name = series_id
-    series.profile_id = 0
+    if not old_series or not old_series['profile_id']:
+        series.profile_id = 0
     if not series.name:
         missing_metadata = True
     pattern = re.compile(r"(?:S(\d{2})E(\d{2})|E(\d{2}))")

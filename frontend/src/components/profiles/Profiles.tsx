@@ -7,12 +7,14 @@ import ToolBar from "../ToolBar/ToolBar";
 import ToolBarItem from "../ToolBarItem/ToolBarItem";
 import SyncIcon from "@mui/icons-material/Sync";
 import useCodecs from "../../hooks/useCodecs";
+import useContainers from "../../hooks/useContainers";
 
 const Profiles = () => {
 	const profiles: any = useProfiles();
 	const [modalType, setModalType] = useState("");
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [selectedProfile, setSelectedProfile] = useState<any>({});
+	const containers = useContainers();
 	const handleProfileClick = (profile: any) => {
 		setSelectedProfile(profile);
 		setContent({
@@ -21,13 +23,15 @@ const Profiles = () => {
 			codec: profile?.codec,
 			codecs: [],
 			speed: profile?.speed,
+			container: profile?.container,
+			extension: profile?.extension,
 		});
 		setModalType("profile");
 		setIsModalOpen(true);
 	};
 	const codecs = useCodecs();
 	const onModalSave = async () => {
-		await fetch(`http://localhost:8000/api/profiles/${content.id}`, {
+		await fetch(`http://localhost:8000/api/profiles`, {
 			method: "PUT",
 			headers: {
 				"Content-Type": "application/json",
@@ -44,6 +48,8 @@ const Profiles = () => {
 		codec: selectedProfile?.codec,
 		codecs: [],
 		speed: selectedProfile?.speeds,
+		container: selectedProfile?.container,
+		extension: selectedProfile?.extension,
 	});
 	const leftToolBarItems: any = [
 		<ToolBarItem text="Advanced" icon={<SyncIcon fontSize="large" />} />,

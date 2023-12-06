@@ -8,7 +8,7 @@ class Queue:
 
     @classmethod
     async def enqueue(cls, episode):
-        episode_id = episode['id']  # replace 'id' with the actual key
+        episode_id = episode['id']
         if episode_id not in cls.items:
             cls.items.add(episode_id)
             loop = asyncio.get_event_loop()
@@ -19,7 +19,7 @@ class Queue:
         if not cls.queue.empty():
             loop = asyncio.get_event_loop()
             episode = await loop.run_in_executor(None, cls.queue.get)
-            episode_id = episode['id']  # replace 'id' with the actual key
+            episode_id = episode['id']
             cls.items.remove(episode_id)
             return episode
         
@@ -27,6 +27,13 @@ class Queue:
     def to_list(cls):
         items = list(cls.queue.queue)
         return items
+    
+    @classmethod
+    def peek(cls, index=0):
+        try:
+            return list(cls.queue.queue)[index]
+        except IndexError:
+            return None
 
 # Global instance of Queue
 queue_instance = Queue()

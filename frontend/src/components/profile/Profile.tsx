@@ -1,6 +1,6 @@
 import styles from "./Profile.module.scss";
 import AddIcon from "@mui/icons-material/Add";
-const Profile = ({ name, type = "", codecs = [] }: any) => {
+const Profile = ({ name, type = "", codecs }: any) => {
 	return (
 		<div className={styles.profile} key={name}>
 			{type === "add" ? (
