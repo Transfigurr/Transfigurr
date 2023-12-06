@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 const useQueue = () => {
 	const [socket, setSocket] = useState(null);
 	const [queue, setQueue] = useState([]);
-
 	useEffect(() => {
 		// Create a new WebSocket connection when the component mounts
 		const newSocket: any = new WebSocket("ws://localhost:8000/ws/queue");
@@ -35,7 +34,7 @@ const useQueue = () => {
 	}, []); // The empty dependency array ensures that this effect runs only once on mount
 
 	// Expose the socket and queue state to the components using this hook
-	return { queue };
+	return queue;
 };
 
 export default useQueue;

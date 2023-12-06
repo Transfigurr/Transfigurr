@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 const useHistory = () => {
 	const [socket, setSocket] = useState(null);
 	const [history, setHistory] = useState([]);
-
 	useEffect(() => {
 		// Create a new WebSocket connection when the component mounts
 		const newSocket: any = new WebSocket("ws://localhost:8000/ws/history");

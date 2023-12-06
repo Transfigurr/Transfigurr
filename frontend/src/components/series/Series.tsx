@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ToolBar from "../ToolBar/ToolBar";
 import styles from "./Series.module.scss";
 import ToolBarItem from "../ToolBarItem/ToolBarItem";
@@ -10,17 +10,29 @@ import SyncIcon from "@mui/icons-material/Sync";
 import SwitchLeftIcon from "@mui/icons-material/SwitchLeft";
 import Modal from "../modal/Modal";
 import Season from "../season/Season";
-import useProfiles from "../../hooks/useProfiles";
-
-const Series = ({ seriesName }: any) => {
+import useProfilesAPI from "../../hooks/useProfilesAPI";
+import useSingleSeries from "../../hooks/useSingleSeries";
+import useSeasons from "../../hooks/useSeason";
+import useEpisodes from "../../hooks/useEpisodes";
+const Series = ({ series_name }: any) => {
+	series_name = series_name.replace(/-/g, " ");
 	const [modalType, setModalType] = useState("");
-	const profiles = useProfiles();
+	const profiles: any = useProfilesAPI();
+
+	const series: any = useSingleSeries(series_name);
+	console.log(series);
+
+	const [isModalOpen, setIsModalOpen] = useState(false);
 	const handleEditClick = () => {
-		setContent({ monitored: false, profile: profile?.id });
+		console.log(series);
+		setContent({
+			monitored: series?.monitored,
+			profile_id: series?.profile_id,
+			id: series?.id,
+		});
 		setModalType("edit");
 		setIsModalOpen(true);
 	};
-
 	const leftToolBarItems: any = [
 		<ToolBarItem text="Update" icon={<SyncIcon fontSize="large" />} />,
 		<ToolBarItem text="RSS Sync" icon={<RssFeedIcon fontSize="medium" />} />,
@@ -40,58 +52,31 @@ const Series = ({ seriesName }: any) => {
 		<ToolBarItem text="Filter" icon={<FilterAltIcon fontSize="medium" />} />,
 	];
 
-	const [series, setSeries] = useState([]);
-	useEffect(() => {
-		fetch("http://localhost:8000/api/data/series")
-			.then((response) => response.json())
-			.then((data) => setSeries(data))
-			.catch((error) => console.error(error));
-	}, []);
-
-	seriesName = seriesName.replace(/-/g, " ");
-
-	const seriesData: any = series.filter(
-		(obj: any) => obj.name === seriesName
-	)[0];
-
-	const status = seriesData?.status;
-	const network = seriesData?.networks;
-	const genre = seriesData?.genre;
-	const firstAirDate = seriesData?.first_air_date?.split("-")[0].trim();
-	const lastAirDate = seriesData?.last_air_date?.split("-")[0].trim();
-	const overview = seriesData?.overview;
+	const status = series?.status;
+	const network = series?.networks;
+	const genre = series?.genre;
+	const firstAirDate = series?.first_air_date?.split("-")[0].trim();
+	const lastAirDate = series?.last_air_date?.split("-")[0].trim();
+	const overview = series?.overview;
 	const runYears =
 		status === "Ended" ? firstAirDate + "-" + lastAirDate : firstAirDate + "-";
 
-	const [isModalOpen, setIsModalOpen] = useState(false);
-	const seasons: any = [];
-	for (let seasonNumber in seriesData?.seasons) {
-		seasons.unshift(<Season seasonData={seriesData?.seasons[seasonNumber]} />);
-	}
-
 	const onSave = async () => {
-		seriesData.profile = content.profile;
-		for (const seasonNumber in seriesData["seasons"]) {
-			seriesData["seasons"][seasonNumber].profile = content.profile;
-			for (const episodeNumber in seriesData["seasons"][seasonNumber][
-				"episodes"
-			]) {
-				seriesData["seasons"][seasonNumber]["episodes"][episodeNumber].profile =
-					content.profile;
-			}
-		}
-		await fetch(`http://localhost:8000/api/series/${seriesData.name}`, {
+		console.log("content", content);
+		content.id = series.id;
+		await fetch(`http://localhost:8000/api/series/${series.name}`, {
 			method: "PUT",
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ series_data: seriesData }),
+			body: JSON.stringify(content),
 		});
+		setIsModalOpen(false);
 	};
-	const profile: any = profiles ? profiles[seriesData?.profile] : {};
 	const [content, setContent] = useState({
-		monitored: false,
-		profile: profile?.id,
+		monitored: series?.monitored,
+		profile_id: series?.profile_id,
+		id: series?.id,
 	});
 	return (
 		<div className={styles.series}>
@@ -105,12 +90,12 @@ const Series = ({ seriesName }: any) => {
 				<div className={styles.modalBackdrop}>
 					<div className={styles.modalContent}>
 						<Modal
-							header={"Edit - " + seriesData.name}
+							header={"Edit - " + series?.name}
 							type={"edit"}
 							isOpen={isModalOpen}
 							setIsOpen={setIsModalOpen}
 							onSave={onSave}
-							data={seriesData}
+							data={profiles}
 							content={content}
 							setContent={setContent}
 						/>
@@ -121,8 +106,8 @@ const Series = ({ seriesName }: any) => {
 				<img
 					className={styles.backdrop}
 					src={
-						"http://localhost:8000/config/metadata/series/" +
-						seriesName +
+						"http://localhost:8000/config/artwork/series/" +
+						series_name +
 						"/backdrop.jpg"
 					}
 					alt="backdrop"
@@ -132,27 +117,33 @@ const Series = ({ seriesName }: any) => {
 					<img
 						className={styles.poster}
 						src={
-							"http://localhost:8000/config/metadata/series/" +
-							seriesName +
+							"http://localhost:8000/config/artwork/series/" +
+							series_name +
 							"/poster.jpg"
 						}
 						alt={"poster"}
 					/>
 					<div className={styles.details}>
-						<div className={styles.titleRow}>{seriesData?.name}</div>
+						<div className={styles.titleRow}>{series?.name}</div>
 						<div className={styles.seriesDetails}>
 							<span className={styles.runtime}>
-								{seriesData?.episode_run_time} Minutes
+								{series?.episode_run_time} Minutes
 							</span>
 							<span className={styles.genre}>{genre}</span>
 							<span className={styles.runYears}>{runYears}</span>
 						</div>
 						<div className={styles.tags}>
-							<div className={styles.tag}>{seriesData?.series_path}</div>
+							<div className={styles.tag}>{series?.name}</div>
 
 							<div className={styles.tag}>Test GB</div>
-							<div className={styles.tag}>{profile?.name}</div>
-							<div className={styles.tag}>{"mono"}</div>
+							<div className={styles.tag}>
+								{series?.profile_id in profiles
+									? profiles[series?.profile_id].name
+									: ""}
+							</div>
+							<div className={styles.tag}>
+								{series?.monitored ? "Monitored" : "Unmonitored"}
+							</div>
 							<div className={styles.tag}>{status}</div>
 							<div className={styles.tag}>{network}</div>
 						</div>
@@ -160,7 +151,11 @@ const Series = ({ seriesName }: any) => {
 					</div>
 				</div>
 			</div>
-			<div className={styles.seasonsContainer}>{seasons}</div>
+			<div className={styles.seasonsContainer}>
+				{Object.values(series.seasons || {}).map((season: any) => {
+					return <Season season={season} />;
+				})}
+			</div>
 		</div>
 	);
 };

@@ -6,50 +6,61 @@ import useProfiles from "../../hooks/useProfiles";
 import ToolBar from "../ToolBar/ToolBar";
 import ToolBarItem from "../ToolBarItem/ToolBarItem";
 import SyncIcon from "@mui/icons-material/Sync";
+import useCodecs from "../../hooks/useCodecs";
+import useContainers from "../../hooks/useContainers";
 
 const Profiles = () => {
-	const profiles = useProfiles();
+	const profiles: any = useProfiles();
 	const [modalType, setModalType] = useState("");
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [selectedProfile, setSelectedProfile] = useState<any>({});
+	const containers = useContainers();
 	const handleProfileClick = (profile: any) => {
 		setSelectedProfile(profile);
 		setContent({
 			id: profile?.id,
 			name: profile?.name,
 			codec: profile?.codec,
-			codecs: profile?.codecs,
+			codecs: [],
 			speed: profile?.speed,
+			container: profile?.container,
+			extension: profile?.extension,
 		});
 		setModalType("profile");
 		setIsModalOpen(true);
 	};
+	const codecs = useCodecs();
 	const onModalSave = async () => {
-		await fetch(`http://localhost:8000/api/profiles/${content.id}`, {
+		await fetch(`http://localhost:8000/api/profiles`, {
 			method: "PUT",
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ profile: content }),
+			body: JSON.stringify(content),
 		});
+		setIsModalOpen(false);
+		console.log(content);
 	};
-
+	console.log(profiles);
 	const [content, setContent] = useState({
-		id: selectedProfile?.id,
+		id: String,
 		name: selectedProfile?.name,
 		codec: selectedProfile?.codec,
-		codecs: selectedProfile?.codecs,
+		codecs: [],
 		speed: selectedProfile?.speeds,
+		container: selectedProfile?.container,
+		extension: selectedProfile?.extension,
 	});
 	const leftToolBarItems: any = [
 		<ToolBarItem text="Advanced" icon={<SyncIcon fontSize="large" />} />,
 	];
-
-	const profilesArray: [] = [];
+	const profilesArray: any = [];
 
 	for (let i in profiles) {
 		profilesArray.push(profiles[i]);
 	}
+	console.log(profiles);
+	const dummy = (dummy: any) => {};
 
 	return (
 		<div className={styles.profiles}>
@@ -66,6 +77,7 @@ const Profiles = () => {
 							data={selectedProfile}
 							content={content}
 							setContent={setContent}
+							setShouldSubscribe={dummy}
 						/>
 					</div>
 				</div>

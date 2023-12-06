@@ -12,15 +12,11 @@ import RssFeedIcon from "@mui/icons-material/RssFeed";
 import SyncIcon from "@mui/icons-material/Sync";
 import SwitchLeftIcon from "@mui/icons-material/SwitchLeft";
 import { useEffect, useState } from "react";
+import useSeries from "../../hooks/useSeries";
+import useSingleSeries from "../../hooks/useSingleSeries";
 const ExplorerComponent = () => {
-	const [series, setSeries] = useState([]);
-
-	useEffect(() => {
-		fetch("http://localhost:8000/api/data/series")
-			.then((response) => response.json())
-			.then((data) => setSeries(data))
-			.catch((error) => console.error(error));
-	}, []);
+	const series = useSeries();
+	console.log(series);
 
 	const leftToolBarItems: any = [
 		<ToolBarItem text="Update" icon={<SyncIcon fontSize="large" />} />,
@@ -36,10 +32,10 @@ const ExplorerComponent = () => {
 		<ToolBarItem text="Filter" icon={<FilterAltIcon fontSize="medium" />} />,
 	];
 
-	const posterClick = (data: any) => {
-		if (data.name) {
-			data.name = "series/" + data.name.replace(/ /g, "-");
-			window.location.href = data.name;
+	const posterClick = (name: any) => {
+		if (name) {
+			name = "series/" + name.replace(/ /g, "-");
+			window.location.href = name;
 		}
 	};
 	return (
@@ -52,15 +48,20 @@ const ExplorerComponent = () => {
 			<div className={styles.mediaContent}>
 				<div className={styles.contentContainer}>
 					<div className={styles.content}>
-						{series.map((obj: any) => (
-							<div className={styles.poster} onClick={() => posterClick(obj)}>
-								<PosterComponent data={obj} />
+						{series.map((value) => (
+							<div
+								className={styles.poster}
+								onClick={() => posterClick(value["name"])}
+							>
+								<PosterComponent name={value["name"]} />
 							</div>
 						))}
 					</div>
 
 					<div className={styles.footerContent}>
-						<Footer data={series} />
+						{
+							//<Footer data={series} />
+						}
 					</div>
 				</div>
 				<JumpBar />

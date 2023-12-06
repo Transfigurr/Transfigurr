@@ -1,20 +1,15 @@
 import { useState } from "react";
 import styles from "./Season.module.scss";
-const Season = ({ seasonData }: any) => {
-	const episodes = [];
-	for (let i in seasonData["episodes"]) {
-		episodes.unshift(seasonData["episodes"][i]);
-	}
+const Season = ({ season }: any) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const onSeasonClick = () => {
 		setIsOpen(!isOpen);
 	};
-
 	return (
 		<div className={styles.season}>
 			<div className={styles.seasonHeader}>
 				<div className={styles.left}>
-					<div className={styles.seasonNumber}>{seasonData?.name}</div>
+					<div className={styles.seasonNumber}>{season?.name}</div>
 					<div className={styles.episodeRatio}>
 						{} / {}
 					</div>
@@ -44,7 +39,7 @@ const Season = ({ seasonData }: any) => {
 						</tr>
 					</thead>
 					<tbody>
-						{episodes.map((episode) => (
+						{Object.values(season.episodes || {}).map((episode: any) => (
 							<tr>
 								<td>{episode?.episode_number}</td>
 								<td>{episode?.episode_name}</td>

@@ -28,7 +28,7 @@ const MassEditor = () => {
 
 	const [series, setSeries] = useState([]);
 
-	const profiles = useProfiles();
+	const { profiles, setShouldSubscribe }: any = useProfiles();
 
 	useEffect(() => {
 		fetch("http://localhost:8000/api/data/series")
@@ -56,7 +56,11 @@ const MassEditor = () => {
 					{series?.map((s: any, index: any) => (
 						<tr>
 							<td>{s.name}</td>
-							<td>{profiles[s.profile]["name"]}</td>
+							<td>
+								{profiles && s.profile in profiles
+									? profiles[s.profile]["name"]
+									: ""}
+							</td>
 							<td>{s.series_path}</td>
 							<td>{s.size}</td>
 						</tr>

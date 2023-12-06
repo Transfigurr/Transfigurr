@@ -1,7 +1,12 @@
-uvicorn
+uvicorn[standard]
 fastapi
 ffmpeg-python
 python-dotenv
 requests
 httpx
 pytest
+aiofiles
+databases[sqlite]
+sqlalchemy
+greenlet
+watchdog

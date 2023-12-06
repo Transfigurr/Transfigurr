@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const useSettings = () => {
+const useSettingsAPI = () => {
 	const [settings, setSettings] = useState<[]>([]);
 	useEffect(() => {
 		fetch("http://localhost:8000/api/settings")
@@ -8,7 +8,6 @@ const useSettings = () => {
 			.then((data) => setSettings(data))
 			.catch((error) => console.error(error));
 	}, []);
-
 	return settings;
 };
-export default useSettings;
+export default useSettingsAPI;
