@@ -1,6 +1,7 @@
 import asyncio
 import json
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
+from src.api.controllers.history_controller import get_all_historys
 from src.global_state import GlobalState
 
 global_state = GlobalState()
@@ -11,7 +12,7 @@ async def history_websocket(websocket: WebSocket):
     try:
         while True:
             # Convert the entire queue to a JSON string
-            history_json = json.dumps(await global_state.get_history())
+            history_json = json.dumps(await get_all_historys())
             try:
                 # Send the JSON string to the client
                 await websocket.send_text(history_json)

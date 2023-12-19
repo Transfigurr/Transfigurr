@@ -1,13 +1,14 @@
 .media {
 	display: flex;
 	flex-direction: column;
-	height: 100vh;
+	height: 100%;
 	width: 100%;
 	.mediaContent {
 		display: flex;
 		flex-direction: row;
 		overflow: scroll;
 		background-color: #fafbfc;
+		height: 100%;
 
 		.contentContainer {
 			overflow: scroll;

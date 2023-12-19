@@ -36,21 +36,19 @@ async def validate_database_route():
     
 @router.get('/api/scan/queue')
 async def scan_queue():
-    await scan_all_series()
+    #await scan_all_series()
     episodes = await get_all_episodes()
     profiles = await get_all_profiles()
     codecs = await get_all_codecs_route()
     for episode in episodes:
         series = await get_series(episode['series_id'])
         profile_id = series['profile_id']
-        monitored = True
+        monitored = series['monitored']
         if not monitored:
             continue
         profile = profiles[profile_id]
         targets = profile['codecs']
-        
         wanted = profile['codec']
-
         if (episode['video_codec'] in targets or 'Any' in targets) and wanted != 'Any' and episode['video_codec'] != wanted:
             print('adding to queue',episode)
             await queue_instance.enqueue(episode)

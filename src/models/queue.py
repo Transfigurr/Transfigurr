@@ -5,6 +5,12 @@ class Queue:
     # Queue functionality
     queue = queue.Queue()
     items = set()
+    active = True
+    stage = 'idle'
+
+    processing = False
+    current_progress = 0
+    current_eta = 0
 
     @classmethod
     async def enqueue(cls, episode):

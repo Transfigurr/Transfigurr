@@ -58,13 +58,8 @@ const ExplorerComponent = () => {
 						))}
 					</div>
 
-					<div className={styles.footerContent}>
-						{
-							//<Footer data={series} />
-						}
-					</div>
+					<div className={styles.footerContent}>{<Footer />}</div>
 				</div>
-				<JumpBar />
 			</div>
 		</div>
 	);

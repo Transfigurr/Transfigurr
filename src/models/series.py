@@ -1,15 +1,11 @@
 from dataclasses import dataclass
 from typing import List
 from sqlalchemy import Column, String
-from sqlalchemy.orm import relationship
 from sqlalchemy import Column, Integer, String
-
-
 from src.models.base import Base
 from sqlalchemy import Column, Integer, String, ForeignKey
 from dataclasses import dataclass
 from typing import List
-from sqlalchemy.orm import relationship
 from src.models.base import Base
 
 @dataclass
@@ -25,3 +21,7 @@ class Series(Base):
     networks: List[str] = Column(String)
     overview: str = Column(String)
     profile_id: int = Column(Integer, ForeignKey('profiles.id'))
+    monitored: bool = Column(Integer)
+    episode_count: int = Column(Integer)
+    size: int = Column(Integer)
+    space_saved: int = Column(Integer)

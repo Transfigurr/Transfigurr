@@ -64,3 +64,29 @@
 		}
 	}
 }
+
+.cross {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	width: 25px;
+	cursor: pointer;
+	.verticalCross {
+		position: absolute;
+		transform: rotate(-45deg);
+		border-radius: 1px;
+		background-color: black;
+		height: 15px;
+		width: 3px;
+	}
+	.horizontalCross {
+		border-radius: 1px;
+		position: absolute;
+		background-color: black;
+		height: 15px;
+		width: 3px;
+		transform: rotate(45deg);
+	}
+}

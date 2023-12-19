@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import useSettingsAPI from "../../hooks/useSettingsAPI";
+import useSettings from "../../hooks/useSettings";
 import styles from "./MediaManagement.module.scss";
 
 const MediaManagement = () => {
-	const initialSettings = useSettingsAPI();
+	const initialSettings: any = useSettings();
 	const [settings, setSettings] = useState([]);
 
 	useEffect(() => {

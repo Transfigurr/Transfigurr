@@ -8,6 +8,8 @@ import ToolBarItem from "../ToolBarItem/ToolBarItem";
 import SyncIcon from "@mui/icons-material/Sync";
 import useCodecs from "../../hooks/useCodecs";
 import useContainers from "../../hooks/useContainers";
+import useEncoders from "../../hooks/useEncoders";
+import ProfileModal from "../profileModal/ProfileModal";
 
 const Profiles = () => {
 	const profiles: any = useProfiles();
@@ -21,15 +23,28 @@ const Profiles = () => {
 			id: profile?.id,
 			name: profile?.name,
 			codec: profile?.codec,
-			codecs: [],
+			codecs: profile?.codecs || [],
 			speed: profile?.speed,
 			container: profile?.container,
+			encoder: profile?.encoder,
 			extension: profile?.extension,
 		});
 		setModalType("profile");
 		setIsModalOpen(true);
 	};
 	const codecs = useCodecs();
+
+	const onModalDelete = async () => {
+		await fetch(`http://localhost:8000/api/profiles/${selectedProfile?.id}`, {
+			method: "DELETE",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+		setIsModalOpen(false);
+		console.log(content);
+	};
+
 	const onModalSave = async () => {
 		await fetch(`http://localhost:8000/api/profiles`, {
 			method: "PUT",
@@ -46,14 +61,12 @@ const Profiles = () => {
 		id: String,
 		name: selectedProfile?.name,
 		codec: selectedProfile?.codec,
-		codecs: [],
-		speed: selectedProfile?.speeds,
+		codecs: selectedProfile.codecs || [],
+		speed: selectedProfile?.speed,
 		container: selectedProfile?.container,
 		extension: selectedProfile?.extension,
+		encoder: selectedProfile?.encoder,
 	});
-	const leftToolBarItems: any = [
-		<ToolBarItem text="Advanced" icon={<SyncIcon fontSize="large" />} />,
-	];
 	const profilesArray: any = [];
 
 	for (let i in profiles) {
@@ -64,16 +77,16 @@ const Profiles = () => {
 
 	return (
 		<div className={styles.profiles}>
-			<ToolBar leftToolBarItems={leftToolBarItems} />
 			{isModalOpen && modalType === "profile" && (
 				<div className={styles.modalBackdrop}>
 					<div className={styles.modalContent}>
-						<Modal
+						<ProfileModal
 							header={"Edit - Codec Profile"}
 							type={"profile"}
 							isOpen={isModalOpen}
 							setIsOpen={setIsModalOpen}
 							onSave={onModalSave}
+							onDelete={onModalDelete}
 							data={selectedProfile}
 							content={content}
 							setContent={setContent}
@@ -91,6 +104,9 @@ const Profiles = () => {
 								<Profile name={profile?.name} codecs={profile?.codecs} />
 							</div>
 						))}
+						<div onClick={() => handleProfileClick({})}>
+							<Profile type={"add"} name={""} codecs={[]} />
+						</div>
 					</div>
 				</div>
 			</div>

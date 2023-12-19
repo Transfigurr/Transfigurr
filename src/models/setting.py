@@ -7,7 +7,7 @@ from src.models.base import Base
 class Setting(Base):
     __tablename__ = 'settings'
 
-    id: int = Column(Integer, primary_key=True)
+    id: int = Column(Integer, primary_key=True, autoincrement=True)
     name: str = Column(String)
     type: str = Column(String)
     value: str = Column(String)

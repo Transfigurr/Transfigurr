@@ -8,23 +8,21 @@ import AppsIcon from "@mui/icons-material/Apps";
 import RssFeedIcon from "@mui/icons-material/RssFeed";
 import SyncIcon from "@mui/icons-material/Sync";
 import SwitchLeftIcon from "@mui/icons-material/SwitchLeft";
-import Modal from "../modal/Modal";
 import Season from "../season/Season";
-import useProfilesAPI from "../../hooks/useProfilesAPI";
 import useSingleSeries from "../../hooks/useSingleSeries";
-import useSeasons from "../../hooks/useSeason";
-import useEpisodes from "../../hooks/useEpisodes";
+import useProfilesAPI from "../../hooks/useProfilesAPI";
+import SeriesModal from "../seriesModals/SeriesModals";
 const Series = ({ series_name }: any) => {
 	series_name = series_name.replace(/-/g, " ");
-	const [modalType, setModalType] = useState("");
-	const profiles: any = useProfilesAPI();
 
+	const profiles: any = useProfilesAPI();
+	const [modalType, setModalType] = useState("");
 	const series: any = useSingleSeries(series_name);
-	console.log(series);
+	const [selectedSeries, setSelectedSeries] = useState<any>();
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const handleEditClick = () => {
-		console.log(series);
+		setSelectedSeries(series);
 		setContent({
 			monitored: series?.monitored,
 			profile_id: series?.profile_id,
@@ -62,7 +60,6 @@ const Series = ({ series_name }: any) => {
 		status === "Ended" ? firstAirDate + "-" + lastAirDate : firstAirDate + "-";
 
 	const onSave = async () => {
-		console.log("content", content);
 		content.id = series.id;
 		await fetch(`http://localhost:8000/api/series/${series.name}`, {
 			method: "PUT",
@@ -74,9 +71,9 @@ const Series = ({ series_name }: any) => {
 		setIsModalOpen(false);
 	};
 	const [content, setContent] = useState({
-		monitored: series?.monitored,
-		profile_id: series?.profile_id,
-		id: series?.id,
+		monitored: selectedSeries?.monitored,
+		profile_id: selectedSeries?.profile_id,
+		id: selectedSeries?.id,
 	});
 	return (
 		<div className={styles.series}>
@@ -89,13 +86,12 @@ const Series = ({ series_name }: any) => {
 			{isModalOpen && modalType === "edit" && (
 				<div className={styles.modalBackdrop}>
 					<div className={styles.modalContent}>
-						<Modal
+						<SeriesModal
 							header={"Edit - " + series?.name}
 							type={"edit"}
 							isOpen={isModalOpen}
 							setIsOpen={setIsModalOpen}
 							onSave={onSave}
-							data={profiles}
 							content={content}
 							setContent={setContent}
 						/>
@@ -133,12 +129,16 @@ const Series = ({ series_name }: any) => {
 							<span className={styles.runYears}>{runYears}</span>
 						</div>
 						<div className={styles.tags}>
-							<div className={styles.tag}>{series?.name}</div>
+							<div className={styles.tag}>{"/series/" + series?.name}</div>
 
-							<div className={styles.tag}>Test GB</div>
+							<div className={styles.tag}>
+								{" "}
+								{((series?.size || 0) / 1000000000).toFixed(2).toString() +
+									" GB"}
+							</div>
 							<div className={styles.tag}>
 								{series?.profile_id in profiles
-									? profiles[series?.profile_id].name
+									? profiles[series?.profile_id]?.name
 									: ""}
 							</div>
 							<div className={styles.tag}>
@@ -152,9 +152,11 @@ const Series = ({ series_name }: any) => {
 				</div>
 			</div>
 			<div className={styles.seasonsContainer}>
-				{Object.values(series.seasons || {}).map((season: any) => {
-					return <Season season={season} />;
-				})}
+				{Object.values(series.seasons || {})
+					.reverse()
+					.map((season: any) => {
+						return <Season season={season} />;
+					})}
 			</div>
 		</div>
 	);

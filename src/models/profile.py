@@ -14,7 +14,7 @@ class profile_codec(Base):
 class Profile(Base):
     __tablename__ = 'profiles'
 
-    id: int = Column(Integer, primary_key=True)
+    id: int = Column(Integer, primary_key=True, autoincrement=True)
     name: str = Column(String)
     codec: str = Column(Integer)
     encoder: str = Column(String)

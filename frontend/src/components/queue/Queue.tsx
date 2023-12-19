@@ -12,7 +12,8 @@ import useQueue from "../../hooks/useQueue";
 import useProfiles from "../../hooks/useProfiles";
 
 const Queue = () => {
-	const queue = useQueue();
+	const queue: any = useQueue();
+	console.log(queue);
 	const profiles: any = useProfiles();
 	const leftToolBarItems: any = [
 		<ToolBarItem text="Update" icon={<SyncIcon fontSize="large" />} />,
@@ -43,10 +44,13 @@ const Queue = () => {
 						<th>Current Codec</th>
 						<th>Future Codec</th>
 						<th>Profile</th>
+						<th>Stage</th>
+						<th>Time Left</th>
+						<th>Progress</th>
 					</tr>
 				</thead>
 				<tbody>
-					{queue?.map((q: any) => (
+					{queue?.queue?.map((q: any, index: number) => (
 						<tr>
 							<td>{q.series_id}</td>
 							<td>
@@ -56,6 +60,34 @@ const Queue = () => {
 							<td>{q.video_codec}</td>
 							<td>{profiles ? profiles[q.profile]?.codec : ""}</td>
 							<td>{profiles ? profiles[q.profile]?.name : ""}</td>
+							<td>{index === 0 ? queue?.stage : "-"}</td>
+							<td>
+								{index === 0
+									? Math.floor(parseInt(queue.eta || 0) / 60).toString() +
+									  ":" +
+									  (parseInt(queue.eta || 0) % 60).toString()
+									: "-"}
+							</td>
+							<td>
+								<div
+									style={{
+										height: "20px",
+										width: "100%",
+										backgroundColor: "#f3f3f3",
+										boxShadow: "inset 0 1px 2px rgba(0, 0, 0, 0.1)",
+										borderRadius: "4px",
+									}}
+								>
+									<div
+										style={{
+											height: "100%",
+											width: `${index === 0 ? queue.progress || 0 : 0}%`,
+											backgroundColor: "#5d9cec",
+											borderRadius: "4px",
+										}}
+									/>
+								</div>
+							</td>
 						</tr>
 					))}
 				</tbody>

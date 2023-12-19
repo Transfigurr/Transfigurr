@@ -20,6 +20,11 @@
 		width: 50%;
 		justify-content: flex-end;
 		align-items: flex-end;
+
+		.queue {
+			display: flex;
+			flex-direction: column;
+		}
 		.profile {
 			cursor: pointer;
 			padding-right: 15px;

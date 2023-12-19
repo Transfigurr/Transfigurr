@@ -7,16 +7,15 @@ const Modal = ({
 	setIsOpen,
 	header,
 	type,
-	data,
 	onSave,
+	onDelete,
 	content,
 	setContent,
+	profiles,
 }: any) => {
 	const onClose = () => {
 		setIsOpen(false);
 	};
-
-	const onDelete = () => {};
 
 	useEffect(() => {
 		const modalBackdropClass = "modalBackdrop";
@@ -45,21 +44,22 @@ const Modal = ({
 			<div className={styles.header}>
 				<div className={styles.left}>{header}</div>
 				<div className={styles.right}>
-					<button className="close-button" onClick={onClose}>
-						Close
-					</button>
+					<div className={styles.cross} onClick={onClose}>
+						<div className={styles.verticalCross}></div>
+						<div className={styles.horizontalCross}></div>
+					</div>
 				</div>
 			</div>
 			<div className={styles.content}>
 				{type === "edit" ? (
 					<SeriesModals
+						profiles={profiles}
 						type={type}
 						content={content}
 						setContent={setContent}
-						data={data}
 					/>
 				) : (
-					<ProfileModal content={content} setContent={setContent} data={data} />
+					<ProfileModal content={content} setContent={setContent} />
 				)}
 			</div>
 			<div className={styles.footer}>

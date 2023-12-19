@@ -11,7 +11,7 @@ async def queue_websocket(websocket: WebSocket, queue_id):
     try:
         await websocket.accept()
         while True:
-            queue_json = json.dumps(queue_instance.queue)
+            queue_json = json.dumps({'queue': queue_instance.queue, 'progress': queue_instance.current_progress, 'eta': queue_instance.current_eta})
             await websocket.send_text(queue_json)
             await asyncio.sleep(10)
 
@@ -28,9 +28,9 @@ async def queue_websocket(websocket: WebSocket):
     try:
         await websocket.accept()
         while True:
-            queue_json = json.dumps(queue_instance.to_list())            
+            queue_json = json.dumps({'queue': queue_instance.to_list(), 'progress': queue_instance.current_progress, 'eta': int(queue_instance.current_eta), 'processing': queue_instance.processing, 'active': queue_instance.active, 'stage': queue_instance.stage})                           
             await websocket.send_text(queue_json)
-            await asyncio.sleep(10)
+            await asyncio.sleep(1)
 
     except WebSocketDisconnect:
         logging.info("WebSocket disconnected")

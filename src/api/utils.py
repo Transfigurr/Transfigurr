@@ -16,8 +16,8 @@ async def verify_folders():
     root_folder_path = await get_root_folder()
     paths = []
     config_folder_path = root_folder_path + '/config'
-    paths.append(config_folder_path + '/metadata/series')
-    paths.append(config_folder_path + '/metadata/movies')
+    paths.append(config_folder_path + '/artwork/series')
+    paths.append(config_folder_path + '/artwork/movies')
     paths.append(root_folder_path + '/series')
     paths.append(root_folder_path + '/movies')
     paths.append(root_folder_path + '/transcode')
@@ -47,6 +47,9 @@ async def get_series_artwork_folder():
 
 async def get_series_folder():
     return await get_root_folder() + '/series'
+
+async def get_movies_folder():
+    return await get_root_folder() + '/movies'
 
 async def get_series_metadata_folder():
     return await get_root_folder() + '/config/metadata/series'

@@ -31,31 +31,53 @@ import {
 	BrowserRouter,
 } from "react-router-dom";
 import Series from "./components/series/Series";
+import themes, { getTheme } from "./styles/themes";
+import useSettings from "./hooks/useSettings";
 
 function App() {
-	const [selectedItem, setSelectedItem] = useState<number>(-1);
-	const [selectedOption, setSelectedOption] = useState<number>(0);
+	const [selectedItem, setSelectedItem] = useState<any>(null);
+	const [selectedOption, setSelectedOption] = useState<any>(null);
+
+	const settings: any = useSettings();
+	const [theme, setTheme] = useState<any>(null);
+	let t = null;
+	useEffect(() => {
+		if (settings) {
+			setTheme(settings[5]?.value);
+		}
+	}, [settings]);
+	console.log("apptheme", theme);
+
+	t = getTheme(theme); // replace with actual theme property
+	console.log(t);
+	if (t) {
+		Object.entries(t).forEach(([key, value]) => {
+			document.documentElement.style.setProperty(`--${key}`, value);
+		});
+	}
 	return (
 		<Router>
-			<div className={styles.app}>
-				<HeaderComponent />
-				<div className={styles.content}>
-					<div className={styles.sideBar}>
-						<SideBar
-							selectedOption={selectedOption}
-							setSelectedOption={setSelectedOption}
-							selectedItem={selectedItem}
-							setSelectedItem={setSelectedItem}
-						/>
-					</div>
-					<div className={styles.page}>
-						<Page
-							setSelectedOption={setSelectedOption}
-							setSelectedItem={setSelectedItem}
-						/>
+			{t ? (
+				<div className={styles.app}>
+					<HeaderComponent />
+					<div className={styles.content}>
+						<div className={styles.sideBar}>
+							<SideBar
+								selectedOption={selectedOption}
+								setSelectedOption={setSelectedOption}
+								selectedItem={selectedItem}
+								setSelectedItem={setSelectedItem}
+							/>
+						</div>
+						<div className={styles.page}>
+							<Page
+								setSelectedOption={setSelectedOption}
+								setSelectedItem={setSelectedItem}
+							/>
+						</div>
 					</div>
 				</div>
-			</div>
+			) : null}
 		</Router>
 	);
 
@@ -64,16 +86,14 @@ function App() {
 		const pathname: string = location.pathname;
 		const sidebar: any = {
 			"/": [0, -1],
-			"/library-import": [0, 0],
-			"/mass-editor": [0, 1],
+			"/mass-editor": [0, 0],
 			"/activity": [1, -1],
 			"/activity/queue": [1, 0],
 			"/activity/history": [1, 1],
 
 			"/settings": [2, -1],
-			"/settings/media-management": [2, 0],
-			"/settings/profiles": [2, 1],
-			"/settings/general": [2, 2],
+			"/settings/profiles": [2, 0],
+			"/settings/general": [2, 1],
 			"/system": [3, -1],
 			"/system/status": [3, 0],
 		};

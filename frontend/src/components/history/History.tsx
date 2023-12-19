@@ -39,6 +39,7 @@ const History = () => {
 				<thead>
 					<tr>
 						<th>Series</th>
+						<th>Season</th>
 						<th>Episode</th>
 						<th>Episode Title</th>
 						<th>Current Codec</th>
@@ -47,26 +48,19 @@ const History = () => {
 					</tr>
 				</thead>
 				<tbody>
-					{history?.map((episode: any, index: any) => (
-						<tr>
-							<td>{episode.series_name}</td>
-							<td>
-								{episode.season_number}x{episode.episode_number}
-							</td>
-							<td>{episode.episode_name}</td>
-							<td>{episode.video_codec}</td>
-							<td>
-								{profiles && episode.profile in profiles
-									? profiles[episode.profile]["codec"]
-									: ""}
-							</td>
-							<td>
-								{profiles && episode.profile in profiles
-									? profiles[episode.profile]["name"]
-									: ""}
-							</td>
-						</tr>
-					))}
+					{Object.values(history)
+						.reverse()
+						.map((entry: any) => (
+							<tr>
+								<td>{entry?.episode?.series_id}</td>
+								<td>{entry?.episode?.season_name}</td>
+								<td>{entry?.episode?.episode_number}</td>
+								<td>{entry?.episode?.episode_name}</td>
+								<td>{entry?.prev_codec}</td>
+								<td>{entry?.new_codec}</td>
+								<td>{entry?.profile?.name}</td>
+							</tr>
+						))}
 				</tbody>
 			</table>
 		</div>

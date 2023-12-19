@@ -10,6 +10,8 @@ import SyncIcon from "@mui/icons-material/Sync";
 import SwitchLeftIcon from "@mui/icons-material/SwitchLeft";
 import { useEffect, useState } from "react";
 import useProfiles from "../../hooks/useProfiles";
+import useProfilesAPI from "../../hooks/useProfilesAPI";
+import useSeriesAPI from "../../hooks/useSeriesAPI";
 
 const MassEditor = () => {
 	const leftToolBarItems: any = [
@@ -25,27 +27,46 @@ const MassEditor = () => {
 		<ToolBarItem text="Sort" icon={<SwitchLeftIcon fontSize="medium" />} />,
 		<ToolBarItem text="Filter" icon={<FilterAltIcon fontSize="medium" />} />,
 	];
+	const series: any = useSeriesAPI();
+	const profiles: any = useProfilesAPI();
+	const [selectedSeries, setSelectedSeries] = useState<any>([]);
 
-	const [series, setSeries] = useState([]);
+	const [monitored, setMonitored] = useState<any>(false);
 
-	const { profiles, setShouldSubscribe }: any = useProfiles();
+	const [profile, setProfile] = useState<any>();
+	console.log(profiles);
+	console.log(monitored, profile, selectedSeries);
+	const applyChanges = () => {
+		for (const s in selectedSeries) {
+			selectedSeries[s].monitored =
+				parseInt(monitored) !== -1 ? parseInt(monitored) : undefined;
+			selectedSeries[s].profile_id =
+				parseInt(profile) !== 0 ? parseInt(profile) : undefined;
+			console.log("test", selectedSeries[s]);
+			fetch(`http://localhost:8000/api/series/${selectedSeries[s].id}`, {
+				method: "PUT",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(selectedSeries[s]),
+			});
+		}
+	};
 
-	useEffect(() => {
-		fetch("http://localhost:8000/api/data/series")
-			.then((response) => response.json())
-			.then((data) => setSeries(data))
-			.catch((error) => console.error(error));
-	}, []);
+	const handleCheckboxChange = (series: any) => {
+		setSelectedSeries((prevSelected: any[]) =>
+			prevSelected.includes(series)
+				? prevSelected.filter((s) => s !== series)
+				: [...prevSelected, series]
+		);
+	};
+
 	return (
 		<div className={styles.massEditor}>
-			<ToolBar
-				leftToolBarItems={leftToolBarItems}
-				middleToolBarItems={middleToolBarItems}
-				rightToolBarItems={rightToolBarItems}
-			/>
 			<table>
 				<thead>
 					<tr>
+						<th></th>
 						<th>Series Title</th>
 						<th>Codec Profile</th>
 						<th>Path</th>
@@ -55,18 +76,55 @@ const MassEditor = () => {
 				<tbody>
 					{series?.map((s: any, index: any) => (
 						<tr>
-							<td>{s.name}</td>
 							<td>
-								{profiles && s.profile in profiles
-									? profiles[s.profile]["name"]
-									: ""}
+								<input
+									type="checkbox"
+									checked={selectedSeries.includes(s)}
+									onChange={() => handleCheckboxChange(s)}
+								/>
 							</td>
-							<td>{s.series_path}</td>
-							<td>{s.size}</td>
+							<td>{s.name}</td>
+							<td>{profiles[s.profile_id]?.name}</td>
+							<td>/series/{s.id}</td>
+							<td>{(s.size / 1000000000).toFixed(2)} GB</td>
 						</tr>
 					))}
 				</tbody>
 			</table>
+			<div className={styles.input}>
+				<div className={styles.inputContainer}>
+					<label>Monitored </label>
+					<select
+						className={styles.select}
+						value={monitored}
+						onChange={(e) => {
+							setMonitored(e.target.value);
+						}}
+					>
+						<option value={-1}>{"No Change"}</option>
+						<option value={0}>{"Not Monitored"}</option>
+						<option value={1}>{"Monitored"}</option>
+					</select>
+				</div>
+				<div className={styles.inputContainer}>
+					<label>Profile </label>
+					<select
+						className={styles.select}
+						value={profile}
+						onChange={(e) => {
+							setProfile(e.target.value);
+						}}
+					>
+						<option value={0}>{"No Change"}</option>
+						{Object.values(profiles)?.map((profile: any) => (
+							<option value={profile.id}>{profile.name}</option>
+						))}
+					</select>
+				</div>
+				<button className={styles.apply} onClick={applyChanges}>
+					Apply
+				</button>
+			</div>
 		</div>
 	);
 };

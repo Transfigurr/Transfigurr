@@ -16,7 +16,9 @@ const Season = ({ season }: any) => {
 					<div className={styles.profileRatio}>
 						{} / {}
 					</div>
-					<div className={styles.size}>{11.2} GB</div>
+					<div className={styles.size}>
+						{(season?.size / 1000000000).toFixed(2).toString() + " GB"}
+					</div>
 				</div>
 				<div className={styles.center}>
 					<div className={styles.open} onClick={onSeasonClick}>
@@ -43,9 +45,19 @@ const Season = ({ season }: any) => {
 							<tr>
 								<td>{episode?.episode_number}</td>
 								<td>{episode?.episode_name}</td>
-								<td>{episode?.air_date}</td>
+								<td>
+									{new Date(episode?.air_date).toLocaleString("en-US", {
+										month: "short",
+									}) +
+										" " +
+										new Date(episode?.air_date).getDate() +
+										" " +
+										new Date(episode?.air_date).getFullYear()}
+								</td>
 								<td>{episode?.video_codec}</td>
-								<td>{episode?.size}</td>
+								<td>
+									{(episode?.size / 1000000000).toFixed(2).toString() + " GB"}
+								</td>
 							</tr>
 						))}
 					</tbody>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 const useSettingsAPI = () => {
-	const [settings, setSettings] = useState<[]>([]);
+	const [settings, setSettings] = useState<{}>({});
 	useEffect(() => {
 		fetch("http://localhost:8000/api/settings")
 			.then((response) => response.json())
