@@ -10,20 +10,16 @@ const Season = ({ season }: any) => {
 			<div className={styles.seasonHeader}>
 				<div className={styles.left}>
 					<div className={styles.seasonNumber}>{season?.name}</div>
-					<div className={styles.episodeRatio}>
-						{} / {}
-					</div>
 					<div className={styles.profileRatio}>
-						{} / {}
+						{season?.episode_count - season?.missing_episodes} /{" "}
+						{season?.episode_count}
 					</div>
 					<div className={styles.size}>
 						{(season?.size / 1000000000).toFixed(2).toString() + " GB"}
 					</div>
 				</div>
-				<div className={styles.center}>
-					<div className={styles.open} onClick={onSeasonClick}>
-						{isOpen ? <>Close</> : <>Open</>}
-					</div>
+				<div className={styles.center} onClick={onSeasonClick}>
+					<div className={styles.open}>{isOpen ? <>Close</> : <>Open</>}</div>
 				</div>
 			</div>
 			<div

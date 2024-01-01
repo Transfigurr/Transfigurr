@@ -1,31 +1,38 @@
-import useQueue from "../../hooks/useQueue";
 import styles from "./Header.module.scss";
-import PersonIcon from "@mui/icons-material/Person";
+import { ReactComponent as Person } from "../svgs/person.svg";
+import { ReactComponent as Logo } from "../svgs/transfigurr.svg";
+import { WebSocketContext } from "../../contexts/webSocketContext";
+import { useContext } from "react";
 const HeaderComponent = () => {
-	const queue: any = useQueue();
+	const wsContext = useContext(WebSocketContext);
+	const queue = wsContext?.data?.queue;
 	return (
 		<div className={styles.header}>
 			<div className={styles.left}>
 				<div className={styles.logo}>
-					<img
-						className={styles.svg}
-						src={process.env.PUBLIC_URL + "/Logo/Sonarr.svg"}
-						alt="logo"
+					<Logo
+						style={{
+							height: "100%",
+							width: "100%",
+							fill: "var(--transfigurrPurple)",
+						}}
 					/>
+				</div>
+				<div className={styles.status}>
+					<div className={styles.statusText}>
+						{Math.floor(parseInt(queue?.eta || 0) / 60).toString() +
+							"m:" +
+							(parseInt(queue?.eta || 0) % 60).toString() +
+							"s"}
+					</div>
+					<div className={styles.statusText}>{queue?.stage || "-"}</div>
+
+					<div className={styles.statusText}></div>
 				</div>
 			</div>
 			<div className={styles.right}>
-				<div className={styles.queue}>
-					<span> Progress: {parseInt(queue?.progress)}%</span>
-					<span>
-						ETA: {Math.floor(parseInt(queue.eta || 0) / 60)}:
-						{parseInt(queue.eta || 0) % 60}
-					</span>
-					<span>Active?: {queue?.active ? "True" : "False"}</span>
-					<span>Stage: {queue?.stage}</span>
-				</div>
 				<div className={styles.profile}>
-					<PersonIcon />
+					<Person style={{ height: "100%", width: "100%" }} />
 				</div>
 			</div>
 		</div>

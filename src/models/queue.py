@@ -11,7 +11,7 @@ class Queue:
     processing = False
     current_progress = 0
     current_eta = 0
-
+    
     @classmethod
     async def enqueue(cls, episode):
         episode_id = episode['id']

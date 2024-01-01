@@ -17,3 +17,4 @@ class Season(Base):
     size: int = Column(Integer)
     series_id: str = Column(String, ForeignKey('series.id'))
     space_saved: int = Column(Integer)
+    missing_episodes: int = Column(Integer)

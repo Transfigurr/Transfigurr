@@ -1,22 +1,15 @@
 import styles from "./Profiles.module.scss";
 import Profile from "../profile/Profile";
-import { useState } from "react";
-import Modal from "../modal/Modal";
-import useProfiles from "../../hooks/useProfiles";
-import ToolBar from "../ToolBar/ToolBar";
-import ToolBarItem from "../ToolBarItem/ToolBarItem";
-import SyncIcon from "@mui/icons-material/Sync";
-import useCodecs from "../../hooks/useCodecs";
-import useContainers from "../../hooks/useContainers";
-import useEncoders from "../../hooks/useEncoders";
+import { useContext, useState } from "react";
 import ProfileModal from "../profileModal/ProfileModal";
+import { WebSocketContext } from "../../contexts/webSocketContext";
 
 const Profiles = () => {
-	const profiles: any = useProfiles();
+	const wsContext = useContext(WebSocketContext);
+	const profiles = wsContext?.data?.profiles;
 	const [modalType, setModalType] = useState("");
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [selectedProfile, setSelectedProfile] = useState<any>({});
-	const containers = useContainers();
 	const handleProfileClick = (profile: any) => {
 		setSelectedProfile(profile);
 		setContent({
@@ -32,7 +25,6 @@ const Profiles = () => {
 		setModalType("profile");
 		setIsModalOpen(true);
 	};
-	const codecs = useCodecs();
 
 	const onModalDelete = async () => {
 		await fetch(`http://localhost:8000/api/profiles/${selectedProfile?.id}`, {
@@ -42,7 +34,6 @@ const Profiles = () => {
 			},
 		});
 		setIsModalOpen(false);
-		console.log(content);
 	};
 
 	const onModalSave = async () => {
@@ -54,9 +45,7 @@ const Profiles = () => {
 			body: JSON.stringify(content),
 		});
 		setIsModalOpen(false);
-		console.log(content);
 	};
-	console.log(profiles);
 	const [content, setContent] = useState({
 		id: String,
 		name: selectedProfile?.name,
@@ -72,7 +61,6 @@ const Profiles = () => {
 	for (let i in profiles) {
 		profilesArray.push(profiles[i]);
 	}
-	console.log(profiles);
 	const dummy = (dummy: any) => {};
 
 	return (
@@ -97,7 +85,7 @@ const Profiles = () => {
 			)}
 			<div className={styles.content}>
 				<div className={styles.codecProfiles}>
-					<div className={styles.header}>Codec Profiles</div>
+					<div className={styles.header}>Profiles</div>
 					<div className={styles.profileContainer}>
 						{profilesArray?.map((profile: any) => (
 							<div onClick={() => handleProfileClick(profile)}>

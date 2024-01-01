@@ -22,7 +22,6 @@ const Modal = ({ isOpen, onClose, children, profile }: any) => {
 	const onSaveProfile = async () => {
 		await fetch("");
 		onClose();
-		console.log("saved");
 	};
 
 	const onCancel = () => {

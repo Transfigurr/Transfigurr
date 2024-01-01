@@ -1,8 +1,6 @@
 import styles from "./ProfileModal.module.scss";
-import useCodecs from "../../hooks/useCodecs";
-import useContainers from "../../hooks/useContainers";
-import useEncoders from "../../hooks/useEncoders";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
+import { WebSocketContext } from "../../contexts/webSocketContext";
 
 const ProfileModal = ({
 	isOpen,
@@ -13,13 +11,13 @@ const ProfileModal = ({
 	content,
 	setContent,
 }: any) => {
-	const codecs: any = useCodecs();
-	const containers: any = useContainers();
-	const encoders: any = useEncoders();
+	const wsContext = useContext(WebSocketContext);
+	const codecs: any = wsContext?.data?.codecs;
+	const containers: any = wsContext?.data?.containers;
+	const encoders: any = wsContext?.data?.encoders;
 	const onClose = () => {
 		setIsOpen(false);
 	};
-	console.log(content);
 	useEffect(() => {
 		const modalBackdropClass = "modalBackdrop";
 

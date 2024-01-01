@@ -1,7 +1,9 @@
-import useSystem from "../../hooks/useSystem";
 import styles from "./Status.module.scss";
+import { useContext } from "react";
+import { WebSocketContext } from "../../contexts/webSocketContext";
 const Status = () => {
-	const system: any = useSystem();
+	const wsContext = useContext(WebSocketContext);
+	const system: any = wsContext?.data?.system;
 
 	return (
 		<div className={styles.status}>
@@ -18,9 +20,9 @@ const Status = () => {
 					</thead>
 					<tbody>
 						<tr>
-							<td>/series</td>
-							<td>{(system?.series_free_space / 1000000000).toFixed(2)} GB</td>
-							<td>{(system?.series_total_space / 1000000000).toFixed(2)} GB</td>
+							<td>/config</td>
+							<td>{(system?.config_free_space / 1000000000).toFixed(2)} GB</td>
+							<td>{(system?.config_total_space / 1000000000).toFixed(2)} GB</td>
 							<td>
 								<div
 									style={{
@@ -34,10 +36,10 @@ const Status = () => {
 									<div
 										style={{
 											height: "100%",
-											width: `${(system?.series_free_space /
-												system?.series_total_space) *
+											width: `${(system?.config_free_space /
+												system?.config_total_space) *
 												100}%`,
-											backgroundColor: "#5d9cec",
+											backgroundColor: "var(--transfigurrPurple)",
 											borderRadius: "4px",
 										}}
 									/>
@@ -64,7 +66,65 @@ const Status = () => {
 											width: `${(system?.movies_free_space /
 												system?.movies_total_space) *
 												100}%`,
-											backgroundColor: "#5d9cec",
+											backgroundColor: "var(--transfigurrPurple)",
+											borderRadius: "4px",
+										}}
+									/>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>/series</td>
+							<td>{(system?.series_free_space / 1000000000).toFixed(2)} GB</td>
+							<td>{(system?.series_total_space / 1000000000).toFixed(2)} GB</td>
+							<td>
+								<div
+									style={{
+										height: "20px",
+										width: "100%",
+										backgroundColor: "#f3f3f3",
+										boxShadow: "inset 0 1px 2px rgba(0, 0, 0, 0.1)",
+										borderRadius: "4px",
+									}}
+								>
+									<div
+										style={{
+											height: "100%",
+											width: `${(system?.series_free_space /
+												system?.series_total_space) *
+												100}%`,
+											backgroundColor: "var(--transfigurrPurple)",
+											borderRadius: "4px",
+										}}
+									/>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>/transcode</td>
+							<td>
+								{(system?.transcode_free_space / 1000000000).toFixed(2)} GB
+							</td>
+							<td>
+								{(system?.transcode_total_space / 1000000000).toFixed(2)} GB
+							</td>
+							<td>
+								<div
+									style={{
+										height: "20px",
+										width: "100%",
+										backgroundColor: "#f3f3f3",
+										boxShadow: "inset 0 1px 2px rgba(0, 0, 0, 0.1)",
+										borderRadius: "4px",
+									}}
+								>
+									<div
+										style={{
+											height: "100%",
+											width: `${(system?.transcode_free_space /
+												system?.transcode_total_space) *
+												100}%`,
+											backgroundColor: "var(--transfigurrPurple)",
 											borderRadius: "4px",
 										}}
 									/>
@@ -73,12 +133,6 @@ const Status = () => {
 						</tr>
 					</tbody>
 				</table>
-			</div>
-			<div className={styles.about}>
-				<div className={styles.header}>About</div>
-			</div>
-			<div className={styles.moreInfo}>
-				<div className={styles.header}>More Info</div>
 			</div>
 		</div>
 	);

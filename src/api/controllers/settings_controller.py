@@ -16,7 +16,7 @@ async def get_all_settings():
     settings = await global_state.get_all_from_table(Setting)
     s = {}
     for setting in settings:
-        s[setting['id']] = setting
+        s[setting['id']] = setting['value']
     return s
         
 

@@ -1,17 +1,14 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import styles from "./General.module.scss";
-import useSettings from "../../hooks/useSettings";
+import { WebSocketContext } from "../../contexts/webSocketContext";
 const General = () => {
-	const settings: any = useSettings();
+	const wsContext = useContext(WebSocketContext);
 
-	const [currentSettings, setCurrentSettings] = useState<any>({});
-	useEffect(() => {
-		if (settings) {
-			setCurrentSettings(settings);
-		}
-	}, [settings]);
+	const initialSettings = useMemo(() => wsContext?.data?.settings, []);
+
+	const [currentSettings, setCurrentSettings] = useState<any>(initialSettings);
+
 	const handleSubmit = (event: any) => {
-		console.log(currentSettings);
 		for (let i in currentSettings) {
 			fetch(`http://localhost:8000/api/settings`, {
 				method: "PUT",
@@ -23,25 +20,61 @@ const General = () => {
 		}
 	};
 	return (
-		<form onSubmit={handleSubmit} className={styles.form}>
-			<label>
-				Theme:
-				<select
-					value={currentSettings[5]?.value}
-					onChange={(e) => {
-						setCurrentSettings({
-							...currentSettings,
-							[5]: { ...currentSettings[5], value: e.target.value },
-						});
-					}}
-				>
-					<option value="auto">Auto</option>
-					<option value="dark">Dark</option>
-					<option value="light">Light</option>
-				</select>
-			</label>
-			<button type="submit">Submit</button>
-		</form>
+		<div className={styles.general}>
+			<div className={styles.content}>
+				<form onSubmit={handleSubmit} className={styles.form}>
+					<label>
+						Default Profile:
+						<select
+							value={currentSettings?.default_profile}
+							onChange={(e) => {
+								setCurrentSettings({
+									...currentSettings,
+									default_profile: e.target.value,
+								});
+							}}
+						>
+							<option value="auto">Auto</option>
+							<option value="dark">Dark</option>
+							<option value="light">Light</option>
+						</select>
+					</label>
+					<label>
+						Queue Startup State:
+						<select
+							value={currentSettings?.queue_startup_state}
+							onChange={(e) => {
+								setCurrentSettings({
+									...currentSettings,
+									queue_startup_state: e.target.value,
+								});
+							}}
+						>
+							<option value="previous">Previous</option>
+							<option value="dark">Dark</option>
+							<option value="light">Light</option>
+						</select>
+					</label>
+					<label>
+						Theme:
+						<select
+							value={currentSettings?.theme}
+							onChange={(e) => {
+								setCurrentSettings({
+									...currentSettings,
+									theme: e.target.value,
+								});
+							}}
+						>
+							<option value="auto">Auto</option>
+							<option value="dark">Dark</option>
+							<option value="light">Light</option>
+						</select>
+					</label>
+					<button type="submit">Submit</button>
+				</form>
+			</div>
+		</div>
 	);
 };
 export default General;

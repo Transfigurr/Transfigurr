@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
-import useSettings from "../../hooks/useSettings";
+import { useState, useEffect, useContext } from "react";
 import styles from "./MediaManagement.module.scss";
+import { WebSocketContext } from "../../contexts/webSocketContext";
 
 const MediaManagement = () => {
-	const initialSettings: any = useSettings();
+	const wsContext = useContext(WebSocketContext);
+	const initialSettings: any = wsContext?.data?.settings;
 	const [settings, setSettings] = useState([]);
 
 	useEffect(() => {

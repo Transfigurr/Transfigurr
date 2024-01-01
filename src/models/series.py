@@ -25,3 +25,4 @@ class Series(Base):
     episode_count: int = Column(Integer)
     size: int = Column(Integer)
     space_saved: int = Column(Integer)
+    missing_episodes: int = Column(Integer)

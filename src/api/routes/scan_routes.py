@@ -10,16 +10,17 @@ from src.tasks.scan import scan_all_series, scan_series, validate_database
 
 router = APIRouter()
 
-@router.get("/api/scan/series/metadata")
+@router.put("/api/scan/series/metadata")
 async def get_all_series_metadata_route():
     await get_all_series_metadata()
+    return
 
 @router.get("/api/scan/series/metadata/{series_id}") 
 async def get_series_metadata_route(series_id):
     await get_series_metadata(series_id)
     return
 
-@router.get('/api/scan/series')
+@router.put('/api/scan/series')
 async def scan_all_series_route():
     await scan_all_series()
     return

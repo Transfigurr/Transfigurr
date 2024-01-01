@@ -63,5 +63,20 @@ default_system = [
         'id': 'movies_free_space',
         'value': 0
     },
-
+    {
+        'id': 'config_free_space',
+        'value': 0
+    },
+    {
+        'id': 'config_total_space',
+        'value': 0
+    },
+    {
+        'id': 'transcode_free_space',
+        'value': 0
+    },
+    {
+        'id': 'transcode_total_space',
+        'value': 0
+    },
 ]

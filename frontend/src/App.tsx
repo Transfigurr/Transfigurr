@@ -10,72 +10,95 @@ import Settings from "./components/settings/Settings";
 import Profiles from "./components/profiles/Profiles";
 import MediaManagement from "./components/mediaManagement/MediaManagement";
 import General from "./components/general/General";
-import UI from "./components/ui/UI";
 import Status from "./components/status/Status";
-import Tasks from "./components/tasks/Tasks";
-import Backup from "./components/backup/Backup";
-import Updates from "./components/updates/Updates";
-import Events from "./components/events/Events";
-import LogFiles from "./components/logFiles/LogFiles";
-import { useCallback, useEffect, useMemo, useState } from "react";
-
+import { useContext, useEffect, useState } from "react";
 import {
 	BrowserRouter as Router,
 	Route,
 	Routes,
-	Link,
 	useNavigate,
-	Outlet,
 	useParams,
 	useLocation,
-	BrowserRouter,
 } from "react-router-dom";
 import Series from "./components/series/Series";
-import themes, { getTheme } from "./styles/themes";
-import useSettings from "./hooks/useSettings";
 
+import { getTheme } from "./styles/themes";
+import { WebSocketContext } from "./contexts/webSocketContext";
+import { WebSocketProvider } from "./contexts/webSocketProvider";
+import Modal from "./components/modal/Modal";
+import { ModalContext } from "./contexts/modalContext";
 function App() {
 	const [selectedItem, setSelectedItem] = useState<any>(null);
 	const [selectedOption, setSelectedOption] = useState<any>(null);
-
-	const settings: any = useSettings();
+	const wsContext: any = useContext(WebSocketContext);
+	const settings: any = wsContext?.settings;
 	const [theme, setTheme] = useState<any>(null);
+
+	useEffect(() => {
+		const modalBackdropClass = "modalBackdrop";
+
+		const handleKeyDown = (event: KeyboardEvent) => {
+			if (event.key === "Escape") {
+				modalContext?.setShowModal(false);
+			}
+		};
+		const handleOutsideClick = (event: any) => {
+			if (event.target.classList.value.includes(modalBackdropClass)) {
+				modalContext?.setShowModal(false);
+			}
+		};
+		window.addEventListener("click", handleOutsideClick);
+		window.addEventListener("keydown", handleKeyDown);
+		return () => {
+			window.removeEventListener("click", handleOutsideClick);
+			window.removeEventListener("keydown", handleKeyDown);
+		};
+	});
+
 	let t = null;
 	useEffect(() => {
-		if (settings) {
-			setTheme(settings[5]?.value);
-		}
+		setTheme("dark");
 	}, [settings]);
-	console.log("apptheme", theme);
 
-	t = getTheme(theme); // replace with actual theme property
-	console.log(t);
+	t = getTheme(theme);
 	if (t) {
 		Object.entries(t).forEach(([key, value]) => {
 			document.documentElement.style.setProperty(`--${key}`, value);
 		});
 	}
+	const modalContext = useContext(ModalContext);
 	return (
 		<Router>
 			{t ? (
 				<div className={styles.app}>
-					<HeaderComponent />
-					<div className={styles.content}>
-						<div className={styles.sideBar}>
-							<SideBar
-								selectedOption={selectedOption}
-								setSelectedOption={setSelectedOption}
-								selectedItem={selectedItem}
-								setSelectedItem={setSelectedItem}
-							/>
-						</div>
-						<div className={styles.page}>
+					<>
+						{modalContext?.showModal ? (
+							<div className={styles.modalBackdrop}>
+								<div className={styles.modalContent}>
+									<Modal />
+								</div>
+							</div>
+						) : (
+							<></>
+						)}
+					</>
+					<WebSocketProvider>
+						<HeaderComponent />
+						<div className={styles.content}>
+							<div className={styles.sideBar}>
+								<SideBar
+									selectedOption={selectedOption}
+									setSelectedOption={setSelectedOption}
+									selectedItem={selectedItem}
+									setSelectedItem={setSelectedItem}
+								/>
+							</div>
 							<Page
 								setSelectedOption={setSelectedOption}
 								setSelectedItem={setSelectedItem}
 							/>
 						</div>
-					</div>
+					</WebSocketProvider>
 				</div>
 			) : null}
 		</Router>
@@ -101,6 +124,8 @@ function App() {
 		setSelectedOption(pathname in sidebar ? sidebar[pathname][0] : 0);
 		setSelectedItem(pathname in sidebar ? sidebar[pathname][1] : -1);
 
+		const [selectedSeries, setSelectedSeries] = useState<any>([]);
+		console.log("reload app");
 		return (
 			<Routes>
 				<Route path="/" element={<MediaComponent />} />

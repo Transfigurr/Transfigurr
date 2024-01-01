@@ -1,9 +1,10 @@
 import SideBarItem from "../sideBarItem/SideBarItem";
 import styles from "./SideBar.module.scss";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import SettingsIcon from "@mui/icons-material/Settings";
-import LaptopMacIcon from "@mui/icons-material/LaptopMac";
+import { ReactComponent as MediaIcon } from "../svgs/play_arrow.svg";
+import { ReactComponent as ActivityIcon } from "../svgs/schedule.svg";
+import { ReactComponent as SettingsIcon } from "../svgs/settings.svg";
+import { ReactComponent as SystemIcon } from "../svgs/laptop.svg";
+
 import { useLocation } from "react-router";
 import { useEffect } from "react";
 
@@ -14,7 +15,6 @@ const MenuComponent = ({
 	setSelectedOption,
 }: any) => {
 	const location: any = useLocation();
-	console.log(selectedItem, selectedOption);
 	const pathname: string = location.pathname;
 	const sidebar: any = {
 		"/": [0, -1],
@@ -39,7 +39,14 @@ const MenuComponent = ({
 	const mediaOptions = {
 		id: 0,
 		text: "Media",
-		svg: <PlayArrowIcon />,
+		svg: (
+			<MediaIcon
+				style={{
+					height: "100%",
+					width: "100%",
+				}}
+			/>
+		),
 		link: "/",
 		children: [
 			{
@@ -52,7 +59,14 @@ const MenuComponent = ({
 	const activityOptions = {
 		id: 1,
 		text: "Activity",
-		svg: <AccessTimeIcon />,
+		svg: (
+			<ActivityIcon
+				style={{
+					height: "100%",
+					width: "100%",
+				}}
+			/>
+		),
 		link: "/activity",
 		children: [
 			{
@@ -69,7 +83,14 @@ const MenuComponent = ({
 	const settingsOptions = {
 		id: 2,
 		text: "Settings",
-		svg: <SettingsIcon />,
+		svg: (
+			<SettingsIcon
+				style={{
+					height: "100%",
+					width: "100%",
+				}}
+			/>
+		),
 		link: "/settings",
 		children: [
 			{
@@ -86,7 +107,14 @@ const MenuComponent = ({
 	const systemOptions = {
 		id: 3,
 		text: "System",
-		svg: <LaptopMacIcon />,
+		svg: (
+			<SystemIcon
+				style={{
+					height: "100%",
+					width: "100%",
+				}}
+			/>
+		),
 		link: "/system/status",
 		children: [
 			{

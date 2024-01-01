@@ -1,0 +1,14 @@
+.general {
+	display: flex;
+	flex: 1;
+	.content {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		.form {
+			padding: 20px;
+			display: flex;
+			flex-direction: column;
+		}
+	}
+}

@@ -1,29 +1,5 @@
 import styles from "./ToolBar.module.scss";
 
-const clickUpdate = () => {
-	console.log("Update");
-};
-
-const clickRSS = () => {
-	console.log("RSS");
-};
-
-const clickOptions = () => {
-	console.log("Options");
-};
-
-const clickView = () => {
-	console.log("View");
-};
-
-const clickSort = () => {
-	console.log("Sort");
-};
-
-const clickFilter = () => {
-	console.log("Filter");
-};
-
 const ToolBar = ({
 	leftToolBarItems,
 	middleToolBarItems,

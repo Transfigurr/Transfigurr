@@ -53,3 +53,22 @@
 		}
 	}
 }
+
+table {
+	border-collapse: collapse;
+	width: 100%;
+
+	tr {
+		border-top: 1px solid #e5e5e5;
+	}
+}
+
+th,
+td {
+	text-align: left;
+	padding: 8px;
+	margin: 8px;
+}
+tr {
+	padding: 8px;
+}

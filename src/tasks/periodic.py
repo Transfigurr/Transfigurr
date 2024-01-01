@@ -129,6 +129,8 @@ async def process_episode(e):
     episode['space_saved'] = (episode['original_size'] - new_size)
     episode['size'] = new_size
     await set_episode(episode)
+    await scan_series(series['id'])
+    await scan_system()
 
     await set_history(episode,profile)
 

@@ -1,54 +1,26 @@
-import ToolBar from "../ToolBar/ToolBar";
-import ToolBarItem from "../ToolBarItem/ToolBarItem";
 import styles from "./MassEditor.module.scss";
-
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import AppsIcon from "@mui/icons-material/Apps";
-import RssFeedIcon from "@mui/icons-material/RssFeed";
-import SyncIcon from "@mui/icons-material/Sync";
-import SwitchLeftIcon from "@mui/icons-material/SwitchLeft";
-import { useEffect, useState } from "react";
-import useProfiles from "../../hooks/useProfiles";
-import useProfilesAPI from "../../hooks/useProfilesAPI";
-import useSeriesAPI from "../../hooks/useSeriesAPI";
+import { useContext, useState } from "react";
+import { WebSocketContext } from "../../contexts/webSocketContext";
 
 const MassEditor = () => {
-	const leftToolBarItems: any = [
-		<ToolBarItem text="Update" icon={<SyncIcon fontSize="large" />} />,
-		<ToolBarItem text="RSS Sync" icon={<RssFeedIcon fontSize="medium" />} />,
-	];
-
-	const middleToolBarItems: any = [
-		<ToolBarItem text="Options" icon={<AppsIcon fontSize="large" />} />,
-	];
-	const rightToolBarItems: any = [
-		<ToolBarItem text="View" icon={<VisibilityIcon fontSize="medium" />} />,
-		<ToolBarItem text="Sort" icon={<SwitchLeftIcon fontSize="medium" />} />,
-		<ToolBarItem text="Filter" icon={<FilterAltIcon fontSize="medium" />} />,
-	];
-	const series: any = useSeriesAPI();
-	const profiles: any = useProfilesAPI();
+	const wsContext: any = useContext(WebSocketContext);
+	const series: any = wsContext?.data?.series;
+	const profiles: any = wsContext?.data?.profiles;
 	const [selectedSeries, setSelectedSeries] = useState<any>([]);
-
 	const [monitored, setMonitored] = useState<any>(false);
-
 	const [profile, setProfile] = useState<any>();
-	console.log(profiles);
-	console.log(monitored, profile, selectedSeries);
 	const applyChanges = () => {
-		for (const s in selectedSeries) {
-			selectedSeries[s].monitored =
+		for (const series of selectedSeries) {
+			series.monitored =
 				parseInt(monitored) !== -1 ? parseInt(monitored) : undefined;
-			selectedSeries[s].profile_id =
+			series.profile_id =
 				parseInt(profile) !== 0 ? parseInt(profile) : undefined;
-			console.log("test", selectedSeries[s]);
-			fetch(`http://localhost:8000/api/series/${selectedSeries[s].id}`, {
+			fetch(`http://localhost:8000/api/series/${series.id}`, {
 				method: "PUT",
 				headers: {
 					"Content-Type": "application/json",
 				},
-				body: JSON.stringify(selectedSeries[s]),
+				body: JSON.stringify(series),
 			});
 		}
 	};
@@ -60,70 +32,85 @@ const MassEditor = () => {
 				: [...prevSelected, series]
 		);
 	};
-
 	return (
 		<div className={styles.massEditor}>
-			<table>
-				<thead>
-					<tr>
-						<th></th>
-						<th>Series Title</th>
-						<th>Codec Profile</th>
-						<th>Path</th>
-						<th>Size on Disk</th>
-					</tr>
-				</thead>
-				<tbody>
-					{series?.map((s: any, index: any) => (
-						<tr>
-							<td>
-								<input
-									type="checkbox"
-									checked={selectedSeries.includes(s)}
-									onChange={() => handleCheckboxChange(s)}
-								/>
-							</td>
-							<td>{s.name}</td>
-							<td>{profiles[s.profile_id]?.name}</td>
-							<td>/series/{s.id}</td>
-							<td>{(s.size / 1000000000).toFixed(2)} GB</td>
-						</tr>
-					))}
-				</tbody>
-			</table>
-			<div className={styles.input}>
-				<div className={styles.inputContainer}>
-					<label>Monitored </label>
-					<select
-						className={styles.select}
-						value={monitored}
-						onChange={(e) => {
-							setMonitored(e.target.value);
-						}}
-					>
-						<option value={-1}>{"No Change"}</option>
-						<option value={0}>{"Not Monitored"}</option>
-						<option value={1}>{"Monitored"}</option>
-					</select>
+			<div className={styles.content}>
+				{series && series.length !== 0 ? (
+					<>
+						<table>
+							<thead>
+								<tr>
+									<th></th>
+									<th>Series Title</th>
+									<th>Monitored</th>
+									<th>Codec Profile</th>
+									<th>Path</th>
+									<th>Size on Disk</th>
+								</tr>
+							</thead>
+							<tbody>
+								{Object.values(series || {}).map((s: any, index: any) => (
+									<tr>
+										<td>
+											<input
+												type="checkbox"
+												checked={selectedSeries.some(
+													(series: any) => series.id === s.id
+												)}
+												onChange={() => handleCheckboxChange(s)}
+											/>
+										</td>
+										<td>{s.name}</td>
+										<td>
+											{s.monitored ? Boolean(s.monitored).toString() : "false"}
+										</td>
+										<td>{profiles[s.profile_id]?.name}</td>
+										<td>/series/{s.id}</td>
+										<td>{(s.size / 1000000000).toFixed(2)} GB</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
+					</>
+				) : (
+					<>No Media Found</>
+				)}
+			</div>
+			<div className={styles.footer}>
+				<div className={styles.input}>
+					<div className={styles.inputContainer}>
+						<label>Monitored </label>
+						<select
+							className={styles.select}
+							value={monitored}
+							onChange={(e) => {
+								setMonitored(e.target.value);
+							}}
+						>
+							<option value={-1}>{"No Change"}</option>
+							<option value={0}>{"Not Monitored"}</option>
+							<option value={1}>{"Monitored"}</option>
+						</select>
+					</div>
+					<div className={styles.inputContainer}>
+						<label>Profile </label>
+						<select
+							className={styles.select}
+							value={profile}
+							onChange={(e) => {
+								setProfile(e.target.value);
+							}}
+						>
+							<option value={0}>{"No Change"}</option>
+							{Object.values(profiles || {}).map((profile: any) => (
+								<option value={profile.id}>{profile.name}</option>
+							))}
+						</select>
+					</div>
+					<button className={styles.apply} onClick={applyChanges}>
+						Apply
+					</button>
 				</div>
-				<div className={styles.inputContainer}>
-					<label>Profile </label>
-					<select
-						className={styles.select}
-						value={profile}
-						onChange={(e) => {
-							setProfile(e.target.value);
-						}}
-					>
-						<option value={0}>{"No Change"}</option>
-						{Object.values(profiles)?.map((profile: any) => (
-							<option value={profile.id}>{profile.name}</option>
-						))}
-					</select>
-				</div>
-				<button className={styles.apply} onClick={applyChanges}>
-					Apply
-				</button>
 			</div>
 		</div>
 	);

@@ -1,35 +1,108 @@
 import styles from "./Media.module.scss";
 import PosterComponent from "../poster/Poster";
-import JumpBar from "../jumpbar/JumpBar";
 import ToolBar from "../ToolBar/ToolBar";
 import Footer from "../footer/Footer";
 import ToolBarItem from "../ToolBarItem/ToolBarItem";
+import { useContext } from "react";
 
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import AppsIcon from "@mui/icons-material/Apps";
-import RssFeedIcon from "@mui/icons-material/RssFeed";
-import SyncIcon from "@mui/icons-material/Sync";
-import SwitchLeftIcon from "@mui/icons-material/SwitchLeft";
-import { useEffect, useState } from "react";
-import useSeries from "../../hooks/useSeries";
-import useSingleSeries from "../../hooks/useSingleSeries";
+import { ReactComponent as Rss } from "../svgs/rss_feed.svg";
+import { ReactComponent as Sync } from "../svgs/cached.svg";
+import { ReactComponent as AppsIcon } from "../svgs/apps.svg";
+import { ReactComponent as ViewIcon } from "../svgs/visibility.svg";
+import { ReactComponent as SortIcon } from "../svgs/sort.svg";
+import { ReactComponent as FilterIcon } from "../svgs/filter.svg";
+
+import { WebSocketContext } from "../../contexts/webSocketContext";
+
 const ExplorerComponent = () => {
-	const series = useSeries();
-	console.log(series);
+	const wsContext = useContext(WebSocketContext);
+	const series = wsContext?.data?.series;
+	const onUpdate = async () => {
+		await fetch(`http://localhost:8000/api/scan/series`, {
+			method: "PUT",
+		});
+	};
+
+	const onRefresh = async () => {
+		await fetch(`http://localhost:8000/api/scan/series/metadata`, {
+			method: "PUT",
+		});
+	};
 
 	const leftToolBarItems: any = [
-		<ToolBarItem text="Update" icon={<SyncIcon fontSize="large" />} />,
-		<ToolBarItem text="RSS Sync" icon={<RssFeedIcon fontSize="medium" />} />,
+		<ToolBarItem
+			text="Scan"
+			icon={
+				<Sync
+					style={{
+						height: "100%",
+						width: "100%",
+					}}
+				/>
+			}
+			onClick={onUpdate}
+		/>,
+		<ToolBarItem
+			text="Metadata"
+			icon={
+				<Rss
+					style={{
+						height: "100%",
+						width: "100%",
+					}}
+				/>
+			}
+			onClick={onRefresh}
+		/>,
 	];
 
 	const middleToolBarItems: any = [
-		<ToolBarItem text="Options" icon={<AppsIcon fontSize="large" />} />,
+		<ToolBarItem
+			text="Options"
+			icon={
+				<AppsIcon
+					style={{
+						height: "100%",
+						width: "100%",
+					}}
+				/>
+			}
+		/>,
 	];
 	const rightToolBarItems: any = [
-		<ToolBarItem text="View" icon={<VisibilityIcon fontSize="medium" />} />,
-		<ToolBarItem text="Sort" icon={<SwitchLeftIcon fontSize="medium" />} />,
-		<ToolBarItem text="Filter" icon={<FilterAltIcon fontSize="medium" />} />,
+		<ToolBarItem
+			text="View"
+			icon={
+				<ViewIcon
+					style={{
+						height: "100%",
+						width: "100%",
+					}}
+				/>
+			}
+		/>,
+		<ToolBarItem
+			text="Sort"
+			icon={
+				<SortIcon
+					style={{
+						height: "100%",
+						width: "100%",
+					}}
+				/>
+			}
+		/>,
+		<ToolBarItem
+			text="Filter"
+			icon={
+				<FilterIcon
+					style={{
+						height: "100%",
+						width: "100%",
+					}}
+				/>
+			}
+		/>,
 	];
 
 	const posterClick = (name: any) => {
@@ -38,6 +111,7 @@ const ExplorerComponent = () => {
 			window.location.href = name;
 		}
 	};
+
 	return (
 		<div className={styles.media}>
 			<ToolBar
@@ -48,14 +122,13 @@ const ExplorerComponent = () => {
 			<div className={styles.mediaContent}>
 				<div className={styles.contentContainer}>
 					<div className={styles.content}>
-						{series.map((value) => (
-							<div
-								className={styles.poster}
-								onClick={() => posterClick(value["name"])}
-							>
-								<PosterComponent name={value["name"]} />
-							</div>
-						))}
+						{Object.keys(series || {})
+							?.sort()
+							.map((key: any) => (
+								<div className={styles.poster} onClick={() => posterClick(key)}>
+									<PosterComponent name={key} />
+								</div>
+							))}
 					</div>
 
 					<div className={styles.footerContent}>{<Footer />}</div>

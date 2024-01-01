@@ -16,7 +16,10 @@ async def get_all_series():
     async with AsyncSession(engine) as async_session:
         res = await async_session.execute(select(Series))
         objects = res.scalars().all()
-        return [instance_to_dict(obj) for obj in objects]
+        series_dict = {}
+        for obj in objects:
+            series_dict[obj.id] = await get_full_series(obj.id)
+        return series_dict
 
 
 async def get_series(series_id):

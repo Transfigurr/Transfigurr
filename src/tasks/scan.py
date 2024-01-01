@@ -2,11 +2,13 @@ from dataclasses import asdict
 import os
 import re
 from src.api.controllers.episode_controller import get_episode, remove_episode, set_episode
+from src.api.controllers.profile_controller import get_profile
 from src.api.controllers.season_controller import remove_season, set_season
 from src.api.controllers.series_controller import get_all_series, get_full_series, get_series, remove_series, set_series
+from src.api.controllers.settings_controller import get_all_settings
 from src.api.controllers.system_controller import set_system
 from src.api.routes.scan_routes import get_series_metadata
-from src.api.utils import analyze_media_file, get_series_folder, verify_folders, get_movies_folder
+from src.api.utils import analyze_media_file, get_config_folder, get_series_folder, get_transcode_folder, verify_folders, get_movies_folder
 from src.models.episode import Episode
 from src.models.season import Season
 from src.models.series import Series
@@ -38,12 +40,15 @@ async def scan_series(series_id):
     series_size = 0
     series_space_saved = 0
     series_episode_count = 0
+    series_missing_episodes = 0
     series.id = series_id
-    series.name = series_id
+    settings = await get_all_settings()
     if not old_series or not old_series['profile_id']:
-        series.profile_id = 1
+        series.profile_id = settings['default_profile']
     if not series.name:
         missing_metadata = True
+    profile = await get_profile(series.profile_id)
+    settings = await get_all_settings()
     pattern = re.compile(r"(?:S(\d{2})E(\d{2})|E(\d{2}))")
     for season_name in os.listdir(series_path):
         if season_name == ".DS_Store":
@@ -56,6 +61,7 @@ async def scan_series(series_id):
         season = Season()
         season_size = 0
         episode_count = 0
+        missing_episodes = 0
         season_size_saved = 0
         season.id = str(series_id)+str(season_number)
         season.season_number = season_number
@@ -93,15 +99,14 @@ async def scan_series(series_id):
             episode['season_number'] = season_number
             
             episode_size = os.path.getsize(episode_path)
-            print(episode,episode_size)
             if 'original_size' not in episode:
-                print('setting original size')
                 episode['original_size'] = episode_size
 
             if 'size' not in episode or episode['size'] != episode_size:
-                print('setting space_saved')
                 episode['original_size'] = episode_size
                 episode['space_saved'] = 0
+            if episode['video_codec'] != profile['codec']:
+                missing_episodes += 1
 
             episode['size'] = episode_size
             season_size += episode['size']
@@ -116,16 +121,19 @@ async def scan_series(series_id):
         season.size = season_size
         season.space_saved = season_size_saved
         season.episode_count = episode_count
+        season.missing_episodes = missing_episodes 
 
         series_episode_count += episode_count
         series_size += season_size
         series_space_saved += season_size_saved
+        series_missing_episodes += missing_episodes
         await set_season(asdict(season))
 
     # Save the Series instance to the database
     series.size = series_size
     series.space_saved = series_space_saved
     series.episode_count = series_episode_count
+    series.missing_episodes = series_missing_episodes
     await set_series(asdict(series))
     if missing_metadata:
         await get_series_metadata(series.id)
@@ -182,7 +190,11 @@ async def scan_system():
     series_free_space, series_total_space = get_disk_space(await get_series_folder())
     movies_free_space, movies_total_space = get_disk_space(await get_movies_folder())
 
-    for s in series:
+    config_free_space, config_total_space = get_disk_space(await get_config_folder())
+    transcode_free_space, transcode_total_space = get_disk_space(await get_transcode_folder())
+
+    for id in series:
+        s = series[id]
         series_count += 1
         size_on_disk += s['size']
         space_saved += s['space_saved']
@@ -212,4 +224,8 @@ async def scan_system():
     await set_system({'id': 'series_free_space', 'value': series_free_space})
     await set_system({'id': 'movies_total_space', 'value': movies_total_space})
     await set_system({'id': 'movies_free_space', 'value': movies_free_space})
+    await set_system({'id': 'config_total_space', 'value': config_total_space})
+    await set_system({'id': 'config_free_space', 'value': config_free_space})
+    await set_system({'id': 'transcode_total_space', 'value': transcode_total_space})
+    await set_system({'id': 'transcode_free_space', 'value': transcode_free_space})
     return

@@ -1,4 +1,4 @@
-const sonarrBlue = "#35c5f4";
+const transfigurrPurple = "#9338b5";
 const darkGray = "#888";
 const mediumGray = "#999";
 const gray = "#adadad";
@@ -25,7 +25,7 @@ const dark = {
 	infoColor: "#5d9cec",
 	purple,
 	pink,
-	sonarrBlue,
+	transfigurrPurple,
 	helpTextColor: "#909293",
 	darkGray,
 	gray,
@@ -34,7 +34,7 @@ const dark = {
 
 	// Theme Colors
 
-	themeBlue: sonarrBlue,
+	themePurple: transfigurrPurple,
 	themeAlternateBlue: "#2193b5",
 	themeRed: "#c4273c",
 	themeDarkColor: "#494949",
@@ -132,14 +132,14 @@ const dark = {
 	//
 	// Menu
 	menuItemColor: "#e1e2e3",
-	menuItemHoverColor: sonarrBlue,
+	menuItemHoverColor: transfigurrPurple,
 	menuItemHoverBackgroundColor: "#606060",
 
 	//
 	// Toolbar
 
-	toobarButtonHoverColor: sonarrBlue,
-	toobarButtonSelectedColor: sonarrBlue,
+	toobarButtonHoverColor: transfigurrPurple,
+	toobarButtonSelectedColor: transfigurrPurple,
 
 	//
 	// Scroller

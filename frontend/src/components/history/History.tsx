@@ -7,8 +7,8 @@ import RssFeedIcon from "@mui/icons-material/RssFeed";
 import SyncIcon from "@mui/icons-material/Sync";
 import SwitchLeftIcon from "@mui/icons-material/SwitchLeft";
 import ToolBar from "../ToolBar/ToolBar";
-import useHistory from "../../hooks/useHistory";
-import useProfiles from "../../hooks/useProfiles";
+import { WebSocketContext } from "../../contexts/webSocketContext";
+import { useContext } from "react";
 
 const History = () => {
 	const leftToolBarItems: any = [
@@ -25,44 +25,50 @@ const History = () => {
 		<ToolBarItem text="Filter" icon={<FilterAltIcon fontSize="medium" />} />,
 	];
 
-	const history = useHistory();
-	const profiles: any = useProfiles();
-	console.log(history);
+	const wsContext: any = useContext(WebSocketContext);
+	const history = wsContext?.data?.history;
+
 	return (
 		<div className={styles.history}>
 			<ToolBar
-				leftToolBarItems={leftToolBarItems}
-				middleToolBarItems={middleToolBarItems}
-				rightToolBarItems={rightToolBarItems}
+				leftToolBarItems={[]}
+				middleToolBarItems={[]}
+				rightToolBarItems={[]}
 			/>
-			<table>
-				<thead>
-					<tr>
-						<th>Series</th>
-						<th>Season</th>
-						<th>Episode</th>
-						<th>Episode Title</th>
-						<th>Current Codec</th>
-						<th>Future Codec</th>
-						<th>Profile</th>
-					</tr>
-				</thead>
-				<tbody>
-					{Object.values(history)
-						.reverse()
-						.map((entry: any) => (
+			<div className={styles.content}>
+				{history && history.length === 0 ? (
+					<table>
+						<thead>
 							<tr>
-								<td>{entry?.episode?.series_id}</td>
-								<td>{entry?.episode?.season_name}</td>
-								<td>{entry?.episode?.episode_number}</td>
-								<td>{entry?.episode?.episode_name}</td>
-								<td>{entry?.prev_codec}</td>
-								<td>{entry?.new_codec}</td>
-								<td>{entry?.profile?.name}</td>
+								<th>Series</th>
+								<th>Season</th>
+								<th>Episode</th>
+								<th>Episode Title</th>
+								<th>Current Codec</th>
+								<th>Future Codec</th>
+								<th>Profile</th>
 							</tr>
-						))}
-				</tbody>
-			</table>
+						</thead>
+						<tbody>
+							{Object.values(history || {})
+								.reverse()
+								.map((entry: any) => (
+									<tr>
+										<td>{entry?.episode?.series_id}</td>
+										<td>{entry?.episode?.season_name}</td>
+										<td>{entry?.episode?.episode_number}</td>
+										<td>{entry?.episode?.episode_name}</td>
+										<td>{entry?.prev_codec}</td>
+										<td>{entry?.new_codec}</td>
+										<td>{entry?.profile?.name}</td>
+									</tr>
+								))}
+						</tbody>
+					</table>
+				) : (
+					<>History is Empty</>
+				)}
+			</div>
 		</div>
 	);
 };

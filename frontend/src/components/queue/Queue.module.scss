@@ -3,7 +3,26 @@
 	flex-direction: column;
 	height: 100%;
 	width: 100%;
+	.content {
+		margin: 20px;
+	}
 	table {
-		padding: 20px;
+		border-collapse: collapse;
+		width: 100%;
+
+		tr {
+			border-top: 1px solid #e5e5e5;
+		}
+	}
+
+	th,
+	td {
+		//border: 1px solid #dddddd;
+		text-align: left;
+		padding: 8px;
+		margin: 8px;
+	}
+	tr {
+		padding: 8px;
 	}
 }

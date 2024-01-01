@@ -21,6 +21,7 @@ API_KEY = config['API_KEY']
 
 async def get_all_series_metadata():
     series_list = await get_all_series()
+    print('getting metadata for all series')
     for series in series_list:
         await get_series_metadata(series['id'])
     return
