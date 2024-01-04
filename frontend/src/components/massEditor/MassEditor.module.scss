@@ -2,35 +2,12 @@
 	display: flex;
 	flex-direction: column;
 	width: 100%;
+	background-color: rgb(250, 251, 252);
 }
 .content {
 	padding: 20px;
 	overflow-y: scroll;
 	height: 80%;
-
-	table {
-		width: 100%;
-		thead {
-			border: none;
-			tr {
-				border: none;
-			}
-			td {
-				border: none;
-			}
-		}
-		tr {
-			border: none;
-		}
-		td {
-			text-align: left;
-			padding: 16px;
-		}
-
-		tr:hover:not(:first-child) {
-			background-color: #ddd;
-		}
-	}
 }
 .footer {
 	display: flex;
@@ -45,8 +22,8 @@
 			display: flex;
 			flex-direction: row;
 			align-items: center;
-			justify-content: flex-start;
 			width: 30%;
+			padding-right: 40px;
 
 			.select {
 				display: flex;
@@ -60,14 +37,84 @@
 			label {
 				color: #515253;
 				padding-bottom: 5px;
+				padding-right: 10px;
 				display: flex;
 				justify-content: center;
 				align-items: center;
 			}
 		}
-
-		.apply {
-			margin-left: 50px;
+		.buttonContainer {
+			height: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			.apply {
+				width: 100px;
+				height: 50px;
+				background-color: white;
+				border-color: var(--transfigurrPurple);
+			}
 		}
 	}
+}
+
+.table {
+	color: #515253;
+	border-collapse: collapse;
+	width: 100%;
+	border: none;
+	font-size: 14px;
+	.row {
+		border-top: 1px solid #eee;
+		padding: 15px;
+	}
+	.row:hover {
+		background-color: white;
+	}
+	.headRow {
+		border: none;
+		font-size: 14px;
+	}
+}
+
+.name {
+	color: var(--transfigurrPurple);
+	text-decoration: none;
+}
+
+.name:hover {
+	color: black;
+	text-decoration: underline;
+}
+
+.iconCell {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 50px;
+	margin: 1px;
+	fill: #515253;
+}
+
+.inputCell {
+	width: 14px;
+}
+
+.checkbox {
+	height: 20px;
+	width: 20px;
+}
+
+.continue {
+	height: 25px;
+	width: 25px;
+}
+.monitored {
+	width: 20px;
+	height: 20px;
+}
+
+.stopped {
+	width: 25px;
+	height: 25px;
 }

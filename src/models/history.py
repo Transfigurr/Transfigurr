@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from sqlalchemy import Column, String, Integer, ForeignKey
-
+from datetime import datetime
 
 from src.models.base import Base
 
@@ -14,3 +14,4 @@ class History(Base):
     profile_id: str = Column(String, ForeignKey('profiles.id'))
     prev_codec: str = Column(String)
     new_codec: str = Column(String)
+    date: str = Column(String, default=datetime.now().isoformat())

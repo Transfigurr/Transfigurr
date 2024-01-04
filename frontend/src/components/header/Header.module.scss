@@ -9,9 +9,10 @@
 		flex-direction: row;
 		width: 50%;
 		.logo {
-			height: 40px;
-			width: 40px;
+			height: 55px;
+			width: 55px;
 			padding-left: 20px;
+			cursor: pointer;
 		}
 		.status {
 			margin-left: 15px;
@@ -20,7 +21,29 @@
 			justify-content: center;
 			color: white;
 			font-size: 12px;
-			width: 75px;
+			width: 60px;
+			height: 60px;
+			.line {
+				display: flex;
+				flex-direction: row;
+				height: 15px;
+				.icon {
+					width: 15px;
+					height: 15px;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					fill: white;
+					padding-right: 5px;
+				}
+				.text {
+					height: 15px;
+					display: flex;
+					flex: 1;
+					align-items: center;
+					justify-content: flex-start;
+				}
+			}
 		}
 	}
 	.right {
@@ -70,7 +93,6 @@
 	justify-content: center;
 	font-size: 11px;
 	height: 20px;
-	color: #8895aa;
 }
 
 .toolBarOption:hover {

@@ -3,26 +3,104 @@
 	flex-direction: column;
 	height: 100%;
 	width: 100%;
+	background-color: rgb(250, 251, 252);
 	.content {
 		margin: 20px;
 	}
-	table {
-		border-collapse: collapse;
-		width: 100%;
+}
 
-		tr {
-			border-top: 1px solid #e5e5e5;
-		}
+.table {
+	color: #515253;
+	border-collapse: collapse;
+	width: 100%;
+	border: none;
+	font-size: 14px;
+	.row {
+		border-top: 1px solid #eee;
 	}
+	.row:hover {
+		background-color: white;
+	}
+	.headRow {
+		border: none;
+		font-size: 14px;
+	}
+}
 
-	th,
-	td {
-		//border: 1px solid #dddddd;
-		text-align: left;
-		padding: 8px;
-		margin: 8px;
-	}
-	tr {
-		padding: 8px;
-	}
+th,
+td {
+	text-align: left;
+	padding: 8px;
+	margin: 8px;
+}
+.iconCell {
+	padding: 0px;
+	margin: 0px;
+}
+tr {
+	padding: 8px;
+}
+
+.navigation {
+	color: #515253;
+	fill: #515253;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 30px;
+	font-size: 13px;
+}
+
+.button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	height: 100%;
+}
+
+.disabled {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	opacity: 0.25;
+	cursor: auto;
+}
+
+.totalRecords {
+	color: #999;
+	font-size: 14px;
+	display: flex;
+	justify-content: flex-end;
+	align-items: flex-start;
+}
+
+.name {
+	color: var(--transfigurrPurple);
+	text-decoration: none;
+}
+
+.name:hover {
+	color: black;
+	text-decoration: underline;
+}
+
+.codec {
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	background-color: #4f566f;
+	border-radius: 2px;
+	color: white;
+	font-size: 11px;
+	padding: 1px 3px;
+	margin: 2px;
+	border: 1px solid #4f566f;
+	line-height: 1;
+	cursor: default;
+}
+.codecRow {
+	padding: 0px;
+	margin: 0px;
 }

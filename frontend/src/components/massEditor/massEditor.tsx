@@ -1,10 +1,17 @@
 import styles from "./MassEditor.module.scss";
 import { useContext, useState } from "react";
 import { WebSocketContext } from "../../contexts/webSocketContext";
+import { ReactComponent as BookmarkFilled } from "../svgs/bookmark_filled.svg";
+import { ReactComponent as BookmarkUnfilled } from "../svgs/bookmark_unfilled.svg";
+import { ReactComponent as ContinuingIcon } from "../svgs/play_arrow.svg";
+import { ReactComponent as StoppedIcon } from "../svgs/stop.svg";
+import ToolBar from "../ToolBar/ToolBar";
 
 const MassEditor = () => {
 	const wsContext: any = useContext(WebSocketContext);
 	const series: any = wsContext?.data?.series;
+	const seriesArray = Array.from(Object.values(series || {}));
+
 	const profiles: any = wsContext?.data?.profiles;
 	const [selectedSeries, setSelectedSeries] = useState<any>([]);
 	const [monitored, setMonitored] = useState<any>(false);
@@ -32,27 +39,42 @@ const MassEditor = () => {
 				: [...prevSelected, series]
 		);
 	};
+	const [selectAll, setSelectAll] = useState(false);
+	const handleSelectAllChange = () => {
+		setSelectAll(!selectAll);
+		setSelectedSeries(!selectAll ? seriesArray : []);
+	};
 	return (
 		<div className={styles.massEditor}>
+			<ToolBar />
 			<div className={styles.content}>
 				{series && series.length !== 0 ? (
 					<>
-						<table>
+						<table className={styles.table}>
 							<thead>
-								<tr>
+								<tr className={styles.headRow}>
+									<th>
+										<input
+											className={styles.checkbox}
+											type="checkbox"
+											checked={selectAll}
+											onChange={handleSelectAllChange}
+										/>
+									</th>
 									<th></th>
-									<th>Series Title</th>
-									<th>Monitored</th>
-									<th>Codec Profile</th>
+									<th>Series</th>
+									<th>Profile</th>
 									<th>Path</th>
+									<th>Space Saved</th>
 									<th>Size on Disk</th>
 								</tr>
 							</thead>
 							<tbody>
-								{Object.values(series || {}).map((s: any, index: any) => (
-									<tr>
-										<td>
+								{seriesArray?.map((s: any, index: any) => (
+									<tr className={styles.row}>
+										<td className={styles.inputCell}>
 											<input
+												className={styles.checkbox}
 												type="checkbox"
 												checked={selectedSeries.some(
 													(series: any) => series.id === s.id
@@ -60,12 +82,26 @@ const MassEditor = () => {
 												onChange={() => handleCheckboxChange(s)}
 											/>
 										</td>
-										<td>{s.name}</td>
+										<td className={styles.iconCell}>
+											{s?.monitored ? (
+												<BookmarkFilled className={styles.monitored} />
+											) : (
+												<BookmarkUnfilled className={styles.monitored} />
+											)}
+											{s?.status !== "Ended" ? (
+												<ContinuingIcon className={styles.continue} />
+											) : (
+												<StoppedIcon className={styles.stopped} />
+											)}
+										</td>
 										<td>
-											{s.monitored ? Boolean(s.monitored).toString() : "false"}
+											<a href={"/series/" + s?.id} className={styles.name}>
+												{s?.id}
+											</a>
 										</td>
 										<td>{profiles[s.profile_id]?.name}</td>
 										<td>/series/{s.id}</td>
+										<td>{(s.space_saved / 1000000000).toFixed(2)} GB</td>
 										<td>{(s.size / 1000000000).toFixed(2)} GB</td>
 									</tr>
 								))}
@@ -107,9 +143,11 @@ const MassEditor = () => {
 							))}
 						</select>
 					</div>
-					<button className={styles.apply} onClick={applyChanges}>
-						Apply
-					</button>
+					<div className={styles.buttonContainer}>
+						<button className={styles.apply} onClick={applyChanges}>
+							Apply
+						</button>
+					</div>
 				</div>
 			</div>
 		</div>
