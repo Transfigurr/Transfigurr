@@ -1,4 +1,4 @@
-const transfigurrPurple = "#9338b5";
+const transfigurrPurple = "#9C27B0";
 const darkGray = "#888";
 const mediumGray = "#999";
 const gray = "#adadad";

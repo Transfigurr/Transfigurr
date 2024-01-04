@@ -5,6 +5,8 @@
 	align-items: flex-start;
 	transition: border-left 0.3s ease-in-out;
 	border-left: 3px solid transparent;
+	font-size: 14px;
+	font-weight: bold;
 	cursor: pointer;
 	.mainItem {
 		width: 100%;
@@ -24,8 +26,7 @@
 	}
 	.mainItem:hover {
 		cursor: pointer;
-		color: #9338b5;
-		fill: #9338b5;
+		color: var(--transfigurrPurple);
 	}
 	.childItem {
 		height: 40px;
@@ -39,6 +40,6 @@
 	}
 	.childItem:hover {
 		cursor: pointer;
-		color: #9338b5;
+		color: var(--transfigurrPurple);
 	}
 }

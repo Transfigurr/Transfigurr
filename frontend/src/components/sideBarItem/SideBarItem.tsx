@@ -46,8 +46,7 @@ const SideBarItem = ({
 							selectedItem === index
 								? {
 										color: "var(--transfigurrPurple)",
-										fill: "#35c5f4",
-										stroke: "#35c5f4",
+										fill: "var(--transfigurrPurple)",
 								  }
 								: {}
 						}
