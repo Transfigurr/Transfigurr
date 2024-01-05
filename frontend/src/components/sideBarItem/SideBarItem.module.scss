@@ -15,7 +15,6 @@
 		display: flex;
 		align-items: center;
 		justify-content: flex-start;
-		font-size: 15px;
 		fill: white;
 
 		.svg {
@@ -27,6 +26,7 @@
 	.mainItem:hover {
 		cursor: pointer;
 		color: var(--transfigurrPurple);
+		fill: var(--transfigurrPurple);
 	}
 	.childItem {
 		height: 40px;
@@ -35,7 +35,6 @@
 		display: flex;
 		align-items: center;
 		justify-content: flex-start;
-		font-size: 15px;
 		padding-left: 40px;
 	}
 	.childItem:hover {
