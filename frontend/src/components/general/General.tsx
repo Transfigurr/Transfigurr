@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import styles from "./General.module.scss";
 import { WebSocketContext } from "../../contexts/webSocketContext";
 import ToolBar from "../ToolBar/ToolBar";

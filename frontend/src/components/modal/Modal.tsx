@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import SeriesModals from "../seriesModals/SeriesModals";
 import ProfileModal from "../profileModal/ProfileModal";
 import { ModalContext } from "../../contexts/modalContext";

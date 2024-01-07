@@ -28,8 +28,6 @@ const Modal = ({ isOpen, onClose, children, profile }: any) => {
 		onClose();
 	};
 
-	const onDeleteProfile = () => {};
-
 	return (
 		<div className={styles.modalOverlay}>
 			<div className={styles.modal}>
