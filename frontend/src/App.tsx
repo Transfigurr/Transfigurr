@@ -2,7 +2,6 @@ import styles from "./App.module.scss";
 import HeaderComponent from "./components/header/Header";
 import SideBar from "./components/sideBar/SideBar";
 import MediaComponent from "./components/media/Media";
-import LibraryImport from "./components/libraryImport/LibraryImport";
 import MassEditor from "./components/massEditor/massEditor";
 import Queue from "./components/queue/Queue";
 import History from "./components/history/History";
@@ -130,7 +129,6 @@ function App() {
 			<Routes>
 				<Route path="/" element={<MediaComponent />} />
 				<Route path="/series/:seriesName" element={<SeriesSelect />} />
-				<Route path="/library-import" element={<LibraryImport />} />
 				<Route path="/mass-editor" element={<MassEditor />} />
 
 				<Route path="/activity" element={<Activity />} />

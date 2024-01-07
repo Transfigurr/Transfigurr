@@ -9,9 +9,9 @@ const Status = () => {
 		<div className={styles.status}>
 			<div className={styles.diskSpace}>
 				<div className={styles.header}>Disk Space</div>
-				<table>
+				<table className={styles.table}>
 					<thead>
-						<tr>
+						<tr className={styles.headRow}>
 							<th>Location</th>
 							<th>Free Space</th>
 							<th>Total Space</th>
@@ -19,7 +19,7 @@ const Status = () => {
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
+						<tr className={styles.row}>
 							<td>/config</td>
 							<td>{(system?.config_free_space / 1000000000).toFixed(2)} GB</td>
 							<td>{(system?.config_total_space / 1000000000).toFixed(2)} GB</td>
@@ -46,7 +46,7 @@ const Status = () => {
 								</div>
 							</td>
 						</tr>
-						<tr>
+						<tr className={styles.row}>
 							<td>/movies</td>
 							<td>{(system?.movies_free_space / 1000000000).toFixed(2)} GB</td>
 							<td>{(system?.movies_total_space / 1000000000).toFixed(2)} GB</td>
@@ -73,7 +73,7 @@ const Status = () => {
 								</div>
 							</td>
 						</tr>
-						<tr>
+						<tr className={styles.row}>
 							<td>/series</td>
 							<td>{(system?.series_free_space / 1000000000).toFixed(2)} GB</td>
 							<td>{(system?.series_total_space / 1000000000).toFixed(2)} GB</td>
@@ -100,7 +100,7 @@ const Status = () => {
 								</div>
 							</td>
 						</tr>
-						<tr>
+						<tr className={styles.row}>
 							<td>/transcode</td>
 							<td>
 								{(system?.transcode_free_space / 1000000000).toFixed(2)} GB

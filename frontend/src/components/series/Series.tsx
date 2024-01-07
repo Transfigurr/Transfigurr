@@ -2,8 +2,8 @@ import { useContext } from "react";
 import ToolBar from "../ToolBar/ToolBar";
 import styles from "./Series.module.scss";
 import ToolBarItem from "../ToolBarItem/ToolBarItem";
-import RssFeedIcon from "@mui/icons-material/RssFeed";
-import SyncIcon from "@mui/icons-material/Sync";
+import { ReactComponent as RssFeedIcon } from "../svgs/rss_feed.svg";
+import { ReactComponent as SyncIcon } from "../svgs/sync.svg";
 import Season from "../season/Season";
 import { WebSocketContext } from "../../contexts/webSocketContext";
 import { ModalContext } from "../../contexts/modalContext";
@@ -21,11 +21,11 @@ const Series = ({ series_name }: any) => {
 		modalContext?.setShowModal(true);
 	};
 	const leftToolBarItems: any = [
-		<ToolBarItem text="Update" icon={<SyncIcon fontSize="large" />} />,
-		<ToolBarItem text="RSS Sync" icon={<RssFeedIcon fontSize="medium" />} />,
+		<ToolBarItem text="Scan" icon={<SyncIcon />} />,
+		<ToolBarItem text="Metadata" icon={<RssFeedIcon />} />,
 		<ToolBarItem
 			text="Edit"
-			icon={<RssFeedIcon fontSize="medium" />}
+			icon={<RssFeedIcon />}
 			onClick={handleEditClick}
 		/>,
 	];
