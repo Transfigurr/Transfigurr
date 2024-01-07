@@ -18,7 +18,7 @@
   </p>
 </p>
 
-![Docker Pulls](https://img.shields.io/docker/pulls/transfigurr/transfigurr) ![Contributors](https://img.shields.io/github/contributors/Transfigurr/Transfigurr?color=dark-green) ![Issues](https://img.shields.io/github/issues/Transfigurr/Transfigurr) ![License](https://img.shields.io/github/license/Transfigurr/Transfigurr)![Frontend](https://github.com/transfigurr/transfigurr/actions/workflows/frontend.yml/badge.svg)![Backend](https://github.com/transfigurr/transfigurr/actions/workflows/backend.yml/badge.svg)![Docker](https://github.com/transfigurr/transfigurr/actions/workflows/docker.yml/badge.svg)![GitHub release (latest by date)](https://img.shields.io/github/v/release/transfigurr/transfigurr)
+![Docker Pulls](https://img.shields.io/docker/pulls/transfigurr/transfigurr) ![Contributors](https://img.shields.io/github/contributors/Transfigurr/Transfigurr?color=dark-green) ![Issues](https://img.shields.io/github/issues/Transfigurr/Transfigurr)![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/transfigurr/transfigurr?include_prereleases)![License](https://img.shields.io/github/license/Transfigurr/Transfigurr)![Frontend](https://github.com/transfigurr/transfigurr/actions/workflows/frontend.yml/badge.svg)![Backend](https://github.com/transfigurr/transfigurr/actions/workflows/backend.yml/badge.svg)![Docker](https://github.com/transfigurr/transfigurr/actions/workflows/docker.yml/badge.svg)
 
 ## Table Of Contents
 
