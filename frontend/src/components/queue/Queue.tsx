@@ -1,65 +1,199 @@
-import ToolBarItem from "../ToolBarItem/ToolBarItem";
 import styles from "./Queue.module.scss";
-
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import AppsIcon from "@mui/icons-material/Apps";
-import RssFeedIcon from "@mui/icons-material/RssFeed";
-import SyncIcon from "@mui/icons-material/Sync";
-import SwitchLeftIcon from "@mui/icons-material/SwitchLeft";
 import ToolBar from "../ToolBar/ToolBar";
-import useQueue from "../../hooks/useQueue";
-import useProfiles from "../../hooks/useProfiles";
+import { useContext, useState } from "react";
+import { WebSocketContext } from "../../contexts/webSocketContext";
+import { ReactComponent as SkipNext } from "../svgs/skip_next.svg";
+import { ReactComponent as SkipPrevious } from "../svgs/skip_previous.svg";
+import { ReactComponent as NavigateNext } from "../svgs/navigate_next.svg";
+import { ReactComponent as NavigateBefore } from "../svgs/navigate_before.svg";
+import { ReactComponent as ResetWrench } from "../svgs/reset_wrench.svg";
+import { ReactComponent as QueueIcon } from "../svgs/queue.svg";
 
 const Queue = () => {
-	const queue = useQueue();
-	const profiles: any = useProfiles();
-	const leftToolBarItems: any = [
-		<ToolBarItem text="Update" icon={<SyncIcon fontSize="large" />} />,
-		<ToolBarItem text="RSS Sync" icon={<RssFeedIcon fontSize="medium" />} />,
-	];
+	const wsContext = useContext(WebSocketContext);
+	const profiles = wsContext?.data?.profiles;
+	const series = wsContext?.data?.series;
+	const queue = wsContext?.data?.queue;
 
-	const middleToolBarItems: any = [
-		<ToolBarItem text="Options" icon={<AppsIcon fontSize="large" />} />,
-	];
-	const rightToolBarItems: any = [
-		<ToolBarItem text="View" icon={<VisibilityIcon fontSize="medium" />} />,
-		<ToolBarItem text="Sort" icon={<SwitchLeftIcon fontSize="medium" />} />,
-		<ToolBarItem text="Filter" icon={<FilterAltIcon fontSize="medium" />} />,
-	];
+	const recordsPerPage = 13;
+	const [currentPage, setCurrentPage] = useState(1);
+	const queueArray = Array.from(Object.values(queue?.queue || []));
+
+	const indexOfLastRecord = currentPage * recordsPerPage;
+	const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+	const currentRecords = queueArray.slice(
+		indexOfFirstRecord,
+		indexOfLastRecord
+	);
+
+	const totalPages = Math.ceil(queueArray.length / recordsPerPage);
+
+	const firstPage = () => {
+		setCurrentPage(1);
+	};
+	const lastPage = () => {
+		setCurrentPage(totalPages);
+	};
+
+	const nextPage = () => {
+		if (currentPage < totalPages) {
+			setCurrentPage(currentPage + 1);
+		}
+	};
+
+	const prevPage = () => {
+		if (currentPage > 1) {
+			setCurrentPage(currentPage - 1);
+		}
+	};
 	return (
 		<div className={styles.queue}>
 			<ToolBar
-				leftToolBarItems={leftToolBarItems}
-				middleToolBarItems={middleToolBarItems}
-				rightToolBarItems={rightToolBarItems}
+				leftToolBarItems={[]}
+				middleToolBarItems={[]}
+				rightToolBarItems={[]}
 			/>
-			<table>
-				<thead>
-					<tr>
-						<th>Series</th>
-						<th>Episode</th>
-						<th>Episode Title</th>
-						<th>Current Codec</th>
-						<th>Future Codec</th>
-						<th>Profile</th>
-					</tr>
-				</thead>
-				<tbody>
-					{queue?.map((q: any) => (
-						<tr>
-							<td>{q.series_id}</td>
-							<td>
-								{q.season_number}x{q.episode_number}
-							</td>
-							<td>{q.episode_name}</td>
-							<td>{q.video_codec}</td>
-							<td>{profiles ? profiles[q.profile]?.codec : ""}</td>
-							<td>{profiles ? profiles[q.profile]?.name : ""}</td>
-						</tr>
-					))}
-				</tbody>
-			</table>
+			<div className={styles.content}>
+				{queue && queue.queue.length !== 0 ? (
+					<>
+						<table className={styles.table}>
+							<thead>
+								<tr className={styles.headRow}>
+									<th></th>
+									<th>Series</th>
+									<th>Episode</th>
+									<th>Episode Title</th>
+									<th>Profile</th>
+									<th>Codec</th>
+									<th>Future Codec</th>
+									<th>Stage</th>
+									<th>Time Left</th>
+									<th>Progress</th>
+								</tr>
+							</thead>
+							<tbody>
+								{currentRecords?.map((q: any, index: number) => (
+									<tr className={styles.row}>
+										<td className={styles.iconCell}>
+											{index === 1 ? (
+												<QueueIcon
+													style={{
+														height: "25px",
+														width: "25px",
+														fill: "#515253",
+													}}
+												/>
+											) : (
+												<ResetWrench
+													style={{
+														height: "25px",
+														width: "25px",
+														fill: "#515253",
+													}}
+												/>
+											)}
+										</td>
+										<td>
+											<a
+												href={"/series/" + q?.series_id}
+												className={styles.name}
+											>
+												{q?.series_id}
+											</a>
+										</td>
+										<td>
+											{q.season_number}x{q.episode_number}
+										</td>
+										<td>{q.episode_name}</td>
+										<td>
+											{profiles
+												? profiles[series[q?.series_id].profile_id].name
+												: ""}
+										</td>
+										<td className={styles.codecRow}>
+											<div className={styles.codec}>{q.video_codec}</div>
+										</td>
+										<td className={styles.codecRow}>
+											<div className={styles.codec}>
+												{profiles
+													? profiles[series[q?.series_id].profile_id].codec
+													: ""}
+											</div>
+										</td>
+
+										<td>{index === 0 ? queue?.stage : "-"}</td>
+										<td>
+											{index === 0
+												? Math.floor(parseInt(queue.eta || 0) / 60).toString() +
+												  ":" +
+												  (parseInt(queue.eta || 0) % 60).toString()
+												: "-"}
+										</td>
+										<td>
+											<div
+												style={{
+													height: "20px",
+													width: "100%",
+													backgroundColor: "#f3f3f3",
+													boxShadow: "inset 0 1px 2px rgba(0, 0, 0, 0.1)",
+													borderRadius: "4px",
+												}}
+											>
+												<div
+													style={{
+														height: "100%",
+														width: `${index === 0 ? queue.progress || 0 : 0}%`,
+														backgroundColor: "var(--transfigurrPurple)",
+														borderRadius: "4px",
+													}}
+												/>
+											</div>
+										</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
+						<div className={styles.navigation}>
+							<div
+								onClick={firstPage}
+								className={currentPage === 1 ? styles.disabled : styles.button}
+							>
+								<SkipPrevious />
+							</div>
+							<div
+								onClick={prevPage}
+								className={currentPage === 1 ? styles.disabled : styles.button}
+							>
+								<NavigateBefore />
+							</div>
+							<div className={styles.pageInfo}>
+								{currentPage} / {totalPages}
+							</div>
+							<div
+								onClick={nextPage}
+								className={
+									currentPage === totalPages ? styles.disabled : styles.button
+								}
+							>
+								<NavigateNext />
+							</div>
+							<div
+								onClick={lastPage}
+								className={
+									currentPage === totalPages ? styles.disabled : styles.button
+								}
+							>
+								<SkipNext />
+							</div>
+						</div>
+						<div className={styles.totalRecords}>
+							Total Records: {queueArray.length}
+						</div>
+					</>
+				) : (
+					<>Queue is empty</>
+				)}
+			</div>
 		</div>
 	);
 };

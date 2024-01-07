@@ -2,7 +2,6 @@ import styles from "./App.module.scss";
 import HeaderComponent from "./components/header/Header";
 import SideBar from "./components/sideBar/SideBar";
 import MediaComponent from "./components/media/Media";
-import LibraryImport from "./components/libraryImport/LibraryImport";
 import MassEditor from "./components/massEditor/massEditor";
 import Queue from "./components/queue/Queue";
 import History from "./components/history/History";
@@ -10,52 +9,97 @@ import Settings from "./components/settings/Settings";
 import Profiles from "./components/profiles/Profiles";
 import MediaManagement from "./components/mediaManagement/MediaManagement";
 import General from "./components/general/General";
-import UI from "./components/ui/UI";
 import Status from "./components/status/Status";
-import Tasks from "./components/tasks/Tasks";
-import Backup from "./components/backup/Backup";
-import Updates from "./components/updates/Updates";
-import Events from "./components/events/Events";
-import LogFiles from "./components/logFiles/LogFiles";
-import { useCallback, useEffect, useMemo, useState } from "react";
-
+import { useContext, useEffect, useState } from "react";
 import {
 	BrowserRouter as Router,
 	Route,
 	Routes,
-	Link,
 	useNavigate,
-	Outlet,
 	useParams,
 	useLocation,
-	BrowserRouter,
 } from "react-router-dom";
 import Series from "./components/series/Series";
 
+import { getTheme } from "./styles/themes";
+import { WebSocketContext } from "./contexts/webSocketContext";
+import { WebSocketProvider } from "./contexts/webSocketProvider";
+import Modal from "./components/modal/Modal";
+import { ModalContext } from "./contexts/modalContext";
 function App() {
-	const [selectedItem, setSelectedItem] = useState<number>(-1);
-	const [selectedOption, setSelectedOption] = useState<number>(0);
+	const [selectedItem, setSelectedItem] = useState<any>(null);
+	const [selectedOption, setSelectedOption] = useState<any>(null);
+	const wsContext: any = useContext(WebSocketContext);
+	const settings: any = wsContext?.settings;
+	const [theme, setTheme] = useState<any>(null);
+
+	useEffect(() => {
+		const modalBackdropClass = "modalBackdrop";
+
+		const handleKeyDown = (event: KeyboardEvent) => {
+			if (event.key === "Escape") {
+				modalContext?.setShowModal(false);
+			}
+		};
+		const handleOutsideClick = (event: any) => {
+			if (event.target.classList.value.includes(modalBackdropClass)) {
+				modalContext?.setShowModal(false);
+			}
+		};
+		window.addEventListener("click", handleOutsideClick);
+		window.addEventListener("keydown", handleKeyDown);
+		return () => {
+			window.removeEventListener("click", handleOutsideClick);
+			window.removeEventListener("keydown", handleKeyDown);
+		};
+	});
+
+	let t = null;
+	useEffect(() => {
+		setTheme("dark");
+	}, [settings]);
+
+	t = getTheme(theme);
+	if (t) {
+		Object.entries(t).forEach(([key, value]) => {
+			document.documentElement.style.setProperty(`--${key}`, value);
+		});
+	}
+	const modalContext = useContext(ModalContext);
 	return (
 		<Router>
-			<div className={styles.app}>
-				<HeaderComponent />
-				<div className={styles.content}>
-					<div className={styles.sideBar}>
-						<SideBar
-							selectedOption={selectedOption}
-							setSelectedOption={setSelectedOption}
-							selectedItem={selectedItem}
-							setSelectedItem={setSelectedItem}
-						/>
-					</div>
-					<div className={styles.page}>
-						<Page
-							setSelectedOption={setSelectedOption}
-							setSelectedItem={setSelectedItem}
-						/>
-					</div>
+			{t ? (
+				<div className={styles.app}>
+					<>
+						{modalContext?.showModal ? (
+							<div className={styles.modalBackdrop}>
+								<div className={styles.modalContent}>
+									<Modal />
+								</div>
+							</div>
+						) : (
+							<></>
+						)}
+					</>
+					<WebSocketProvider>
+						<HeaderComponent />
+						<div className={styles.content}>
+							<div className={styles.sideBar}>
+								<SideBar
+									selectedOption={selectedOption}
+									setSelectedOption={setSelectedOption}
+									selectedItem={selectedItem}
+									setSelectedItem={setSelectedItem}
+								/>
+							</div>
+							<Page
+								setSelectedOption={setSelectedOption}
+								setSelectedItem={setSelectedItem}
+							/>
+						</div>
+					</WebSocketProvider>
 				</div>
-			</div>
+			) : null}
 		</Router>
 	);
 
@@ -64,16 +108,14 @@ function App() {
 		const pathname: string = location.pathname;
 		const sidebar: any = {
 			"/": [0, -1],
-			"/library-import": [0, 0],
-			"/mass-editor": [0, 1],
+			"/mass-editor": [0, 0],
 			"/activity": [1, -1],
 			"/activity/queue": [1, 0],
 			"/activity/history": [1, 1],
 
 			"/settings": [2, -1],
-			"/settings/media-management": [2, 0],
-			"/settings/profiles": [2, 1],
-			"/settings/general": [2, 2],
+			"/settings/profiles": [2, 0],
+			"/settings/general": [2, 1],
 			"/system": [3, -1],
 			"/system/status": [3, 0],
 		};
@@ -81,11 +123,12 @@ function App() {
 		setSelectedOption(pathname in sidebar ? sidebar[pathname][0] : 0);
 		setSelectedItem(pathname in sidebar ? sidebar[pathname][1] : -1);
 
+		const [selectedSeries, setSelectedSeries] = useState<any>([]);
+		console.log("reload app");
 		return (
 			<Routes>
 				<Route path="/" element={<MediaComponent />} />
 				<Route path="/series/:seriesName" element={<SeriesSelect />} />
-				<Route path="/library-import" element={<LibraryImport />} />
 				<Route path="/mass-editor" element={<MassEditor />} />
 
 				<Route path="/activity" element={<Activity />} />

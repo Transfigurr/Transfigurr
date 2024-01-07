@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, String
 
 from src.models.base import Base
 
@@ -7,7 +7,5 @@ from src.models.base import Base
 class Setting(Base):
     __tablename__ = 'settings'
 
-    id: int = Column(Integer, primary_key=True)
-    name: str = Column(String)
-    type: str = Column(String)
+    id: int = Column(String, primary_key=True)
     value: str = Column(String)

@@ -1,11 +1,11 @@
 import styles from "./Profile.module.scss";
-import AddIcon from "@mui/icons-material/Add";
+import { ReactComponent as AddIcon } from "../svgs/add.svg";
 const Profile = ({ name, type = "", codecs }: any) => {
 	return (
 		<div className={styles.profile} key={name}>
 			{type === "add" ? (
 				<div className={styles.add}>
-					<div className={styles.box}>{<AddIcon fontSize="large" />}</div>
+					<div className={styles.box}>{<AddIcon />}</div>
 				</div>
 			) : (
 				<div className={styles.normal}>

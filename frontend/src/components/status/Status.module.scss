@@ -53,3 +53,33 @@
 		}
 	}
 }
+
+.table {
+	color: #515253;
+	border-collapse: collapse;
+	width: 100%;
+	border: none;
+	font-size: 14px;
+
+	tbody {
+		.row {
+			border-top: 1px solid #eee;
+			th,
+			td {
+				text-align: left;
+				padding: 8px;
+				margin: 8px;
+				white-space: nowrap;
+				overflow: hidden;
+			}
+		}
+
+		.row:hover {
+			background-color: white;
+		}
+	}
+	.headRow {
+		border: none;
+		font-size: 14px;
+	}
+}

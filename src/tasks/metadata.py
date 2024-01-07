@@ -21,6 +21,7 @@ API_KEY = config['API_KEY']
 
 async def get_all_series_metadata():
     series_list = await get_all_series()
+    print('getting metadata for all series')
     for series in series_list:
         await get_series_metadata(series['id'])
     return
@@ -67,6 +68,7 @@ async def get_series_metadata(series_id):
                                 episode['season_number'] = season['season_number']
                                 episode['episode_name'] = episode_data.get('name')
                                 episode['episode_number'] = episode_data.get('episode_number')
+                                episode['air_date'] = episode_data.get('air_date')
                                 await set_episode(episode)
                             else:
                                 print(f"Failed to fetch episode {episode_number} information. Status code: {episode_response.status_code}")

@@ -5,17 +5,6 @@ const Settings = ({ setSelectedItem }: any) => {
 			<div className={styles.setting}>
 				<div
 					className={styles.header}
-					onClick={() => (window.location.href = "/settings/media-management")}
-				>
-					Media Management
-				</div>
-				<div className={styles.body}>
-					Naming, file management settings and root folders
-				</div>
-			</div>
-			<div className={styles.setting}>
-				<div
-					className={styles.header}
 					onClick={() => (window.location.href = "/settings/profiles")}
 				>
 					Profiles

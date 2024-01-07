@@ -15,11 +15,19 @@ const SideBarItem = ({
 	return (
 		<div
 			className={styles.sideBarItem}
-			style={selected ? { borderLeft: "3px solid #2193b5" } : {}}
+			style={selected ? { borderLeft: "3px solid #9338b5" } : {}}
 		>
 			<div
 				className={styles.mainItem}
-				style={selected ? { color: "#35c5f4", backgroundColor: "#252833" } : {}}
+				style={
+					selected
+						? {
+								color: "var(--transfigurrPurple)",
+								backgroundColor: "#252833",
+								fill: "var(--transfigurrPurple)",
+						  }
+						: {}
+				}
 				onClick={() => {
 					onParentClick();
 					setSelectedItem(-1);
@@ -34,7 +42,14 @@ const SideBarItem = ({
 						className={styles.childItem}
 						key={index}
 						onClick={() => onItemClick(index)}
-						style={selectedItem === index ? { color: "#35c5f4" } : {}}
+						style={
+							selectedItem === index
+								? {
+										color: "var(--transfigurrPurple)",
+										fill: "var(--transfigurrPurple)",
+								  }
+								: {}
+						}
 					>
 						{child.text}
 					</div>

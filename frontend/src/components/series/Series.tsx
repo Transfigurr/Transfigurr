@@ -1,56 +1,37 @@
-import { useState } from "react";
+import { useContext } from "react";
 import ToolBar from "../ToolBar/ToolBar";
 import styles from "./Series.module.scss";
 import ToolBarItem from "../ToolBarItem/ToolBarItem";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import AppsIcon from "@mui/icons-material/Apps";
-import RssFeedIcon from "@mui/icons-material/RssFeed";
-import SyncIcon from "@mui/icons-material/Sync";
-import SwitchLeftIcon from "@mui/icons-material/SwitchLeft";
-import Modal from "../modal/Modal";
+import { ReactComponent as RssFeedIcon } from "../svgs/rss_feed.svg";
+import { ReactComponent as SyncIcon } from "../svgs/sync.svg";
 import Season from "../season/Season";
-import useProfilesAPI from "../../hooks/useProfilesAPI";
-import useSingleSeries from "../../hooks/useSingleSeries";
-import useSeasons from "../../hooks/useSeason";
-import useEpisodes from "../../hooks/useEpisodes";
+import { WebSocketContext } from "../../contexts/webSocketContext";
+import { ModalContext } from "../../contexts/modalContext";
+
 const Series = ({ series_name }: any) => {
+	const modalContext = useContext(ModalContext);
 	series_name = series_name.replace(/-/g, " ");
-	const [modalType, setModalType] = useState("");
-	const profiles: any = useProfilesAPI();
+	const wsContext = useContext(WebSocketContext);
+	const profiles = wsContext?.data?.profiles;
+	const series = wsContext?.data?.series[series_name];
 
-	const series: any = useSingleSeries(series_name);
-	console.log(series);
-
-	const [isModalOpen, setIsModalOpen] = useState(false);
 	const handleEditClick = () => {
-		console.log(series);
-		setContent({
-			monitored: series?.monitored,
-			profile_id: series?.profile_id,
-			id: series?.id,
-		});
-		setModalType("edit");
-		setIsModalOpen(true);
+		modalContext?.setModalType("editSeries");
+		modalContext?.setModalData(series);
+		modalContext?.setShowModal(true);
 	};
 	const leftToolBarItems: any = [
-		<ToolBarItem text="Update" icon={<SyncIcon fontSize="large" />} />,
-		<ToolBarItem text="RSS Sync" icon={<RssFeedIcon fontSize="medium" />} />,
+		<ToolBarItem text="Scan" icon={<SyncIcon />} />,
+		<ToolBarItem text="Metadata" icon={<RssFeedIcon />} />,
 		<ToolBarItem
 			text="Edit"
-			icon={<RssFeedIcon fontSize="medium" />}
+			icon={<RssFeedIcon />}
 			onClick={handleEditClick}
 		/>,
 	];
 
-	const middleToolBarItems: any = [
-		<ToolBarItem text="Options" icon={<AppsIcon fontSize="large" />} />,
-	];
-	const rightToolBarItems: any = [
-		<ToolBarItem text="View" icon={<VisibilityIcon fontSize="medium" />} />,
-		<ToolBarItem text="Sort" icon={<SwitchLeftIcon fontSize="medium" />} />,
-		<ToolBarItem text="Filter" icon={<FilterAltIcon fontSize="medium" />} />,
-	];
+	const middleToolBarItems: any = [];
+	const rightToolBarItems: any = [];
 
 	const status = series?.status;
 	const network = series?.networks;
@@ -61,23 +42,6 @@ const Series = ({ series_name }: any) => {
 	const runYears =
 		status === "Ended" ? firstAirDate + "-" + lastAirDate : firstAirDate + "-";
 
-	const onSave = async () => {
-		console.log("content", content);
-		content.id = series.id;
-		await fetch(`http://localhost:8000/api/series/${series.name}`, {
-			method: "PUT",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(content),
-		});
-		setIsModalOpen(false);
-	};
-	const [content, setContent] = useState({
-		monitored: series?.monitored,
-		profile_id: series?.profile_id,
-		id: series?.id,
-	});
 	return (
 		<div className={styles.series}>
 			<ToolBar
@@ -85,29 +49,13 @@ const Series = ({ series_name }: any) => {
 				middleToolBarItems={middleToolBarItems}
 				rightToolBarItems={rightToolBarItems}
 			/>
-			{/* Render different modals based on the type */}
-			{isModalOpen && modalType === "edit" && (
-				<div className={styles.modalBackdrop}>
-					<div className={styles.modalContent}>
-						<Modal
-							header={"Edit - " + series?.name}
-							type={"edit"}
-							isOpen={isModalOpen}
-							setIsOpen={setIsModalOpen}
-							onSave={onSave}
-							data={profiles}
-							content={content}
-							setContent={setContent}
-						/>
-					</div>
-				</div>
-			)}
+
 			<div className={styles.header}>
 				<img
 					className={styles.backdrop}
 					src={
 						"http://localhost:8000/config/artwork/series/" +
-						series_name +
+						series?.id +
 						"/backdrop.jpg"
 					}
 					alt="backdrop"
@@ -118,7 +66,7 @@ const Series = ({ series_name }: any) => {
 						className={styles.poster}
 						src={
 							"http://localhost:8000/config/artwork/series/" +
-							series_name +
+							series?.id +
 							"/poster.jpg"
 						}
 						alt={"poster"}
@@ -133,12 +81,16 @@ const Series = ({ series_name }: any) => {
 							<span className={styles.runYears}>{runYears}</span>
 						</div>
 						<div className={styles.tags}>
-							<div className={styles.tag}>{series?.name}</div>
+							<div className={styles.tag}>{"/series/" + series?.name}</div>
 
-							<div className={styles.tag}>Test GB</div>
 							<div className={styles.tag}>
-								{series?.profile_id in profiles
-									? profiles[series?.profile_id].name
+								{" "}
+								{((series?.size || 0) / 1000000000).toFixed(2).toString() +
+									" GB"}
+							</div>
+							<div className={styles.tag}>
+								{profiles && series?.profile_id in profiles
+									? profiles[series?.profile_id]?.name
 									: ""}
 							</div>
 							<div className={styles.tag}>
@@ -152,9 +104,11 @@ const Series = ({ series_name }: any) => {
 				</div>
 			</div>
 			<div className={styles.seasonsContainer}>
-				{Object.values(series.seasons || {}).map((season: any) => {
-					return <Season season={season} />;
-				})}
+				{Object.values(series?.seasons || {})
+					.reverse()
+					.map((season: any) => {
+						return <Season season={season} />;
+					})}
 			</div>
 		</div>
 	);

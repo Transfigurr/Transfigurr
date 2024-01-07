@@ -6,27 +6,15 @@ def seed_settings(conn):
         conn.execute(insert(Setting).values(setting))
 default_settings = [
     {
-        "id": 0,
-        "name": "Root Folder",
-        "type": "string",
-        "value": "/"
+        "id": "theme",
+        "value": "auto"
     },
-    {
-        "id": 1,
-        "name": "Series Folder",
-        "type": "string",
-        "value": "/series"
+    {   
+        "id": "default_profile",
+        "value": "1"
     },
-    {
-        "id": 2,
-        "name": "Movies_ Folder",
-        "type": "string",
-        "value": "/movies"
+    {   
+        "id": "queue_startup_state",
+        "value": "previous"
     },
-    {
-        "id": 3,
-        "name": "Transcode Folder",
-        "type": "string",
-        "value": "/transcode"
-    }
 ]

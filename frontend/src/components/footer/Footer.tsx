@@ -1,15 +1,7 @@
+import useSystem from "../../hooks/useSystem";
 import styles from "./Footer.module.scss";
-const Footer = ({ data }: any) => {
-	const series = "Series " + (data ? data.length : 0).toString();
-	const ended = "Ended " + (data ? data.length : 0).toString();
-	const continuing = "Continuing " + (data ? data.length : 0).toString();
-	const monitored = "Monitored " + (data ? data.length : 0).toString();
-	const unmonitored = "Unmonitored " + (data ? data.length : 0).toString();
-	const episodes = "Episodes " + (data ? data.length : 0).toString();
-	const movies = "Movies " + (data ? data.length : 0).toString();
-	const files = "Files " + (data ? data.length : 0).toString();
-	const totalFileSize =
-		"Total File Size " + (data ? data.length : 0).toString();
+const Footer = () => {
+	const system: any = useSystem();
 
 	return (
 		<div className={styles.footer}>
@@ -44,15 +36,34 @@ const Footer = ({ data }: any) => {
 				</div>
 			</div>
 			<div className={styles.dataContainer}>
-				<div className={styles.data}>{series}</div>
-				<div className={styles.data}>{ended}</div>
-				<div className={styles.data}>{continuing}</div>
-				<div className={styles.data}>{monitored}</div>
-				<div className={styles.data}>{unmonitored}</div>
-				<div className={styles.data}>{episodes}</div>
-				<div className={styles.data}>{movies}</div>
-				<div className={styles.data}>{files}</div>
-				<div className={styles.data}>{totalFileSize}</div>
+				<div className={styles.section}>
+					<div className={styles.data}>Series {system?.series_count}</div>
+					<div className={styles.data}>Ended {system?.ended_count}</div>
+					<div className={styles.data}>
+						Continuing {system?.continuing_count}
+					</div>
+				</div>
+				<div className={styles.section}>
+					<div className={styles.data}>Monitored {system?.monitored_count}</div>
+
+					<div className={styles.data}>
+						Unmonitored {system?.unmonitored_count}
+					</div>
+				</div>
+				<div className={styles.section}>
+					<div className={styles.data}>Episodes {system?.episode_count}</div>
+					<div className={styles.data}>Files {system?.files_count}</div>
+				</div>
+				<div className={styles.section}>
+					<div className={styles.data}>
+						{"Size on Disk   "}
+						{(system?.size_on_disk / 1000000000).toFixed(2)} GB
+					</div>
+					<div className={styles.data}>
+						{"Space Saved   "}
+						{(system?.space_saved / 1000000000).toFixed(2)} GB
+					</div>
+				</div>
 			</div>
 		</div>
 	);

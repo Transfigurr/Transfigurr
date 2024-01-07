@@ -1,5 +1,6 @@
 .profiles {
 	height: 100%;
+	background-color: #fafbfc;
 
 	.modalBackdrop {
 		position: fixed;
@@ -25,8 +26,6 @@
 	.content {
 		display: flex;
 		flex-direction: column;
-		width: 100%;
-		height: 100%;
 		background-color: #fafbfc;
 		padding: 20px;
 		overflow: scroll;
@@ -34,7 +33,6 @@
 		.codecProfiles {
 			display: flex;
 			flex-direction: column;
-			width: 100%;
 			.header {
 				font-size: 21px;
 				margin-bottom: 21px;

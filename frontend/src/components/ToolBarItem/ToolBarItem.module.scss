@@ -5,25 +5,24 @@
 	justify-content: center;
 	height: 60px;
 	width: 60px;
-	color: white;
+	fill: white;
 	cursor: pointer;
 	.svg {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		max-height: 21px;
-		max-width: 21px;
-		opacity: 0.75;
+		min-height: 30px;
+		min-width: 30px;
 	}
 	.text {
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		font-size: 11px;
-		height: 24px;
+		height: 20px;
 		color: #8895aa;
 	}
 }
 .toolBarOption:hover {
-	color: #35c5f4;
+	fill: var(--themePurple);
 }

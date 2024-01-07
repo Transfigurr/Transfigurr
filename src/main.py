@@ -5,11 +5,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from starlette.responses import FileResponse
 from src.api.utils import get_root_folder
-
-from src.api.routes import codec_routes, encoder_routes, profile_routes, scan_routes, series_routes, settings_routes, season_routes
-from src.api.websockets import episode_websocket, profiles_websocket, queue_websocket, series_websocket, settings_websocket, season_websocket
-from src.models import container
+from src.api.routes import codec_routes, profile_routes, scan_routes, series_routes, settings_routes, season_routes, system_routes
+from src.api.websockets import channel
 from src.tasks.periodic import process_episodes_in_queue_periodic, scan_queue_periodic, start_watchdog
+from src.tasks.scan import scan_all_series
 
 # Create app
 app = FastAPI()
@@ -21,17 +20,10 @@ app.include_router(settings_routes.router)
 app.include_router(codec_routes.router)
 app.include_router(profile_routes.router)
 app.include_router(series_routes.router)
-app.include_router(encoder_routes.router)
-
+app.include_router(system_routes.router)
 
 # Add Websockets
-app.include_router(series_websocket.router)
-app.include_router(settings_websocket.router)
-app.include_router(season_websocket.router)
-app.include_router(queue_websocket.router)
-app.include_router(profiles_websocket.router)
-app.include_router(episode_websocket.router)
-
+app.include_router(channel.router)
 # CORS
 origins = [
     "http://localhost.tiangolo.com",
@@ -54,18 +46,19 @@ app.add_middleware(
 # Mount directories
 os.makedirs("../config", exist_ok=True)
 app.mount("/config", staticfiles.StaticFiles(directory="config"), name="config")
-app.mount("/static", StaticFiles(directory="frontend/build/static"), name="static")
+app.mount("/build", StaticFiles(directory="frontend/build"), name="build")
 
 # Start tasks
 @app.on_event("startup")
 async def startup_event():
     asyncio.create_task(scan_queue_periodic())
     asyncio.create_task(process_episodes_in_queue_periodic())
-
+    #inital scan
+    await scan_all_series()
     loop = asyncio.get_event_loop()
     loop.run_in_executor(None, start_watchdog, await get_root_folder() + '/series')
 
-    
+
 # Serve frontend
 @app.get("/")
 @app.get("/{path:path}")
