@@ -6,7 +6,7 @@ const ModalProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
 	const [showModal, setShowModal] = useState(false);
 	const [modalData, setModalData] = useState({});
-	const [modalType, setModalType] = useState("");
+	const [modalType, setModalType] = useState({});
 
 	const modalContextValue: ModalContextType = {
 		showModal,
