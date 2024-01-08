@@ -41,9 +41,9 @@ const HeaderComponent = () => {
 						<div className={styles.text}>
 							{queue && queue.stage !== "idle"
 								? Math.floor(parseInt(queue?.eta || 0) / 60) +
-								  "m " +
-								  (parseInt(queue?.eta || 0) % 60).toString() +
-								  "s"
+									"m " +
+									(parseInt(queue?.eta || 0) % 60).toString() +
+									"s"
 								: "-m -s"}
 						</div>
 					</div>

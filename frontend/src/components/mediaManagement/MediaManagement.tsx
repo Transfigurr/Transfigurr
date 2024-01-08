@@ -9,7 +9,7 @@ const MediaManagement = () => {
 
 	useEffect(() => {
 		const s: any = [];
-		for (let i in initialSettings) {
+		for (const i in initialSettings) {
 			s.push(initialSettings[i]);
 		}
 		setSettings(s);
@@ -17,7 +17,7 @@ const MediaManagement = () => {
 
 	const handleInputChange = (name: any, value: any) => {
 		const updatedSettings: any = settings.map((setting: any) =>
-			setting.name === name ? { ...setting, value } : setting
+			setting.name === name ? { ...setting, value } : setting,
 		);
 		setSettings(updatedSettings);
 	};

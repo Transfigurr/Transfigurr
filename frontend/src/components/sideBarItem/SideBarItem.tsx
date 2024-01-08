@@ -25,7 +25,7 @@ const SideBarItem = ({
 								color: "var(--transfigurrPurple)",
 								backgroundColor: "#252833",
 								fill: "var(--transfigurrPurple)",
-						  }
+							}
 						: {}
 				}
 				onClick={() => {
@@ -47,7 +47,7 @@ const SideBarItem = ({
 								? {
 										color: "var(--transfigurrPurple)",
 										fill: "var(--transfigurrPurple)",
-								  }
+									}
 								: {}
 						}
 					>

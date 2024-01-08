@@ -58,10 +58,9 @@ const Profiles = () => {
 	});
 	const profilesArray: any = [];
 
-	for (let i in profiles) {
+	for (const i in profiles) {
 		profilesArray.push(profiles[i]);
 	}
-	const dummy = (dummy: any) => {};
 
 	return (
 		<div className={styles.profiles}>
@@ -78,7 +77,6 @@ const Profiles = () => {
 							data={selectedProfile}
 							content={content}
 							setContent={setContent}
-							setShouldSubscribe={dummy}
 						/>
 					</div>
 				</div>

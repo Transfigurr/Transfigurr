@@ -27,9 +27,8 @@ const General = () => {
 				[key]: value,
 			};
 
-			// Compare newSettings with initialSettings
 			setSettingsChanged(
-				JSON.stringify(newSettings) !== JSON.stringify(initialSettings)
+				JSON.stringify(newSettings) !== JSON.stringify(initialSettings),
 			);
 
 			return newSettings;
@@ -40,7 +39,7 @@ const General = () => {
 		if (!settingsChanged) {
 			return;
 		}
-		for (let key in currentSettings) {
+		for (const key in currentSettings) {
 			fetch(`http://localhost:8000/api/settings`, {
 				method: "PUT",
 				headers: {

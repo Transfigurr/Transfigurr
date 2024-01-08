@@ -1,7 +1,6 @@
 import styles from "./History.module.scss";
 import { WebSocketContext } from "../../contexts/webSocketContext";
 import { useContext, useState } from "react";
-
 import { ReactComponent as SkipNext } from "../svgs/skip_next.svg";
 import { ReactComponent as SkipPrevious } from "../svgs/skip_previous.svg";
 import { ReactComponent as NavigateNext } from "../svgs/navigate_next.svg";
@@ -20,7 +19,7 @@ const History = () => {
 	const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
 	const currentRecords = historyArray.slice(
 		indexOfFirstRecord,
-		indexOfLastRecord
+		indexOfLastRecord,
 	);
 
 	const totalPages = Math.ceil(historyArray.length / recordsPerPage);

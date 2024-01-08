@@ -5,12 +5,12 @@ import App from "./App";
 import ModalContextProvider from "./contexts/modalContextProvider";
 
 const root = ReactDOM.createRoot(
-	document.getElementById("root") as HTMLElement
+	document.getElementById("root") as HTMLElement,
 );
 root.render(
 	<ModalContextProvider>
 		<StrictMode>
 			<App />
 		</StrictMode>
-	</ModalContextProvider>
+	</ModalContextProvider>,
 );
