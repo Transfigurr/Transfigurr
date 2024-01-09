@@ -8,11 +8,11 @@ interface WebSocketProviderProps {
 export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
 	children,
 }) => {
-	const [data, setData] = useState<any | null>(null);
-	const ws = useRef<WebSocket | null>(null);
+	const [data, setData] = useState(null);
+	const ws = useRef<WebSocket | null>(null); // Update the type of ws
 
 	useEffect(() => {
-		ws.current = new WebSocket("ws://localhost:8000/ws");
+		ws.current = new WebSocket("ws://localhost:8000/ws"); // Fix the assignment
 
 		ws.current.onopen = () => {
 			console.log("ws opened");

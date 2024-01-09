@@ -28,4 +28,4 @@ export type Episode = {
 	video_codec: string;
 };
 
-export type Profile = {};
+export type Profile = object;
