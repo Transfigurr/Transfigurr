@@ -16,8 +16,10 @@ from src.models.series import Series
 
 router = APIRouter()
 config = dotenv_values("src/.env")
-API_KEY = config['API_KEY']
-
+if 'API_KEY' in config:
+    API_KEY = config['API_KEY']
+else:
+    API_KEY = ""
 
 async def get_all_series_metadata():
     series_list = await get_all_series()

@@ -114,7 +114,7 @@ docker pull transfigurr/transfigurr
 or
 
 ```docker
-docker pull ghcr.io/transfigurr/transfigurr:main
+docker pull ghcr.io/transfigurr/transfigurr
 ```
 
 2. Run
