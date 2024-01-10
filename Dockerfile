@@ -33,12 +33,11 @@ WORKDIR /
 # Install uvicorn in the final stage
 RUN pip install -r src/requirements.txt
 
-# Initialize the database
-RUN mkdir -p /config/db
-RUN touch /config/db/database.db
-RUN python src/init_db.py
+# Copy the init script
+COPY init.sh /init.sh
+RUN chmod +x /init.sh
 
 # Expose the port the app runs on
 EXPOSE 8000
 # Command to run the application
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["/init.sh"]
