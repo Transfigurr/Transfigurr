@@ -36,7 +36,7 @@ const MassEditor = () => {
 		setSelectedSeries((prevSelected: any[]) =>
 			prevSelected.includes(series)
 				? prevSelected.filter((s) => s !== series)
-				: [...prevSelected, series]
+				: [...prevSelected, series],
 		);
 	};
 	const [selectAll, setSelectAll] = useState(false);
@@ -77,7 +77,7 @@ const MassEditor = () => {
 												className={styles.checkbox}
 												type="checkbox"
 												checked={selectedSeries.some(
-													(series: any) => series.id === s.id
+													(series: any) => series.id === s.id,
 												)}
 												onChange={() => handleCheckboxChange(s)}
 											/>

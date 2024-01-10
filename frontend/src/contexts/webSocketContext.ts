@@ -6,5 +6,5 @@ export type WebSocketContextType = {
 };
 
 export const WebSocketContext = createContext<WebSocketContextType | undefined>(
-	undefined
+	undefined,
 );

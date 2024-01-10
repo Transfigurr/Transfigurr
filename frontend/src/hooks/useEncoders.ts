@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 const useEncoders = () => {
-	const [encoders, setEncoders] = useState<{}>({});
+	const [encoders, setEncoders] = useState<object>({});
 	useEffect(() => {
 		fetch("http://localhost:8000/api/encoders")
 			.then((response) => response.json())

@@ -1,14 +1,14 @@
 import { createContext } from "react";
 
 export type ModalContextType = {
-	modalType: Object; // or replace with a more specific type
+	modalType: object;
 	setModalType: React.Dispatch<React.SetStateAction<string>>;
 	showModal: boolean;
 	setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
-	modalData: Object;
+	modalData: object;
 	setModalData: React.Dispatch<React.SetStateAction<any>>;
 };
 
 export const ModalContext = createContext<ModalContextType | undefined>(
-	undefined
+	undefined,
 );

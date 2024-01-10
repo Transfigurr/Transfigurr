@@ -1,10 +1,10 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import useProfilesAPI from "../../hooks/useProfilesAPI";
 import styles from "./SeriesModals.module.scss";
 import { ModalContext } from "../../contexts/modalContext";
 
 const SeriesModal = () => {
-	const profiles: {} = useProfilesAPI();
+	const profiles: object = useProfilesAPI();
 
 	const modalContext = useContext(ModalContext);
 	const onClose = () => {

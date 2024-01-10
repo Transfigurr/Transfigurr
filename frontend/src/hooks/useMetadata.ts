@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 const useMetadata = (name: string) => {
-	const [metadata, setMetadata] = useState<{}>({});
+	const [metadata, setMetadata] = useState<object>({});
 	useEffect(() => {
 		fetch(`http://localhost:8000/api/metadata/${name}`)
 			.then((response) => response.json())

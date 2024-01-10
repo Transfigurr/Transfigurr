@@ -23,7 +23,7 @@ const Queue = () => {
 	const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
 	const currentRecords = queueArray.slice(
 		indexOfFirstRecord,
-		indexOfLastRecord
+		indexOfLastRecord,
 	);
 
 	const totalPages = Math.ceil(queueArray.length / recordsPerPage);
@@ -125,8 +125,8 @@ const Queue = () => {
 										<td>
 											{index === 0
 												? Math.floor(parseInt(queue.eta || 0) / 60).toString() +
-												  ":" +
-												  (parseInt(queue.eta || 0) % 60).toString()
+													":" +
+													(parseInt(queue.eta || 0) % 60).toString()
 												: "-"}
 										</td>
 										<td>

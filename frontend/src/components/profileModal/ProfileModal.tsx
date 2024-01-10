@@ -153,7 +153,7 @@ const ProfileModal = ({
 							{containers[content?.container]?.extensions?.map(
 								(extension: any) => (
 									<option value={extension}>{extension}</option>
-								)
+								),
 							)}
 						</select>
 					</div>
