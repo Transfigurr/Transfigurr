@@ -16,12 +16,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '20.x'
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci
       - name: Run lint
         working-directory: frontend
         run: npm run lint
-      - name: Install dependencies and test
+      - name: Test
         working-directory: frontend
-        run: |
-            npm ci
-            npm run test -- --passWithNoTests
-      
+        run: npm run test -- --passWithNoTests
