@@ -34,10 +34,10 @@ WORKDIR /
 RUN pip install -r src/requirements.txt
 
 # Copy the init script
-COPY init.sh /init.sh
-RUN chmod +x /init.sh
+COPY init /init
+RUN chmod +x /init
 
 # Expose the port the app runs on
 EXPOSE 8000
 # Command to run the application
-CMD ["/init.sh"]
+CMD ["/init"]

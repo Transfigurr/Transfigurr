@@ -1,7 +1,7 @@
 import asyncio
 import os
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from src.tasks import periodic, scan
 from pathlib import Path
@@ -50,9 +50,13 @@ async def startup_event():
 app.add_event_handler("startup", startup_event)
 
 # Catch all static routes
-@app.get("/{full_path:path}", response_class=HTMLResponse)
+@app.get("/{full_path:path}")
 async def read_item(request: Request, full_path: str):
     file_path = Path(f"frontend/build/{full_path}")
     if not file_path.exists() or file_path.is_dir():
         file_path = Path("frontend/build/index.html")
-    return HTMLResponse(file_path.read_text(), media_type="text/html")
+    
+    if file_path.suffix in [".png", ".jpg", ".jpeg"]:
+        return FileResponse(str(file_path), media_type="image/png")
+    else:
+        return HTMLResponse(file_path.read_text(), media_type="text/html")
