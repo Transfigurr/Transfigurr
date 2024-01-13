@@ -10,7 +10,7 @@ RUN npm run build
 FROM python:alpine as backend
 WORKDIR /
 COPY src /src
-RUN apk add --no-cache ffmpeg && pip install -r src/requirements.txt
+RUN apk add --no-cache ffmpeg
 
 # Stage 3: Combine frontend and backend
 FROM python:alpine
@@ -22,9 +22,16 @@ COPY --from=frontend /frontend/build /frontend/build
 # Copy the built backend
 COPY --from=backend / /
 
+
+WORKDIR /
+
+# Install uvicorn in the final stage
+RUN pip install -r src/requirements.txt
+
 # Copy the init script
 COPY init /init
 RUN chmod +x /init
+
 
 # Expose the port the app runs on
 EXPOSE 8000
