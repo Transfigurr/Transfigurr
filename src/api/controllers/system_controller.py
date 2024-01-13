@@ -4,7 +4,6 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.future import select
 
 
-
 global_state = GlobalState()
 engine = create_async_engine("sqlite+aiosqlite:///config/db/database.db")
 
@@ -15,7 +14,7 @@ async def get_all_system():
         systems = res.scalars().all()
         s = {}
         for system in systems:
-           s[system.id] = system.value
+            s[system.id] = system.value
     return s
 
 
@@ -24,6 +23,7 @@ async def get_system(system_id):
         result = await async_session.execute(select(System).where(System.id == system_id))
         obj = result.scalars().first()
         return instance_to_dict(obj)
+
 
 async def set_system(system):
     async with AsyncSession(engine) as async_session:
@@ -37,4 +37,3 @@ async def set_system(system):
             s = System(**system)
             async_session.add(s)
         await async_session.commit()
-

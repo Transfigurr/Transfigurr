@@ -1,9 +1,7 @@
 
 from fastapi import Request
-from src.global_state import GlobalState
 from src.models.profile import Profile, profile_codec
 from sqlalchemy import delete, insert
-
 from src.global_state import GlobalState, instance_to_dict
 from sqlalchemy.future import select
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
@@ -11,6 +9,7 @@ engine = create_async_engine("sqlite+aiosqlite:///config/db/database.db")
 
 
 global_state = GlobalState()
+
 
 async def get_all_profiles():
     profiles = await global_state.get_all_from_table(Profile)
@@ -22,14 +21,15 @@ async def get_all_profiles():
             profile['codecs'] = [(instance_to_dict(obj))['codec_id'] for obj in res]
             p[profile['id']] = profile
     return p
-        
+
 
 async def get_profile(profile_id):
-    return await global_state.get_object_from_table(Profile, profile_id) 
+    return await global_state.get_object_from_table(Profile, profile_id)
+
 
 async def set_profile(request: Request):
     profile = await request.json()
-    codec_ids = profile.pop('codecs',[])
+    codec_ids = profile.pop('codecs', [])
     profile_id = 0
     async with AsyncSession(engine) as async_session:
         if 'id' in profile:
@@ -51,13 +51,12 @@ async def set_profile(request: Request):
             await async_session.flush()  # Flush to get the id of the new profile
             await async_session.refresh(obj)  # Refresh the object to get the new id
             profile_id = obj.id
-                
 
     async with AsyncSession(engine) as async_session:
 
         # Delete all profile_codec entries associated with the profile
         await async_session.execute(delete(profile_codec).where(profile_codec.profile_id == profile_id))
-        
+
         # Add the codecs to the profile
         for codec_id in codec_ids:
             stmt = insert(profile_codec).values(profile_id=profile_id, codec_id=codec_id)
@@ -65,6 +64,7 @@ async def set_profile(request: Request):
         # Commit the changes to the database
         await async_session.commit()
     return
+
 
 async def delete_profile(profile_id):
     async with AsyncSession(engine) as async_session:

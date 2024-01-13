@@ -6,6 +6,7 @@ def seed_system(conn):
     for system in default_system:
         conn.execute(insert(System).values(system))
 
+
 default_system = [
     {
         'id': 'series_count',

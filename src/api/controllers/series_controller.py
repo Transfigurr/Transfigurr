@@ -28,6 +28,7 @@ async def get_series(series_id):
         obj = result.scalars().first()
         return instance_to_dict(obj)
 
+
 async def set_series(series):
     async with AsyncSession(engine) as async_session:
         result = await async_session.execute(select(Series).where(Series.id == series['id']))
@@ -42,7 +43,6 @@ async def set_series(series):
         await async_session.commit()
 
 
-
 async def get_full_series(series_id: str):
     async with AsyncSession(engine) as async_session:
         series = await get_series(series_id)
@@ -54,11 +54,10 @@ async def get_full_series(series_id: str):
             season['episodes'] = {}  # Initialize 'episodes' as an empty dictionary
             for episode in result.scalars().all():
                 episode = instance_to_dict(episode)
-                season['episodes'][episode['episode_number']] = episode            
+                season['episodes'][episode['episode_number']] = episode
             seasons[season['season_number']] = season
         series['seasons'] = seasons
         return series
-
 
 
 async def remove_series(series_id: str):

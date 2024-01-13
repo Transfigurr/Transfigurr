@@ -6,6 +6,7 @@ from src.api.controllers.websocket_controller import get_all_websocket_data
 
 router = APIRouter()
 
+
 @router.websocket("/ws")
 async def websocket(websocket: WebSocket):
     try:
@@ -22,4 +23,3 @@ async def websocket(websocket: WebSocket):
     except Exception as e:
         logging.error(f"Error occurred: {e}")
         await websocket.close(code=1000)
-

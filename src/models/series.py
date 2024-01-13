@@ -1,12 +1,8 @@
 from dataclasses import dataclass
 from typing import List
-from sqlalchemy import Column, String
-from sqlalchemy import Column, Integer, String
 from src.models.base import Base
 from sqlalchemy import Column, Integer, String, ForeignKey
-from dataclasses import dataclass
-from typing import List
-from src.models.base import Base
+
 
 @dataclass
 class Series(Base):

@@ -1,6 +1,7 @@
 import queue
 import asyncio
 
+
 class Queue:
     # Queue functionality
     queue = queue.Queue()
@@ -11,7 +12,7 @@ class Queue:
     processing = False
     current_progress = 0
     current_eta = 0
-    
+
     @classmethod
     async def enqueue(cls, episode):
         episode_id = episode['id']
@@ -28,18 +29,19 @@ class Queue:
             episode_id = episode['id']
             cls.items.remove(episode_id)
             return episode
-        
+
     @classmethod
     def to_list(cls):
         items = list(cls.queue.queue)
         return items
-    
+
     @classmethod
     def peek(cls, index=0):
         try:
             return list(cls.queue.queue)[index]
         except IndexError:
             return None
+
 
 # Global instance of Queue
 queue_instance = Queue()

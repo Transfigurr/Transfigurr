@@ -10,3 +10,4 @@ databases[sqlite]
 sqlalchemy
 greenlet
 watchdog
+unidecode

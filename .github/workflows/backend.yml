@@ -13,10 +13,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
-        uses: actions/setup-node@v3
+        uses: actions/setup-python@v2
         with:
           python-version: 3.8
-      - name: Install packages and test
+      - name: Install dependencies
         run: |
             pip install -r src/requirements.txt
+            pip install flake8
+      - name: Lint with flake8
+        run: flake8 src
+      - name: Run tests
+        run: |
             pytest --exitfirst || echo "No tests to run"

@@ -6,11 +6,10 @@ from pathlib import Path
 import ffmpeg
 import os
 import aiofiles
-import aiofiles.os as aos
-
 
 
 file_locks = defaultdict(asyncio.Lock)
+
 
 async def verify_folders():
     root_folder_path = await get_root_folder()
@@ -21,25 +20,29 @@ async def verify_folders():
     paths.append(root_folder_path + '/series')
     paths.append(root_folder_path + '/movies')
     paths.append(root_folder_path + '/transcode')
-    
+
     loop = asyncio.get_event_loop()
 
     for path in paths:
         await loop.run_in_executor(None, partial(os.makedirs, path, exist_ok=True))
     return
 
+
 async def get_root_folder():
     current_file = Path(__file__).resolve()
     root_folder = current_file.parents[2]
     return str(root_folder)
+
 
 def get_root_folder2():
     current_file = Path(__file__).resolve()
     root_folder = current_file.parents[2]
     return str(root_folder)
 
+
 async def get_config_folder():
     return await get_root_folder() + '/config'
+
 
 async def get_series_artwork_folder():
     return await get_root_folder() + '/config/artwork/series'
@@ -48,16 +51,20 @@ async def get_series_artwork_folder():
 async def get_series_folder():
     return await get_root_folder() + '/series'
 
+
 async def get_movies_folder():
     return await get_root_folder() + '/movies'
+
 
 async def get_series_metadata_folder():
     return await get_root_folder() + '/config/metadata/series'
 
+
 async def get_transcode_folder():
     return await get_root_folder() + '/transcode'
 
-async def open_json(folder,file_path,default):
+
+async def open_json(folder, file_path, default):
     await verify_folders()
     await asyncio.get_event_loop().run_in_executor(None, partial(os.makedirs, folder, exist_ok=True))
     path = os.path.join(folder, file_path)
@@ -67,6 +74,7 @@ async def open_json(folder,file_path,default):
         async with aiofiles.open(path, "r") as json_file:
             data = await json_file.read()
     return json.loads(data)
+
 
 async def write_json(folder, file_path, data):
     await verify_folders()
@@ -86,9 +94,3 @@ async def analyze_media_file(file_path):
     except Exception as e:
         print(f"Error analyzing the media file: {e}")
         return None
-    
-
-
-
-
-    

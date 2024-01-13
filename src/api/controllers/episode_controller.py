@@ -6,11 +6,14 @@ from sqlalchemy.future import select
 global_state = GlobalState()
 engine = create_async_engine("sqlite+aiosqlite:///config/db/database.db")
 
+
 async def get_all_episodes():
     return await global_state.get_all_from_table(Episode)
 
+
 async def get_episode(episode_id):
     return await global_state.get_object_from_table(Episode, episode_id)
+
 
 async def set_episode(episode):
     return await global_state.set_object_to_table(Episode, episode)

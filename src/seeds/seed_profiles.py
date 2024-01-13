@@ -6,8 +6,9 @@ def seed_profiles(conn):
     for profile in default_profiles:
         conn.execute(insert(Profile).values(profile))
 
+
 default_profiles = [
-     {
+    {
         "name": "Any",
         "codec": "Any",
         "encoder": "",
@@ -32,7 +33,7 @@ default_profiles = [
         "container": "matroska",
         "extension": "mkv"
     },
- {
+    {
         "name": "mpeg4",
         "codec": "mpeg4",
         "encoder": "mpeg4",
@@ -48,7 +49,7 @@ default_profiles = [
         "container": "matroska",
         "extension": "mkv"
     },
-        {
+    {
         "name": "vp9",
         "codec": "vp9",
         "encoder": "libvpx-vp9",
