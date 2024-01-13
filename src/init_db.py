@@ -1,4 +1,6 @@
-from src.models.base import Base
+import os
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # noqa
 from src.models.system import System  # noqa
 from src.models.history import History  # noqa
 from src.models.episode import Episode  # noqa
@@ -6,13 +8,11 @@ from src.models.season import Season  # noqa
 from src.models.series import Series  # noqa
 from src.models.setting import Setting  # noqa
 from src.models.profile import Profile, profile_codec  # noqa
-from src.seeds.seed_system import seed_system
-from src.seeds.seed_settings import seed_settings
-from src.seeds.seed_profiles import seed_profiles
-from sqlalchemy import create_engine, inspect
-import os
-import sys
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from src.seeds.seed_system import seed_system  # noqa
+from src.seeds.seed_settings import seed_settings  # noqa
+from src.seeds.seed_profiles import seed_profiles  # noqa
+from sqlalchemy import create_engine, inspect  # noqa
+from src.models.base import Base  # noqa
 
 
 def init_db():
