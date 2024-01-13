@@ -72,5 +72,7 @@ async def read_item(request: Request, full_path: str):
 
     if file_path.suffix in [".png", ".jpg", ".jpeg"]:
         return FileResponse(str(file_path), media_type="image/png")
+    elif file_path.suffix == ".ico":
+        return FileResponse(str(file_path), media_type="image/x-icon")
     else:
         return HTMLResponse(file_path.read_text(), media_type="text/html")
