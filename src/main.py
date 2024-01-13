@@ -6,6 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from src.tasks import periodic, scan
 from pathlib import Path
 from src.api.utils import get_root_folder
+from fastapi.middleware.cors import CORSMiddleware
 from src.api.routes import (
     codec_routes,
     profile_routes,
@@ -19,6 +20,15 @@ from src.api.routes import (
 
 # Create app
 app = FastAPI()
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
 
 # Add Routes
 routers = [
