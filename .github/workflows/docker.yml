@@ -4,6 +4,12 @@ on:
   push:
       branches:
           - main
+          - develop
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+      - develop
 
 jobs:
   push_to_registries:
@@ -29,6 +35,15 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       
+      - name: Set Docker tag based on branch
+        id: set_tag
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "::set-output name=tag::latest"
+          elif [[ "${{ github.ref }}" == "refs/heads/develop" ]]; then
+            echo "::set-output name=tag::develop"
+          fi
+
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
@@ -37,7 +52,7 @@ jobs:
             transfigurr/transfigurr
             ghcr.io/${{ github.repository }}
           tags: |
-            latest
+            ${{ steps.set_tag.outputs.tag }}
       - name: Build and push Docker images
         uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
         with:
