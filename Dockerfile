@@ -2,28 +2,29 @@
 FROM node:alpine as frontend
 WORKDIR /frontend
 COPY frontend/package*.json ./
-RUN npm install && npm cache clean --force
+RUN npm install
 COPY frontend/ ./
 RUN npm run build
 
 # Stage 2: Build the FastAPI backend
 FROM python:slim as backend
-WORKDIR /src
-COPY src ./
-RUN apt-get update && apt-get install -y ffmpeg gcc && \
-    pip install -r requirements.txt && \
-    find /usr/local \
-    \( -type d -a -name test -o -name tests \) \
-    -o \( -type f -a -name '*.pyc' -o -name '*.pyo' \) \
-    -exec rm -rf '{}' + && \
-    apt-get purge -y --auto-remove gcc && \
+WORKDIR /
+COPY src /src
+
+# Install ffmpeg
+RUN apt-get update && \
+    apt-get install -y ffmpeg && \
     rm -rf /var/lib/apt/lists/*
 
-# Stage 3: Combine frontend and backend and run
+# Stage 3: Combine frontend and backend
 FROM python:slim
 WORKDIR /
 COPY --from=frontend /frontend/build /frontend/build
-COPY --from=backend / /
+COPY --from=backend /src /src
+RUN pip install -r src/requirements.txt
+
+# Stage 4: Copy the init script and execute
+WORKDIR /
 COPY init /init
 RUN chmod +x /init
 EXPOSE 8000
