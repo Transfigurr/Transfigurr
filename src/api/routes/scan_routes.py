@@ -1,3 +1,4 @@
+import logging
 from fastapi import APIRouter
 from src.api.controllers.episode_controller import get_all_episodes
 from src.api.controllers.series_controller import get_series
@@ -7,6 +8,7 @@ from src.tasks.metadata import get_all_series_metadata, get_series_metadata
 from src.tasks.scan import scan_all_series, scan_series, validate_database
 
 router = APIRouter()
+logger = logging.getLogger('logger')
 
 
 @router.put("/api/scan/series/metadata")
@@ -54,7 +56,6 @@ async def scan_queue():
             targets = profile['codecs']
             wanted = profile['codec']
             if (episode['video_codec'] in targets or 'Any' in targets) and wanted != 'Any' and episode['video_codec'] != wanted:
-                print('adding to queue', episode)
                 await queue_instance.enqueue(episode)
     except Exception as e:
-        print(f"An error occurred: {e}")
+        logger.error(f"An error occurred: {e}")

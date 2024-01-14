@@ -1,4 +1,5 @@
 from dataclasses import asdict
+import logging
 import os
 import aiofiles
 from dotenv import dotenv_values
@@ -22,6 +23,8 @@ API_KEY = config.get("API_KEY", "")
 
 SERIES_URL = "https://api.themoviedb.org/3/search/tv"
 ARTWORK_URL = "https://image.tmdb.org/t/p/original"
+
+logger = logging.getLogger('logger')
 
 
 async def parse_series(series_id):
@@ -55,7 +58,7 @@ async def parse_series(series_id):
             series.status = series_data.get("status")
             await set_series(asdict(series))
     except Exception as e:
-        print(f"An error occurred while parsing the series: {e}")
+        logger.error(f"An error occurred while parsing the series: {e}")
     return series_data
 
 
@@ -66,11 +69,11 @@ async def get_all_series_metadata():
             try:
                 await get_series_metadata(series["id"])
             except Exception as e:
-                print(
+                logger.error(
                     f"An error occurred while getting metadata for series {series['id']}: {e}"
                 )
     except Exception as e:
-        print(f"An error occurred while getting all series metadata: {e}")
+        logger.error(f"An error occurred while getting all series metadata: {e}")
     return
 
 
@@ -82,25 +85,25 @@ async def download_series_artwork(series_data, series_id):
         try:
             poster_path = series_data.get("poster_path")
             if not poster_path:
-                print("No poster path provided.")
+                logger.error("No poster path provided.")
             else:
                 poster_url = f"https://image.tmdb.org/t/p/original{poster_path}"
                 poster_path = os.path.join(series_folder, "poster.jpg")
                 if not os.path.exists(poster_path):
                     response = await client.get(poster_url)
                     if response.status_code != 200:
-                        print("Failed to download poster.")
+                        logger.error("Failed to download poster.")
                     else:
                         async with aiofiles.open(poster_path, "wb") as poster_file:
                             await poster_file.write(response.content)
         except Exception as e:
-            print(f"An error occurred while downloading the poster: {e}")
+            logger.error(f"An error occurred while downloading the poster: {e}")
 
         # Download backdrop
         try:
             backdrop_path = series_data.get("backdrop_path")
             if not backdrop_path:
-                print("No backdrop path provided.")
+                logger.info("No backdrop path provided.")
             else:
                 backdrop_url = f"https://image.tmdb.org/t/p/original{backdrop_path}"
                 backdrop_file_path = os.path.join(
@@ -108,14 +111,14 @@ async def download_series_artwork(series_data, series_id):
                 if not os.path.exists(backdrop_file_path):
                     response = await client.get(backdrop_url)
                     if response.status_code != 200:
-                        print("Failed to download backdrop.")
+                        logger.info("Failed to download backdrop.")
                     else:
                         async with aiofiles.open(
                             backdrop_file_path, "wb"
                         ) as backdrop_file:
                             await backdrop_file.write(response.content)
         except Exception as e:
-            print(f"An error occurred while downloading the backdrop: {e}")
+            logger.error(f"An error occurred while downloading the backdrop: {e}")
 
     return
 
@@ -140,7 +143,7 @@ async def parse_episode(series, season, series_data, season_number, episode_numb
             episode.air_date = episode_data.get("air_date")
             await set_episode(asdict(episode))
     except Exception as e:
-        print(f"An error occurred while parsing the episode: {e}")
+        logger.error(f"An error occurred while parsing the episode: {e}")
 
 
 async def get_series_metadata(series_id):
@@ -161,4 +164,4 @@ async def get_series_metadata(series_id):
                     series, season, series_data, season_number, episode_number
                 )
     except Exception as e:
-        print(f"An error occurred: {e}")
+        logger.error(f"An error occurred: {e}")

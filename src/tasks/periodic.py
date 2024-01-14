@@ -21,17 +21,19 @@ from src.api.utils import get_series_folder, get_transcode_folder
 from src.models.queue import queue_instance
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
-
+import logging
 from src.tasks.scan import scan_system
+
+logger = logging.getLogger('logger')
 
 
 async def scan_queue_periodic():
     while True:
         try:
-            print("scanning queue")
+            logger.info("Scanning Queue")
             await asyncio.sleep(20)
         except Exception as e:
-            print(f"An error occurred: {e}")
+            logger.error(f"An error occurred while scanning the queue: {e}")
         await scan_queue()
 
 
@@ -51,6 +53,7 @@ async def process_episodes_in_queue_periodic():
 
 async def run_ffmpeg(input_file, output_file, encoder, output_container, preset=None):
     try:
+        logger.info(f"Encoding {input_file}")
         loop = asyncio.get_event_loop()
         queue_instance.processing = True
         # Get the total duration of the video
@@ -117,19 +120,14 @@ async def run_ffmpeg(input_file, output_file, encoder, output_container, preset=
                         queue_instance.current_progress / 100
                     )
                     queue_instance.current_eta = estimated_total_time - elapsed_time
-
-                    print("Current progress:", queue_instance.current_progress, "%")
-                    print(
-                        "Estimated time remaining:",
-                        str(datetime.timedelta(seconds=int(queue_instance.current_eta))),
-                    )
     except Exception as e:
-        print(f"An error occurred: {e}")
+        logger.error(f"An error occurred while running ffmpeg on {input_file}: {e}")
     return
 
 
 async def process_episode(e):
     try:
+        logger.info(f"Processing {e['filename']}")
         if not e:
             return
         queue_instance.stage = "analyzing"
@@ -186,7 +184,7 @@ async def process_episode(e):
         queue_instance.current_progress = 0
         queue_instance.current_eta = 0
     except Exception as e:
-        print(f"An error occurred: {e}")
+        logger.error(f"An error occurred processing {input_file}: {e}")
     return
 
 
@@ -194,16 +192,15 @@ class FileChangeHandler(FileSystemEventHandler):
     def on_modified(self, event):
         try:
             if os.path.isfile(event.src_path):
-                print(f"File {event.src_path} has been modified")
+                logger.info(f"File {event.src_path} has been modified")
                 self.wait_until_done(event.src_path)
-                print("modified for real")
                 loop = asyncio.new_event_loop()
                 asyncio.set_event_loop(loop)
                 loop.run_until_complete(
                     asyncio.gather(scan_all_series(), validate_database())
                 )
         except Exception as e:
-            print(f"An error occurred: {e}")
+            logger.error(f"An error occurred monitoring changes on {event.src_path}: {e}")
 
     def wait_until_done(self, path):
         try:
@@ -221,7 +218,7 @@ class FileChangeHandler(FileSystemEventHandler):
                     # If the file doesn't exist yet, wait a bit before checking again.
                     time.sleep(5)
         except Exception as e:
-            print(f"An error occurred: {e}")
+            logger.error(f"An error occurred while waiting for file initialization: {e}")
 
     def on_deleted(self, event):
         try:
@@ -229,7 +226,7 @@ class FileChangeHandler(FileSystemEventHandler):
             asyncio.set_event_loop(loop)
             loop.run_until_complete(validate_database())
         except Exception as e:
-            print(f"An error occurred: {e}")
+            logger.error(f"An error occurred while monitoring deleted file: {e}")
 
 
 async def start_watchdog(directory):
@@ -239,4 +236,4 @@ async def start_watchdog(directory):
         observer.schedule(handler, directory, recursive=True)
         observer.start()
     except Exception as e:
-        print(f"An error occurred: {e}")
+        logger.error(f"An error occurred starting the file watchdog: {e}")

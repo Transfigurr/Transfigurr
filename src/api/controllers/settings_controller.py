@@ -26,7 +26,6 @@ async def get_setting(setting_id):
 
 async def set_setting(request: Request):
     setting = await request.json()
-    print('test', setting)
     async with AsyncSession(engine) as async_session:
         result = await async_session.execute(select(Setting).where(Setting.id == setting['id']))
         obj = result.scalars().first()

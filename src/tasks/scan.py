@@ -28,9 +28,13 @@ from src.api.utils import (
 from src.models.episode import Episode
 from src.models.season import Season
 from src.models.series import Series
+import logging
+
+logger = logging.getLogger('logger')
 
 
 async def scan_all_series():
+    logger.info("Scanning all series")
     try:
         await verify_folders()
         series_folder = await get_series_folder()
@@ -39,7 +43,7 @@ async def scan_all_series():
                 continue
             await scan_series(series_name)
     except Exception as e:
-        print(f"An error occurred: {e}")
+        logger.error(f"An error occurred scanning all series: {e}")
     return
 
 
@@ -47,6 +51,7 @@ async def parse_episode(
     file, series_id, season_id, season_path, season_number, season_name
 ):
     try:
+        logger.info(f"Parsing episode: {file}")
         pattern = re.compile(r"(?:S(\d{2})E(\d{2})|E(\d{2}))")
         match = pattern.search(file)
         episode_number = 0
@@ -78,12 +83,13 @@ async def parse_episode(
             episode.space_saved = 0
         episode.size = episode_size
     except Exception as e:
-        print(f"An error occurred: {e}")
+        logger.error(f"An error occurred parsing episode {file}: {e}")
     return episode
 
 
 async def parse_season(season_name, series_id):
     try:
+        logger.info(f"Parsing season: {season_name}")
         season_number = int("".join(re.findall(r"\d+", season_name)))
         season_id = str(series_id) + str(season_number)
         season = Season()
@@ -96,7 +102,7 @@ async def parse_season(season_name, series_id):
         season.space_saved = 0
         season.episode_count = 0
     except Exception as e:
-        print(f"An error occurred: {e}")
+        logger.error(f"An error occurred parsing season {season_name}: {e}")
     return season
 
 
@@ -104,6 +110,7 @@ async def scan_series(series_id):
     try:
         if series_id in [".DS_Store", ""]:
             return
+        logger.info(f"Scanning series: {series_id}")
         series: Series = Series(**await get_series(series_id))
         series_path = os.path.join(await get_series_folder(), series_id)
         if not os.path.isdir(series_path):
@@ -167,12 +174,13 @@ async def scan_series(series_id):
         await validate_database()
         await scan_system()
     except Exception as e:
-        print(f"An error occurred: {e}")
+        logger.error(f"An error occurred scanning series {series_id}: {e}")
     return
 
 
 async def validate_database():
     try:
+        logger.info("Validating database")
         series_list = await get_all_series()
         for s in series_list:
             series = series_list[s]
@@ -192,12 +200,13 @@ async def validate_database():
                             if not os.path.isfile(episode_path):
                                 await remove_episode(episode["id"])
     except Exception as e:
-        print(f"An error occurred: {e}")
+        logger.error(f"An error occurred validating database: {e}")
     return
 
 
 async def scan_system():
     try:
+        logger.info("Scanning system")
         series = await get_all_series()
         series_count = 0
         episode_count = 0
@@ -259,5 +268,5 @@ async def scan_system():
         await set_system({"id": "transcode_total_space", "value": transcode_total_space})
         await set_system({"id": "transcode_free_space", "value": transcode_free_space})
     except Exception as e:
-        print(f"An error occurred: {e}")
+        logger.error(f"An error occurred scanning system: {e}")
     return
