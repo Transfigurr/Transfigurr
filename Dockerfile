@@ -2,42 +2,29 @@
 FROM node:alpine as frontend
 WORKDIR /frontend
 COPY frontend/package*.json ./
-RUN npm install
+RUN npm install && npm cache clean --force
 COPY frontend/ ./
 RUN npm run build
 
 # Stage 2: Build the FastAPI backend
 FROM python:slim as backend
-WORKDIR /
-COPY src /src
-
-# Install ffmpeg
-RUN apt-get update && \
-    apt-get install -y ffmpeg && \
+WORKDIR /src
+COPY src ./
+RUN apt-get update && apt-get install -y ffmpeg gcc && \
+    pip install -r requirements.txt && \
+    find /usr/local \
+    \( -type d -a -name test -o -name tests \) \
+    -o \( -type f -a -name '*.pyc' -o -name '*.pyo' \) \
+    -exec rm -rf '{}' + && \
+    apt-get purge -y --auto-remove gcc && \
     rm -rf /var/lib/apt/lists/*
 
-# Stage 3: Combine frontend and backend
+# Stage 3: Combine frontend and backend and run
 FROM python:slim
 WORKDIR /
-
-# Copy the built frontend static files
 COPY --from=frontend /frontend/build /frontend/build
-
-# Copy the built backend
 COPY --from=backend / /
-
-
-# Set the working directory to the root of the project
-WORKDIR /
-
-# Install uvicorn in the final stage
-RUN pip install -r src/requirements.txt
-
-# Copy the init script
 COPY init /init
 RUN chmod +x /init
-
-# Expose the port the app runs on
 EXPOSE 8000
-# Command to run the application
 CMD ["/init"]
