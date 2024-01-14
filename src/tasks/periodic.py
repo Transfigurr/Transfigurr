@@ -232,7 +232,7 @@ class FileChangeHandler(FileSystemEventHandler):
             print(f"An error occurred: {e}")
 
 
-def start_watchdog(directory):
+async def start_watchdog(directory):
     try:
         observer = Observer()
         handler = FileChangeHandler()

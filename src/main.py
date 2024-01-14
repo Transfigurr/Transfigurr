@@ -56,9 +56,8 @@ app.mount("/static", StaticFiles(directory="frontend/build/static"), name="stati
 async def startup_event():
     asyncio.create_task(periodic.scan_queue_periodic())
     asyncio.create_task(periodic.process_episodes_in_queue_periodic())
-    await scan.scan_all_series()
-    loop = asyncio.get_event_loop()
-    loop.run_in_executor(None, periodic.start_watchdog, await get_root_folder() + '/series')
+    asyncio.create_task(scan.scan_all_series())
+    asyncio.create_task(periodic.start_watchdog(await get_root_folder() + '/series'))
 app.add_event_handler("startup", startup_event)
 
 # Catch all static routes
