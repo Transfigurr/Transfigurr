@@ -48,6 +48,7 @@ async def scan_queue():
         profiles = await get_all_profiles()
         for episode in episodes:
             series = await get_series(episode['series_id'])
+            logger.info(f'scanning episode for queue {episode["filename"]} of series {series["id"]}')
             profile_id = series['profile_id']
             monitored = series['monitored']
             if not monitored:
@@ -58,4 +59,4 @@ async def scan_queue():
             if (episode['video_codec'] in targets or 'Any' in targets) and wanted != 'Any' and episode['video_codec'] != wanted:
                 await queue_instance.enqueue(episode)
     except Exception as e:
-        logger.error(f"An error occurred: {e}")
+        logger.error(f"An error occurred while scanning the queue: {e}")

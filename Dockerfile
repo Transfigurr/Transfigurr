@@ -11,19 +11,19 @@ FROM python:slim as backend
 WORKDIR /
 COPY src /src
 
-# Install ffmpeg
-RUN apt-get update && \
-    apt-get install -y ffmpeg && \
-    rm -rf /var/lib/apt/lists/*
-
 # Stage 3: Combine frontend and backend
 FROM python:slim
 WORKDIR /
 COPY --from=frontend /frontend/build /frontend/build
 COPY --from=backend /src /src
+
+# Stage 4: Install python requirements and ffmpeg
+RUN apt-get update && \
+    apt-get install -y ffmpeg && \
+    rm -rf /var/lib/apt/lists/*
 RUN pip install -r src/requirements.txt
 
-# Stage 4: Copy the init script and execute
+# Stage 5: Copy the init script and execute
 WORKDIR /
 COPY init /init
 RUN chmod +x /init
