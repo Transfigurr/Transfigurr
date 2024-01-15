@@ -10,7 +10,7 @@ engine = create_async_engine("sqlite+aiosqlite:///config/db/database.db")
 
 async def get_all_logs():
     async with AsyncSession(engine) as async_session:
-        res = await async_session.execute(select(Log).order_by(Log.timestamp.desc()))
+        res = await async_session.execute(select(Log))
         logs = res.scalars().all()
         return [instance_to_dict(log) for log in logs]
 

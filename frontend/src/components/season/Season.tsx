@@ -40,7 +40,11 @@ const Season = ({ season }: any) => {
 						{Object.values(season.episodes || {}).map((episode: any) => (
 							<tr>
 								<td>{episode?.episode_number}</td>
-								<td>{episode?.episode_name}</td>
+								<td>
+									{episode?.episode_name
+										? episode.episode_name
+										: episode.filename}
+								</td>
 								<td>
 									{new Date(episode?.air_date).toLocaleString("en-US", {
 										month: "short",

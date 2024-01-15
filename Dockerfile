@@ -2,7 +2,7 @@
 FROM node:alpine as frontend
 WORKDIR /frontend
 COPY frontend/package*.json ./
-RUN npm install
+RUN npm ci
 COPY frontend/ ./
 RUN npm run build
 
@@ -19,9 +19,9 @@ COPY --from=backend /src /src
 
 # Stage 4: Install python requirements and ffmpeg
 RUN apt-get update && \
-    apt-get install -y ffmpeg && \
+    apt-get install -y ffmpeg --no-install-recommends && \
     rm -rf /var/lib/apt/lists/*
-RUN pip install -r src/requirements.txt
+RUN pip install --no-cache-dir -r src/requirements.txt
 
 # Stage 5: Copy the init script and execute
 WORKDIR /

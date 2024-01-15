@@ -62,14 +62,14 @@ const Events = () => {
 								</tr>
 							</thead>
 							<tbody>
-								{currentRecords.reverse().map((entry: any) => (
+								{currentRecords.map((entry: any) => (
 									<tr className={styles.row}>
 										<td className={styles.iconCell}>
 											{entry?.level === "INFO" ? (
 												<Info style={{ fill: "var(--transfigurrPurple)	" }} />
 											) : entry?.level === "WARNING" ? (
 												<Warning style={{ fill: "rgb(255, 165, 0)" }} />
-											) : entry?.level === "DEBUG" ? (
+											) : entry?.level === "ERROR" ? (
 												<Error style={{ fill: "rgb(240, 80, 80)" }} />
 											) : null}
 										</td>

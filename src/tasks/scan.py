@@ -94,7 +94,6 @@ async def parse_season(season_name, series_id):
         season_number = 0
         if digits:
             season_number = int("".join(digits))
-        season_number = 0
         season_id = str(series_id) + str(season_number)
         season = Season()
         season.id = season_id

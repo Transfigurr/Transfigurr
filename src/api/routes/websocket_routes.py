@@ -17,9 +17,8 @@ async def websocket(websocket: WebSocket):
             await asyncio.sleep(5)
 
     except WebSocketDisconnect:
-        logging.info("WebSocket disconnected")
+        pass
     except asyncio.CancelledError:
-        logging.info("WebSocket connection cancelled")
-    except Exception as e:
-        logging.error(f"Error occurred: {e}")
+        pass
+    except Exception:
         await websocket.close(code=1000)
