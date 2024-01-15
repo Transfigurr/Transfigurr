@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 const useSettingsAPI = () => {
 	const [settings, setSettings] = useState<object>({});
 	useEffect(() => {
-		fetch("http://localhost:8000/api/settings")
+		fetch(`http://${window.location.hostname}:8000/api/settings`)
 			.then((response) => response.json())
 			.then((data) => setSettings(data))
 			.catch((error) => console.error(error));

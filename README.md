@@ -125,7 +125,7 @@ docker run transfigurr
 
 3.
 
-Visit localhost:3000
+Visit {your-server-ip}:8000
 
 ## Roadmap
 
