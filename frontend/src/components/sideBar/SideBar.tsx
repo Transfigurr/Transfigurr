@@ -29,6 +29,7 @@ const MenuComponent = ({
 		"/settings/general": [2, 1],
 		"/system": [3, -1],
 		"/system/status": [3, 0],
+		"/system/events": [3, 1],
 	};
 
 	useEffect(() => {
@@ -120,6 +121,10 @@ const MenuComponent = ({
 			{
 				text: "Status",
 				link: "/system/status",
+			},
+			{
+				text: "Events",
+				link: "/system/events",
 			},
 		],
 	};

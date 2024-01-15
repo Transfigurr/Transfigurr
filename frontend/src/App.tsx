@@ -26,6 +26,7 @@ import { WebSocketContext } from "./contexts/webSocketContext";
 import { WebSocketProvider } from "./contexts/webSocketProvider";
 import Modal from "./components/modal/Modal";
 import { ModalContext } from "./contexts/modalContext";
+import Events from "./components/events/Events";
 function App() {
 	const [selectedItem, setSelectedItem] = useState<any>(null);
 	const [selectedOption, setSelectedOption] = useState<any>(null);
@@ -118,6 +119,7 @@ function App() {
 			"/settings/general": [2, 1],
 			"/system": [3, -1],
 			"/system/status": [3, 0],
+			"/system/events": [3, 1],
 		};
 
 		setSelectedOption(pathname in sidebar ? sidebar[pathname][0] : 0);
@@ -146,6 +148,7 @@ function App() {
 				<Route path="/system" element={<Status />} />
 
 				<Route path="/system/status" element={<Status />} />
+				<Route path="/system/events" element={<Events />} />
 
 				{<Route path="*" element={<NotFound />} />}
 			</Routes>

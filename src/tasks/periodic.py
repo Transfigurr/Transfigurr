@@ -13,7 +13,6 @@ from src.api.controllers.series_controller import get_series
 from src.api.routes.profile_routes import get_all_profiles
 from src.api.routes.scan_routes import (
     scan_all_series,
-    scan_queue,
     scan_series,
     validate_database,
 )
@@ -25,16 +24,6 @@ import logging
 from src.tasks.scan import scan_system
 
 logger = logging.getLogger('logger')
-
-
-async def scan_queue_periodic():
-    while True:
-        try:
-            logger.info("Scanning Queue")
-            await asyncio.sleep(20)
-        except Exception as e:
-            logger.error(f"An error occurred while scanning the queue: {e}")
-        await scan_queue()
 
 
 async def process_episodes_in_queue_periodic():

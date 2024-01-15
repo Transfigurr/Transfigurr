@@ -5,12 +5,13 @@ from src.api.controllers.series_controller import get_all_series
 from src.api.controllers.settings_controller import get_all_settings
 from src.api.controllers.system_controller import get_all_system
 from src.api.controllers.codec_controller import get_all_codecs, get_all_containers, get_all_encoders
+from src.api.controllers.log_controller import get_all_logs
 from src.models.queue import queue_instance
 
 
 async def get_all_websocket_data():
     while True:
-        series, profiles, history, settings, system, containers, codecs, encoders = await asyncio.gather(
+        series, profiles, history, settings, system, containers, codecs, encoders, logs = await asyncio.gather(
             get_all_series(),
             get_all_profiles(),
             get_all_historys(),
@@ -18,7 +19,8 @@ async def get_all_websocket_data():
             get_all_system(),
             get_all_containers(),
             get_all_codecs(),
-            get_all_encoders()
+            get_all_encoders(),
+            get_all_logs()
         )
         return {'series': series,
                 'profiles': profiles,
@@ -34,5 +36,6 @@ async def get_all_websocket_data():
                 'settings': settings,
                 'containers': containers,
                 'codecs': codecs,
-                'encoders': encoders
+                'encoders': encoders,
+                'logs': logs,
                 }
