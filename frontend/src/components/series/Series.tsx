@@ -54,7 +54,7 @@ const Series = ({ series_name }: any) => {
 				<img
 					className={styles.backdrop}
 					src={
-						"http://localhost:8000/config/artwork/series/" +
+						`http://${window.location.hostname}:8000/config/artwork/series/` +
 						series?.id +
 						"/backdrop.jpg"
 					}
@@ -65,7 +65,7 @@ const Series = ({ series_name }: any) => {
 					<img
 						className={styles.poster}
 						src={
-							"http://localhost:8000/config/artwork/series/" +
+							`http://${window.location.hostname}:8000/config/artwork/series/` +
 							series?.id +
 							"/poster.jpg"
 						}

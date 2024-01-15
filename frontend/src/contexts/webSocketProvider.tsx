@@ -9,19 +9,10 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
 	children,
 }) => {
 	const [data, setData] = useState(null);
-	const ws = useRef<WebSocket | null>(null); // Update the type of ws
+	const ws = useRef<WebSocket | null>(null);
 
 	useEffect(() => {
-		ws.current = new WebSocket("ws://localhost:8000/ws"); // Fix the assignment
-
-		ws.current.onopen = () => {
-			console.log("ws opened");
-		};
-
-		ws.current.onclose = () => {
-			console.log("ws closed");
-		};
-
+		ws.current = new WebSocket(`ws://${window.location.hostname}:8000/ws`);
 		ws.current.onmessage = (e) => {
 			setData(JSON.parse(e.data));
 		};

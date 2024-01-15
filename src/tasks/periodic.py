@@ -13,6 +13,7 @@ from src.api.controllers.series_controller import get_series
 from src.api.routes.profile_routes import get_all_profiles
 from src.api.routes.scan_routes import (
     scan_all_series,
+    scan_queue,
     scan_series,
     validate_database,
 )
@@ -186,7 +187,7 @@ class FileChangeHandler(FileSystemEventHandler):
                 loop = asyncio.new_event_loop()
                 asyncio.set_event_loop(loop)
                 loop.run_until_complete(
-                    asyncio.gather(scan_all_series(), validate_database())
+                    asyncio.gather(scan_all_series(), validate_database(), scan_queue())
                 )
         except Exception as e:
             logger.error(f"An error occurred monitoring changes on {event.src_path}: {e}")

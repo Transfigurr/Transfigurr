@@ -22,7 +22,7 @@ const MassEditor = () => {
 				parseInt(monitored) !== -1 ? parseInt(monitored) : undefined;
 			series.profile_id =
 				parseInt(profile) !== 0 ? parseInt(profile) : undefined;
-			fetch(`http://localhost:8000/api/series/${series.id}`, {
+			fetch(`http://${window.location.hostname}:8000/api/series/${series.id}`, {
 				method: "PUT",
 				headers: {
 					"Content-Type": "application/json",

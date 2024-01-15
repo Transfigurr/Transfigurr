@@ -14,13 +14,16 @@ const SeriesModal = () => {
 	const { setShowModal, modalData, setModalData }: any = modalContext || {};
 
 	const onSave = async () => {
-		await fetch(`http://localhost:8000/api/series/${modalData.name}`, {
-			method: "PUT",
-			headers: {
-				"Content-Type": "application/json",
+		await fetch(
+			`http://${window.location.hostname}:8000/api/series/${modalData.name}`,
+			{
+				method: "PUT",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(modalData),
 			},
-			body: JSON.stringify(modalData),
-		});
+		);
 		setShowModal(false);
 	};
 

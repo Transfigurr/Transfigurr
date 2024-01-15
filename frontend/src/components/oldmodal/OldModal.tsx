@@ -4,7 +4,7 @@ const Modal = ({ isOpen, onClose, children, profile }: any) => {
 	const [codecs, setCodecs] = useState([]);
 
 	useEffect(() => {
-		fetch("http://localhost:8000/api/codecs")
+		fetch(`http://${window.location.hostname}:8000/api/codecs`)
 			.then((response) => response.json())
 			.then((data) => setCodecs(data))
 			.catch((error) => console.error(error));

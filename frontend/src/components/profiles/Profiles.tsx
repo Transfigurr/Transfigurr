@@ -27,17 +27,20 @@ const Profiles = () => {
 	};
 
 	const onModalDelete = async () => {
-		await fetch(`http://localhost:8000/api/profiles/${selectedProfile?.id}`, {
-			method: "DELETE",
-			headers: {
-				"Content-Type": "application/json",
+		await fetch(
+			`http://${window.location.hostname}:8000/api/profiles/${selectedProfile?.id}`,
+			{
+				method: "DELETE",
+				headers: {
+					"Content-Type": "application/json",
+				},
 			},
-		});
+		);
 		setIsModalOpen(false);
 	};
 
 	const onModalSave = async () => {
-		await fetch(`http://localhost:8000/api/profiles`, {
+		await fetch(`http://${window.location.hostname}:8000/api/profiles`, {
 			method: "PUT",
 			headers: {
 				"Content-Type": "application/json",

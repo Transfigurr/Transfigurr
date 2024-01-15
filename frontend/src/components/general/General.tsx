@@ -40,7 +40,7 @@ const General = () => {
 			return;
 		}
 		for (const key in currentSettings) {
-			fetch(`http://localhost:8000/api/settings`, {
+			fetch(`http://${window.location.hostname}:8000/api/settings`, {
 				method: "PUT",
 				headers: {
 					"Content-Type": "application/json",

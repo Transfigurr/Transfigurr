@@ -126,7 +126,6 @@ function App() {
 		setSelectedItem(pathname in sidebar ? sidebar[pathname][1] : -1);
 
 		const [selectedSeries, setSelectedSeries] = useState<any>([]);
-		console.log("reload app");
 		return (
 			<Routes>
 				<Route path="/" element={<MediaComponent />} />

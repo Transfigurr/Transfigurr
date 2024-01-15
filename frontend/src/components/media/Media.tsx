@@ -18,15 +18,18 @@ const ExplorerComponent = () => {
 	const wsContext = useContext(WebSocketContext);
 	const series = wsContext?.data?.series;
 	const onUpdate = async () => {
-		await fetch(`http://localhost:8000/api/scan/series`, {
+		await fetch(`http://${window.location.hostname}:8000/api/scan/series`, {
 			method: "PUT",
 		});
 	};
 
 	const onRefresh = async () => {
-		await fetch(`http://localhost:8000/api/scan/series/metadata`, {
-			method: "PUT",
-		});
+		await fetch(
+			`http://${window.location.hostname}:8000/api/scan/series/metadata`,
+			{
+				method: "PUT",
+			},
+		);
 	};
 
 	const leftToolBarItems: any = [
