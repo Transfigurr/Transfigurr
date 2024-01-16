@@ -62,18 +62,40 @@ const Events = () => {
 								</tr>
 							</thead>
 							<tbody>
-								{currentRecords.map((entry: any) => (
+								{currentRecords.reverse().map((entry: any) => (
 									<tr className={styles.row}>
 										<td className={styles.iconCell}>
 											{entry?.level === "INFO" ? (
-												<Info style={{ fill: "var(--transfigurrPurple)	" }} />
+												<Info
+													style={{
+														height: "100%",
+														width: "100%",
+														fill: "var(--transfigurrPurple)	",
+													}}
+												/>
 											) : entry?.level === "WARNING" ? (
-												<Warning style={{ fill: "rgb(255, 165, 0)" }} />
+												<Warning
+													style={{
+														height: "100%",
+														width: "100%",
+														fill: "rgb(255, 165, 0)",
+													}}
+												/>
 											) : entry?.level === "ERROR" ? (
-												<Error style={{ fill: "rgb(240, 80, 80)" }} />
+												<Error
+													style={{
+														height: "100%",
+														width: "100%",
+														fill: "rgb(240, 80, 80)",
+													}}
+												/>
 											) : null}
 										</td>
-										<td>{entry?.timestamp}</td>
+										<td>
+											{new Date(
+												entry?.timestamp.replace(",", "."),
+											).toLocaleString()}
+										</td>
 										<td>{entry?.message}</td>
 									</tr>
 								))}

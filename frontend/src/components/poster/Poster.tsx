@@ -33,9 +33,8 @@ const PosterComponent = ({ name }: any) => {
 					<img
 						className={styles.img}
 						src={
-							`http://${window.location.hostname}:8000/config/artwork/series/` +
-							series?.id +
-							"/poster.jpg"
+							`http://${window.location.hostname}:8000/api/poster/series/` +
+							series?.id
 						}
 						alt={name}
 					></img>
@@ -49,6 +48,9 @@ const PosterComponent = ({ name }: any) => {
 										: { backgroundColor: backgroundColor(), width: progress }
 								}
 							></div>
+						</div>
+						<div className={styles.name}>
+							{series?.name ? series?.name : series?.id}
 						</div>
 						<div className={styles.status}>
 							{series?.monitored ? "Monitored" : "Unmonitored"}

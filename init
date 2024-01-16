@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/ash
 
 mkdir -p /config/db
 mkdir -p /config/artwork

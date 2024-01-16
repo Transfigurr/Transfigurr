@@ -12,9 +12,9 @@ const Series = ({ series_name }: any) => {
 	const modalContext = useContext(ModalContext);
 	series_name = series_name.replace(/-/g, " ");
 	const wsContext = useContext(WebSocketContext);
+	console.log(wsContext?.data);
 	const profiles = wsContext?.data?.profiles;
 	const series = wsContext?.data?.series[series_name];
-
 	const handleEditClick = () => {
 		modalContext?.setModalType("editSeries");
 		modalContext?.setModalData(series);
@@ -41,7 +41,7 @@ const Series = ({ series_name }: any) => {
 	const overview = series?.overview;
 	const runYears =
 		status === "Ended" ? firstAirDate + "-" + lastAirDate : firstAirDate + "-";
-
+	console.log("series", series);
 	return (
 		<div className={styles.series}>
 			<ToolBar
@@ -54,9 +54,8 @@ const Series = ({ series_name }: any) => {
 				<img
 					className={styles.backdrop}
 					src={
-						`http://${window.location.hostname}:8000/config/artwork/series/` +
-						series?.id +
-						"/backdrop.jpg"
+						`http://${window.location.hostname}:8000/api/backdrop/series/` +
+						series?.id
 					}
 					alt="backdrop"
 				/>
@@ -65,14 +64,15 @@ const Series = ({ series_name }: any) => {
 					<img
 						className={styles.poster}
 						src={
-							`http://${window.location.hostname}:8000/config/artwork/series/` +
-							series?.id +
-							"/poster.jpg"
+							`http://${window.location.hostname}:8000/api/poster/series/` +
+							series?.id
 						}
 						alt={"poster"}
 					/>
 					<div className={styles.details}>
-						<div className={styles.titleRow}>{series?.name}</div>
+						<div className={styles.titleRow}>
+							{series?.name ? series?.name : series?.id}
+						</div>
 						<div className={styles.seriesDetails}>
 							<span className={styles.runtime}>
 								{series?.episode_run_time} Minutes
@@ -81,10 +81,11 @@ const Series = ({ series_name }: any) => {
 							<span className={styles.runYears}>{runYears}</span>
 						</div>
 						<div className={styles.tags}>
-							<div className={styles.tag}>{"/series/" + series?.name}</div>
+							<div className={styles.tag}>
+								{"/series/" + (series?.name ? series?.name : series?.id)}
+							</div>
 
 							<div className={styles.tag}>
-								{" "}
 								{((series?.size || 0) / 1000000000).toFixed(2).toString() +
 									" GB"}
 							</div>

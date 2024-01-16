@@ -48,9 +48,8 @@ for router in routers:
 
 # Mount directories
 os.makedirs("../config", exist_ok=True)
-app.mount("/config", StaticFiles(directory="config"), name="config")
 app.mount("/static", StaticFiles(directory="frontend/build/static"), name="static")
-
+app.mount("/images", StaticFiles(directory="src/images"), name="images")
 # Start tasks
 
 
@@ -66,7 +65,23 @@ app.add_event_handler("startup", startup_event)
 
 setup_logger()
 
+
 # Catch all static routes
+
+@app.get("/api/backdrop/series/{series_id}")
+async def get_series_backdrop(series_id: str):
+    file_path = Path(f"config/artwork/series/{series_id}/backdrop.jpg")
+    if not file_path.exists() or file_path.is_dir():
+        file_path = Path("src/images/backdrop.jpg")
+    return FileResponse(str(file_path), media_type="image/png")
+
+
+@app.get("/api/poster/series/{series_id}")
+async def get_series_poster(series_id: str):
+    file_path = Path(f"config/artwork/series/{series_id}/poster.jpg")
+    if not file_path.exists() or file_path.is_dir():
+        file_path = Path("src/images/poster.png")
+    return FileResponse(str(file_path), media_type="image/png")
 
 
 @app.get("/{full_path:path}")
@@ -74,7 +89,6 @@ async def read_item(request: Request, full_path: str):
     file_path = Path(f"frontend/build/{full_path}")
     if not file_path.exists() or file_path.is_dir():
         file_path = Path("frontend/build/index.html")
-
     if file_path.suffix in [".png", ".jpg", ".jpeg"]:
         return FileResponse(str(file_path), media_type="image/png")
     elif file_path.suffix == ".ico":

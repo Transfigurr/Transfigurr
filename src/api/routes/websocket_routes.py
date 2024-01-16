@@ -1,6 +1,5 @@
 import asyncio
 import json
-import logging
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from src.api.controllers.websocket_controller import get_all_websocket_data
 
@@ -14,7 +13,6 @@ async def websocket(websocket: WebSocket):
         while True:
             data = await get_all_websocket_data()
             await websocket.send_text(json.dumps(data))
-            await asyncio.sleep(5)
 
     except WebSocketDisconnect:
         pass

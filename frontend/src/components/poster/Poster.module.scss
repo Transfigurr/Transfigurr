@@ -52,6 +52,17 @@
 						background-color: #27c24c;
 					}
 				}
+				.name {
+					background-color: white;
+					color: #515253;
+					font-family: "Roboto", "open sans", "Helvetica Neue", "Helvetica",
+						"Arial", sans-serif;
+					display: flex;
+					align-items: flex-end;
+					justify-content: center;
+					height: 18px;
+					font-size: 12px;
+				}
 				.status {
 					background-color: white;
 					color: #515253;

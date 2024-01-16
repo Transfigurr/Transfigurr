@@ -7,21 +7,21 @@ COPY frontend/ ./
 RUN npm run build
 
 # Stage 2: Build the FastAPI backend
-FROM python:slim as backend
+FROM python:alpine as backend
 WORKDIR /
 COPY src /src
 
 # Stage 3: Combine frontend and backend
-FROM python:slim
+FROM python:alpine
 WORKDIR /
 COPY --from=frontend /frontend/build /frontend/build
 COPY --from=backend /src /src
 
 # Stage 4: Install python requirements and ffmpeg
-RUN apt-get update && \
-    apt-get install -y ffmpeg --no-install-recommends && \
-    rm -rf /var/lib/apt/lists/*
-RUN pip install --no-cache-dir -r src/requirements.txt
+RUN apk add --no-cache --update \
+    ffmpeg \
+    && pip install --no-cache-dir -r src/requirements.txt \
+    && rm -rf /var/cache/apk/*
 
 # Stage 5: Copy the init script and execute
 WORKDIR /
