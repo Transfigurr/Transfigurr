@@ -12,9 +12,9 @@ const Series = ({ series_name }: any) => {
 	const modalContext = useContext(ModalContext);
 	series_name = series_name.replace(/-/g, " ");
 	const wsContext = useContext(WebSocketContext);
-	console.log(wsContext?.data);
 	const profiles = wsContext?.data?.profiles;
 	const series = wsContext?.data?.series[series_name];
+	console.log(series);
 	const handleEditClick = () => {
 		modalContext?.setModalType("editSeries");
 		modalContext?.setModalData(series);
@@ -41,7 +41,6 @@ const Series = ({ series_name }: any) => {
 	const overview = series?.overview;
 	const runYears =
 		status === "Ended" ? firstAirDate + "-" + lastAirDate : firstAirDate + "-";
-	console.log("series", series);
 	return (
 		<div className={styles.series}>
 			<ToolBar
@@ -75,10 +74,15 @@ const Series = ({ series_name }: any) => {
 						</div>
 						<div className={styles.seriesDetails}>
 							<span className={styles.runtime}>
-								{series?.episode_run_time} Minutes
+								{series?.episode_run_time ? series?.episode_run_time : "-"}{" "}
+								Minutes
 							</span>
-							<span className={styles.genre}>{genre}</span>
-							<span className={styles.runYears}>{runYears}</span>
+							{genre ? <span className={styles.genre}>{genre}</span> : <></>}
+							{status ? (
+								<span className={styles.runYears}>{runYears}</span>
+							) : (
+								<></>
+							)}
 						</div>
 						<div className={styles.tags}>
 							<div className={styles.tag}>
@@ -97,8 +101,8 @@ const Series = ({ series_name }: any) => {
 							<div className={styles.tag}>
 								{series?.monitored ? "Monitored" : "Unmonitored"}
 							</div>
-							<div className={styles.tag}>{status}</div>
-							<div className={styles.tag}>{network}</div>
+							{status ? <div className={styles.tag}>{status}</div> : <></>}
+							{network ? <div className={styles.tag}>{network}</div> : <></>}
 						</div>
 						<div className={styles.overview}>{overview}</div>
 					</div>

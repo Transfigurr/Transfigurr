@@ -62,7 +62,7 @@ const Events = () => {
 								</tr>
 							</thead>
 							<tbody>
-								{currentRecords.reverse().map((entry: any) => (
+								{currentRecords.map((entry: any) => (
 									<tr className={styles.row}>
 										<td className={styles.iconCell}>
 											{entry?.level === "INFO" ? (

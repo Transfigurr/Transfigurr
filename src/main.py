@@ -8,7 +8,9 @@ from pathlib import Path
 from src.api.utils import get_root_folder
 from fastapi.middleware.cors import CORSMiddleware
 from src.utils.logger import setup_logger
+from src.utils.watchdog import start_watchdog
 from src.api.routes import (
+    artwork_routes,
     codec_routes,
     profile_routes,
     scan_routes,
@@ -40,6 +42,7 @@ routers = [
     profile_routes.router,
     series_routes.router,
     system_routes.router,
+    artwork_routes.router,
     websocket_routes.router
 ]
 
@@ -57,7 +60,7 @@ async def startup_event():
     asyncio.create_task(scan.scan_all_series())
     asyncio.create_task(scan_routes.scan_queue())
     asyncio.create_task(periodic.process_episodes_in_queue_periodic())
-    asyncio.create_task(periodic.start_watchdog(await get_root_folder() + '/series'))
+    asyncio.create_task(start_watchdog(await get_root_folder() + '/series'))
 app.add_event_handler("startup", startup_event)
 
 # Setup Logger
@@ -67,21 +70,6 @@ setup_logger()
 
 
 # Catch all static routes
-
-@app.get("/api/backdrop/series/{series_id}")
-async def get_series_backdrop(series_id: str):
-    file_path = Path(f"config/artwork/series/{series_id}/backdrop.jpg")
-    if not file_path.exists() or file_path.is_dir():
-        file_path = Path("src/images/backdrop.jpg")
-    return FileResponse(str(file_path), media_type="image/png")
-
-
-@app.get("/api/poster/series/{series_id}")
-async def get_series_poster(series_id: str):
-    file_path = Path(f"config/artwork/series/{series_id}/poster.jpg")
-    if not file_path.exists() or file_path.is_dir():
-        file_path = Path("src/images/poster.png")
-    return FileResponse(str(file_path), media_type="image/png")
 
 
 @app.get("/{full_path:path}")
