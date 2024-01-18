@@ -33,8 +33,8 @@ const MassEditor = () => {
 
 	const handleCheckboxChange = (series: any) => {
 		setSelectedSeries((prevSelected: any[]) =>
-			prevSelected.includes(series)
-				? prevSelected.filter((s) => s !== series)
+			prevSelected.some((s) => s.id === series.id)
+				? prevSelected.filter((s) => s.id !== series.id)
 				: [...prevSelected, series],
 		);
 	};

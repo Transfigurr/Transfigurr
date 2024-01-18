@@ -4,6 +4,7 @@ from functools import partial
 import os
 import re
 import shutil
+import stat
 import subprocess
 import time
 import ffmpeg
@@ -19,6 +20,7 @@ from src.api.utils import get_series_folder, get_transcode_folder
 from src.models.queue import queue_instance
 import logging
 from src.tasks.scan import scan_system
+from src.utils.ffmpeg import analyze_media_file
 
 logger = logging.getLogger('logger')
 
@@ -137,13 +139,25 @@ async def process_episode(e):
             await get_transcode_folder(), f"{file_name}.{output_extension}"
         )
 
-        probe = ffmpeg.probe(input_file)
-        video_stream = next(
-            (stream for stream in probe["streams"] if stream["codec_type"] == "video"), None
-        )
+        # Check if input_file exists and is readable and writable
+        if not os.path.exists(input_file):
+            logger.error(f"{input_file} does not exist")
+            return
+        if not os.access(input_file, os.R_OK):
+            logger.info(f"Changing permissions of {input_file} to make it readable")
+            os.chmod(input_file, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
+        if not os.access(input_file, os.W_OK):
+            logger.info(f"Changing permissions of {input_file} to make it writable")
+            os.chmod(input_file, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
 
-        check = video_stream["codec_name"]
-        if check == profile["codec"]:
+        # Check if output_file is writable
+        if os.path.exists(output_file) and not os.access(output_file, os.W_OK):
+            logger.info(f"Changing permissions of {output_file} to make it writable")
+            os.chmod(output_file, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
+
+        video_stream = await analyze_media_file(input_file)
+
+        if video_stream == profile["codec"]:
             return
 
         loop = asyncio.get_event_loop()
