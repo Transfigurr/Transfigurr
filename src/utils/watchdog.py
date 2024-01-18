@@ -2,9 +2,10 @@
 import asyncio
 import logging
 import os
+import re
 import time
-from src.api.routes.scan_routes import scan_queue
-from src.tasks.scan import scan_all_series, validate_database
+from src.tasks.scan import scan_all_series, scan_series, scan_system
+from src.tasks.validate import validate_all_series, validate_series
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
@@ -12,18 +13,46 @@ logger = logging.getLogger('logger')
 
 
 class FileChangeHandler(FileSystemEventHandler):
+    def on_created(self, event):
+        try:
+            self.wait_until_done(event.src_path)
+            series = get_series_name(event.src_path)
+            if series:
+                asyncio.run(scan_series(series))
+                asyncio.run(scan_system())
+            else:
+                asyncio.run(scan_all_series())
+                asyncio.run(scan_system())
+        except Exception as e:
+            logger.info(f'An error occurred while handling a file creation: {e}')
+
+    def on_deleted(self, event):
+        try:
+            series = get_series_name(event.src_path)
+            if series:
+                asyncio.run(validate_series(series))
+                asyncio.run(scan_series(series))
+                asyncio.run(scan_system())
+
+            else:
+                asyncio.run(validate_all_series())
+                asyncio.run(scan_all_series())
+                asyncio.run(scan_system())
+        except Exception as e:
+            logger.info(f'An error occurred while handling a file deletion: {e}')
+
     def on_modified(self, event):
         try:
-            if os.path.isfile(event.src_path):
-                logger.info(f"File {event.src_path} has been modified")
-                self.wait_until_done(event.src_path)
-                loop = asyncio.new_event_loop()
-                asyncio.set_event_loop(loop)
-                loop.run_until_complete(
-                    asyncio.gather(scan_all_series(), validate_database(), scan_queue())
-                )
+            self.wait_until_done(event.src_path)
+            series = get_series_name(event.src_path)
+            if series:
+                asyncio.run(scan_series(series))
+                asyncio.run(scan_system())
+            else:
+                asyncio.run(scan_all_series())
+                asyncio.run(scan_system())
         except Exception as e:
-            logger.error(f"An error occurred monitoring changes on {event.src_path}: {e}")
+            logger.info(f'An error occurred while handling a file modification: {e}')
 
     def wait_until_done(self, path):
         try:
@@ -43,13 +72,20 @@ class FileChangeHandler(FileSystemEventHandler):
         except Exception as e:
             logger.error(f"An error occurred while waiting for file initialization: {e}")
 
-    def on_deleted(self, event):
-        try:
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-            loop.run_until_complete(validate_database())
-        except Exception as e:
-            logger.error(f"An error occurred while monitoring deleted file: {e}")
+
+def get_series_name(path):
+    match = re.search(r'/series/([^/]*)', path)
+    return match.group(1) if match else None
+
+
+def get_season_name(path):
+    match = re.search(r'/series/([^/]*)/([^/]*)', path)
+    return match.group(2) if match else None
+
+
+def get_episode_name(path):
+    match = re.search(r'/series/([^/]*)/([^/]*)/([^/]*)', path)
+    return match.group(3) if match else None
 
 
 async def start_watchdog(directory):

@@ -5,6 +5,7 @@ from sqlalchemy import delete, insert
 from src.global_state import GlobalState, instance_to_dict
 from sqlalchemy.future import select
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+
 engine = create_async_engine("sqlite+aiosqlite:///config/db/database.db")
 
 
@@ -63,6 +64,7 @@ async def set_profile(request: Request):
             await async_session.execute(stmt)
         # Commit the changes to the database
         await async_session.commit()
+
     return
 
 

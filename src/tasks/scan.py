@@ -3,32 +3,34 @@ import os
 import re
 from src.api.controllers.episode_controller import (
     get_episode,
-    remove_episode,
     set_episode,
 )
-from src.api.controllers.profile_controller import get_profile
-from src.api.controllers.season_controller import remove_season, set_season
+from src.api.controllers.profile_controller import get_all_profiles, get_profile
+from src.api.controllers.season_controller import set_season
 from src.api.controllers.series_controller import (
     get_all_series,
+    get_full_series,
     get_series,
-    remove_series,
     set_series,
 )
 from src.api.controllers.settings_controller import get_all_settings
 from src.api.controllers.system_controller import set_system
-from src.api.routes.scan_routes import get_series_metadata
 from src.api.utils import (
-    analyze_media_file,
     get_config_folder,
     get_series_folder,
     get_transcode_folder,
     verify_folders,
     get_movies_folder,
 )
+from src.tasks.metadata import get_series_metadata
+from src.utils.ffmpeg import analyze_media_file
 from src.models.episode import Episode
 from src.models.season import Season
 from src.models.series import Series
 import logging
+from src.models.queue import queue_instance
+
+from src.tasks.validate import validate_series
 
 logger = logging.getLogger('logger')
 
@@ -174,36 +176,12 @@ async def scan_series(series_id):
         await set_series(asdict(series))
         if missing_metadata:
             await get_series_metadata(series.id)
-        await validate_database()
+
+        await validate_series(series.id)
         await scan_system()
+        await scan_queue(series.id)
     except Exception as e:
         logger.error(f"An error occurred scanning series {series_id}: {e}")
-    return
-
-
-async def validate_database():
-    try:
-        logger.info("Validating database")
-        series_list = await get_all_series()
-        for s in series_list:
-            series = series_list[s]
-            series_path = os.path.join(await get_series_folder(), series["id"])
-            if not os.path.isdir(series_path):
-                await remove_series(series["id"])
-            else:
-                for season_number in series["seasons"]:
-                    season = series["seasons"][season_number]
-                    season_path = os.path.join(series_path, season["name"])
-                    if not os.path.isdir(season_path):
-                        await remove_season(season["id"])
-                    else:
-                        for episode_number in season["episodes"]:
-                            episode = season["episodes"][episode_number]
-                            episode_path = os.path.join(season_path, episode["filename"])
-                            if not os.path.isfile(episode_path):
-                                await remove_episode(episode["id"])
-    except Exception as e:
-        logger.error(f"An error occurred validating database: {e}")
     return
 
 
@@ -273,3 +251,24 @@ async def scan_system():
     except Exception as e:
         logger.error(f"An error occurred scanning system: {e}")
     return
+
+
+async def scan_queue(series_id):
+    try:
+        profiles = await get_all_profiles()
+        series = await get_full_series(series_id)
+        profile_id = series['profile_id']
+        profile = profiles[profile_id]
+        monitored = series['monitored']
+        for season_number in series['seasons']:
+            season = series['seasons'][season_number]
+            for episode_number in season['episodes']:
+                episode = season['episodes'][episode_number]
+                if not monitored:
+                    continue
+                targets = profile['codecs']
+                wanted = profile['codec']
+                if (episode['video_codec'] in targets or 'Any' in targets) and wanted != 'Any' and episode['video_codec'] != wanted:
+                    await queue_instance.enqueue(episode)
+    except Exception as e:
+        logger.error(f"An error occurred while scanning for the queue {e}")

@@ -13,16 +13,18 @@ import ToolBar from "../ToolBar/ToolBar";
 
 const Events = () => {
 	const wsContext: any = useContext(WebSocketContext);
-	const logs = wsContext?.data?.logs;
+	const logs = wsContext?.data?.logs || [];
+	const sortedLogs = [...logs].sort((a, b) => b.id - a.id);
 	const recordsPerPage = 12;
 	const [currentPage, setCurrentPage] = useState(1);
-	const logsArray = Array.from(Object.values(logs || {}));
-
 	const indexOfLastRecord = currentPage * recordsPerPage;
 	const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-	const currentRecords = logsArray.slice(indexOfFirstRecord, indexOfLastRecord);
+	const currentRecords = sortedLogs.slice(
+		indexOfFirstRecord,
+		indexOfLastRecord,
+	);
 
-	const totalPages = Math.ceil(logsArray.length / recordsPerPage);
+	const totalPages = Math.ceil(logs.length / recordsPerPage);
 
 	const firstPage = () => {
 		setCurrentPage(1);
@@ -135,7 +137,7 @@ const Events = () => {
 							</div>
 						</div>
 						<div className={styles.totalRecords}>
-							Total Records: {logsArray.length}
+							Total Records: {logs.length}
 						</div>
 					</>
 				) : (

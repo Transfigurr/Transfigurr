@@ -5,7 +5,7 @@ from src.api.controllers.series_controller import get_series
 from src.api.routes.profile_routes import get_all_profiles
 from src.models.queue import queue_instance
 from src.tasks.metadata import get_all_series_metadata, get_series_metadata
-from src.tasks.scan import scan_all_series, scan_series, validate_database
+from src.tasks.scan import scan_all_series, scan_series
 
 router = APIRouter()
 logger = logging.getLogger('logger')
@@ -35,12 +35,6 @@ async def scan_series_route(series_name):
     return
 
 
-@router.get('/api/scan/validate')
-async def validate_database_route():
-    await validate_database()
-    return
-
-
 @router.get('/api/scan/queue')
 async def scan_queue():
     try:
@@ -48,7 +42,6 @@ async def scan_queue():
         profiles = await get_all_profiles()
         for episode in episodes:
             series = await get_series(episode['series_id'])
-            logger.info(f'scanning episode for queue {episode["filename"]} of series {series["id"]}')
             profile_id = series['profile_id']
             monitored = series['monitored']
             if not monitored:

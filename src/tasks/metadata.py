@@ -1,8 +1,8 @@
+import base64
 from dataclasses import asdict
 import logging
 import os
 import aiofiles
-from dotenv import dotenv_values
 from fastapi import APIRouter
 import httpx
 from unidecode import unidecode
@@ -13,13 +13,12 @@ from src.api.controllers.series_controller import (
     get_series,
     set_series,
 )
+from src.api.controllers.settings_controller import get_all_settings
 from src.api.utils import get_series_artwork_folder
 from src.models.episode import Episode
 from src.models.series import Series
 
 router = APIRouter()
-config = dotenv_values(".env")
-API_KEY = config.get("API_KEY", "")
 
 SERIES_URL = "https://api.themoviedb.org/3/search/tv"
 ARTWORK_URL = "https://image.tmdb.org/t/p/original"
@@ -27,11 +26,11 @@ ARTWORK_URL = "https://image.tmdb.org/t/p/original"
 logger = logging.getLogger('logger')
 
 
-async def parse_series(series_id):
+async def parse_series(series_id, HEADER):
     try:
         async with httpx.AsyncClient() as client:
-            search_params = {"api_key": API_KEY, "query": unidecode(series_id)}
-            series_search_response = await client.get(SERIES_URL, params=search_params)
+            search_params = {"query": unidecode(series_id)}
+            series_search_response = await client.get(SERIES_URL, params=search_params, headers=HEADER)
             if series_search_response.status_code != 200:
                 return
             series_search_array = series_search_response.json()
@@ -42,12 +41,11 @@ async def parse_series(series_id):
             series_url = (
                 f"https://api.themoviedb.org/3/tv/{series_best_match.get('id')}"
             )
-            series_best_match_params = {"api_key": API_KEY}
             series_response = await client.get(
-                series_url, params=series_best_match_params
+                series_url, headers=HEADER
             )
             if series_response.status_code != 200:
-                return series
+                return
             series_data = series_response.json()
             series.name = series_data.get("name")
             series.overview = series_data.get("overview")
@@ -123,12 +121,12 @@ async def download_series_artwork(series_data, series_id):
     return
 
 
-async def parse_episode(series, season, series_data, season_number, episode_number):
+async def parse_episode(series, season, series_data, season_number, episode_number, HEADER):
     try:
-        series_params = {"api_key": API_KEY, "query": unidecode(series["id"])}
+        series_params = {"query": unidecode(series["id"])}
         async with httpx.AsyncClient() as client:
             episode_url = f"https://api.themoviedb.org/3/tv/{series_data.get('id')}/season/{season_number}/episode/{episode_number}"
-            episode_response = await client.get(episode_url, params=series_params)
+            episode_response = await client.get(episode_url, params=series_params, headers=HEADER)
             if episode_response.status_code != 200:
                 return
             episode_data = episode_response.json()
@@ -143,12 +141,16 @@ async def parse_episode(series, season, series_data, season_number, episode_numb
             episode.air_date = episode_data.get("air_date")
             await set_episode(asdict(episode))
     except Exception as e:
-        logger.error(f"An error occurred while parsing the episode: {e}")
+        logger.error(f"An error occurred while parsing the episode {series, season_number, episode_number}: {e}")
 
 
 async def get_series_metadata(series_id):
     try:
-        series_data = await parse_series(series_id)
+        settings = await get_all_settings()
+        TMDB_SETTING = settings['TMDB']
+        TMDB = base64.b64decode(TMDB_SETTING).decode('utf-8')
+        HEADER = {"Authorization": 'Bearer ' + TMDB}
+        series_data = await parse_series(series_id, HEADER)
         if not series_data:
             return
         await download_series_artwork(series_data, series_id)
@@ -161,7 +163,7 @@ async def get_series_metadata(series_id):
                 continue
             for episode_number in season["episodes"]:
                 await parse_episode(
-                    series, season, series_data, season_number, episode_number
+                    series, season, series_data, season_number, episode_number, HEADER
                 )
     except Exception as e:
         logger.error(f"An error occurred: {e}")

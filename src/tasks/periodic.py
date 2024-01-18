@@ -29,7 +29,6 @@ async def process_episodes_in_queue_periodic():
         w = True
         while q and w:
             await asyncio.sleep(5)
-            await scan_system()
             item = queue_instance.peek()
             if item:
                 await process_episode(item)

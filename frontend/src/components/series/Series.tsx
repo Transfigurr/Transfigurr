@@ -14,7 +14,6 @@ const Series = ({ series_name }: any) => {
 	const wsContext = useContext(WebSocketContext);
 	const profiles = wsContext?.data?.profiles;
 	const series = wsContext?.data?.series[series_name];
-	console.log(series);
 	const handleEditClick = () => {
 		modalContext?.setModalType("editSeries");
 		modalContext?.setModalData(series);

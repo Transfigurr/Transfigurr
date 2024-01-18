@@ -41,6 +41,7 @@ async def set_series(series):
             s = Series(**series)
             async_session.add(s)
         await async_session.commit()
+    # UPDATE ALL
 
 
 async def get_full_series(series_id: str):

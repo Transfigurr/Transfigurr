@@ -92,7 +92,7 @@ const History = () => {
 											<div className={styles.codec}>{entry?.new_codec}</div>
 										</td>
 										<td>
-											{(entry?.episode?.size / 1000000000)
+											{(entry?.episode?.space_saved / 1000000000)
 												.toFixed(2)
 												.toString() + " GB"}
 										</td>
