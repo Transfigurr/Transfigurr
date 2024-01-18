@@ -11,8 +11,7 @@ router = APIRouter()
 async def websocket(websocket: WebSocket):
     try:
         await websocket.accept()
-        while True:
-            data = await get_all_websocket_data()
+        async for data in get_all_websocket_data():
             try:
                 await websocket.send_text(json.dumps(data))
             except ConnectionClosedError:

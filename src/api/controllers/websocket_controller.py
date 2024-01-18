@@ -22,20 +22,23 @@ async def get_all_websocket_data():
             get_all_encoders(),
             get_all_logs()
         )
-        return {'series': series,
-                'profiles': profiles,
-                'queue': {
-                    'queue': queue_instance.to_list(),
-                    'progress': queue_instance.current_progress,
-                    'eta': int(queue_instance.current_eta),
-                    'processing': queue_instance.processing, 'active': queue_instance.active,
-                    'stage': queue_instance.stage
-                },
-                'history': history,
-                'system': system,
-                'settings': settings,
-                'containers': containers,
-                'codecs': codecs,
-                'encoders': encoders,
-                'logs': logs,
-                }
+
+        yield {'series': series}
+        yield {'profiles': profiles}
+        yield {
+            'queue': {
+                'queue': queue_instance.to_list(),
+                'progress': queue_instance.current_progress,
+                'eta': int(queue_instance.current_eta),
+                'processing': queue_instance.processing, 'active': queue_instance.active,
+                'stage': queue_instance.stage
+            }
+        }
+        yield {'history': history}
+        yield {'system': system}
+        yield {'settings': settings}
+        yield {'containers': containers}
+        yield {'codecs': codecs}
+        yield {'encoders': encoders}
+        yield {'logs': logs}
+        await asyncio.sleep(1)

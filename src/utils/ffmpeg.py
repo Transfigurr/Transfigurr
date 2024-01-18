@@ -12,5 +12,5 @@ async def analyze_media_file(file_path):
         probe = await loop.run_in_executor(None, partial(ffmpeg.probe, file_path))
         return probe['streams'][0]['codec_name']
     except Exception as e:
-        logger.error(f"Error analyzing the media file: {e}")
+        logger.error(f"Error analyzing the media file {file_path}: {e}")
         return None

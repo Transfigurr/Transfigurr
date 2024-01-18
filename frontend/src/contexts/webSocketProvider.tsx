@@ -8,13 +8,14 @@ interface WebSocketProviderProps {
 export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
 	children,
 }) => {
-	const [data, setData] = useState(null);
+	const [data, setData] = useState({});
 	const ws = useRef<WebSocket | null>(null);
 
 	useEffect(() => {
 		ws.current = new WebSocket(`ws://${window.location.hostname}:8000/ws`);
 		ws.current.onmessage = (e) => {
-			setData(JSON.parse(e.data));
+			const newData = JSON.parse(e.data);
+			setData((prevData) => ({ ...prevData, ...newData }));
 		};
 
 		return () => {

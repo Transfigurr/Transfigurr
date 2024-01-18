@@ -13,7 +13,10 @@ const Series = ({ series_name }: any) => {
 	series_name = series_name.replace(/-/g, " ");
 	const wsContext = useContext(WebSocketContext);
 	const profiles = wsContext?.data?.profiles;
-	const series = wsContext?.data?.series[series_name];
+	const series: any =
+		wsContext?.data?.series && profiles
+			? wsContext?.data?.series[series_name]
+			: {};
 	const handleEditClick = () => {
 		modalContext?.setModalType("editSeries");
 		modalContext?.setModalData(series);

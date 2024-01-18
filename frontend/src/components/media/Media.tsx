@@ -13,6 +13,7 @@ import { ReactComponent as SortIcon } from "../svgs/sort.svg";
 import { ReactComponent as FilterIcon } from "../svgs/filter.svg";
 
 import { WebSocketContext } from "../../contexts/webSocketContext";
+import { Link } from "react-router-dom";
 
 const ExplorerComponent = () => {
 	const wsContext = useContext(WebSocketContext);
@@ -128,13 +129,15 @@ const ExplorerComponent = () => {
 						{Object.keys(series || {})
 							?.sort()
 							.map((key: any) => (
-								<div className={styles.poster} onClick={() => posterClick(key)}>
+								<Link to={`series/${key}`} className={styles.poster}>
 									<PosterComponent name={key} />
-								</div>
+								</Link>
 							))}
 					</div>
 
-					<div className={styles.footerContent}>{<Footer />}</div>
+					<div className={styles.footerContent}>
+						{series ? <Footer /> : <></>}
+					</div>
 				</div>
 			</div>
 		</div>

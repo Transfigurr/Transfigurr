@@ -15,6 +15,7 @@
 /series
 /config
 /transcode
+/test
 
 # misc
 .DS_Store

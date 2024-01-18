@@ -11,7 +11,6 @@ const MassEditor = () => {
 	const wsContext: any = useContext(WebSocketContext);
 	const series: any = wsContext?.data?.series;
 	const seriesArray = Array.from(Object.values(series || {}));
-
 	const profiles: any = wsContext?.data?.profiles;
 	const [selectedSeries, setSelectedSeries] = useState<any>([]);
 	const [monitored, setMonitored] = useState<any>(false);
@@ -99,7 +98,7 @@ const MassEditor = () => {
 												{s?.id}
 											</a>
 										</td>
-										<td>{profiles[s.profile_id]?.name}</td>
+										<td>{profiles ? profiles[s.profile_id]?.name : ""}</td>
 										<td>/series/{s.id}</td>
 										<td>{(s.space_saved / 1000000000).toFixed(2)} GB</td>
 										<td>{(s.size / 1000000000).toFixed(2)} GB</td>
