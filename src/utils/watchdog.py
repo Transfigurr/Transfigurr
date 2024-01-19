@@ -6,7 +6,7 @@ import re
 import time
 from src.tasks.scan import scan_all_series, scan_series, scan_system
 from src.tasks.validate import validate_all_series, validate_series
-from watchdog.observers import Observer
+from watchdog.observers.polling import PollingObserver as Observer
 from watchdog.events import FileSystemEventHandler
 
 logger = logging.getLogger('logger')
