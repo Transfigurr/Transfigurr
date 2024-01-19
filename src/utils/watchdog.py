@@ -15,6 +15,7 @@ logger = logging.getLogger('logger')
 class FileChangeHandler(FileSystemEventHandler):
     def on_created(self, event):
         try:
+            logger.info("Watchdog detedted a file creation")
             self.wait_until_done(event.src_path)
             series = get_series_name(event.src_path)
             if series:
@@ -28,6 +29,7 @@ class FileChangeHandler(FileSystemEventHandler):
 
     def on_deleted(self, event):
         try:
+            logger.info('Watchdog detected a file deletion.')
             series = get_series_name(event.src_path)
             if series:
                 asyncio.run(validate_series(series))
@@ -43,6 +45,7 @@ class FileChangeHandler(FileSystemEventHandler):
 
     def on_modified(self, event):
         try:
+            logger.info('Watchdog detected a file modification.')
             self.wait_until_done(event.src_path)
             series = get_series_name(event.src_path)
             if series:
@@ -90,6 +93,7 @@ def get_episode_name(path):
 
 async def start_watchdog(directory):
     try:
+        logger.info(f"Starting the file watchdog for {directory}")
         observer = Observer()
         handler = FileChangeHandler()
         observer.schedule(handler, directory, recursive=True)
