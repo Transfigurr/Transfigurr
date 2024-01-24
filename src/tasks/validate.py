@@ -1,6 +1,5 @@
 import logging
 import os
-
 from src.api.controllers.series_controller import get_all_series, get_full_series
 from src.api.controllers.series_controller import remove_episode, remove_season, remove_series
 from src.api.utils import get_series_folder

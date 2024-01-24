@@ -1,15 +1,16 @@
 import asyncio
 import os
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
-from src.tasks import periodic, scan
 from pathlib import Path
-from src.api.utils import get_root_folder
 from fastapi.middleware.cors import CORSMiddleware
-from src.tasks.validate import validate_all_series
-from src.utils.logger import setup_logger
-from src.utils.watchdog import start_watchdog
+from src.api.utils import get_root_folder, verify_folders
+from src.services.logging_service import start_logger
+from src.services.watchdog_service import start_watchdog
+from src.services.metadata_service import metadata_service
+from src.services.encode_service import encode_service
+from src.services.scan_service import scan_service
 from src.api.routes import (
     artwork_routes,
     codec_routes,
@@ -28,10 +29,10 @@ app = FastAPI()
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods
-    allow_headers=["*"],  # Allows all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Add Routes
@@ -58,25 +59,25 @@ app.mount("/images", StaticFiles(directory="src/images"), name="images")
 
 
 async def startup_event():
-    asyncio.create_task(validate_all_series())
-    asyncio.create_task(scan.scan_all_series())
-    asyncio.create_task(scan.scan_system())
-
-    asyncio.create_task(periodic.process_episodes_in_queue_periodic())
-    asyncio.create_task(start_watchdog(await get_root_folder() + '/series'))
+    await verify_folders()
+    asyncio.create_task(scan_service.enqueue_all())
+    asyncio.create_task(scan_service.process())
+    asyncio.create_task(metadata_service.process())
+    asyncio.create_task(encode_service.process())
+    start_watchdog(await get_root_folder() + '/series')
 app.add_event_handler("startup", startup_event)
+
 
 # Setup Logger
 
 
-setup_logger()
-
+start_logger()
 
 # Catch all static routes
 
 
 @app.get("/{full_path:path}")
-async def read_item(request: Request, full_path: str):
+async def read_item(full_path: str):
     file_path = Path(f"frontend/build/{full_path}")
     if not file_path.exists() or file_path.is_dir():
         file_path = Path("frontend/build/index.html")

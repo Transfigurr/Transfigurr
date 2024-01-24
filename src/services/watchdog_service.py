@@ -4,9 +4,8 @@ import logging
 import os
 import re
 import time
-from src.tasks.scan import scan_all_series, scan_series, scan_system
-from src.tasks.validate import validate_all_series, validate_series
-from watchdog.observers.polling import PollingObserver as Observer
+from src.services.scan_service import scan_service
+from watchdog.observers.polling import PollingObserver
 from watchdog.events import FileSystemEventHandler
 
 logger = logging.getLogger('logger')
@@ -15,15 +14,17 @@ logger = logging.getLogger('logger')
 class FileChangeHandler(FileSystemEventHandler):
     def on_created(self, event):
         try:
-            logger.info("Watchdog detedted a file creation")
+            logger.info("Watchdog detected a file creation")
             self.wait_until_done(event.src_path)
             series = get_series_name(event.src_path)
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
             if series:
-                asyncio.run(scan_series(series))
-                asyncio.run(scan_system())
+                loop.run_until_complete(scan_service.enqueue(series))
             else:
-                asyncio.run(scan_all_series())
-                asyncio.run(scan_system())
+                pass
+                loop.run_until_complete(scan_service.enqueue_all())
+            loop.close()
         except Exception as e:
             logger.info(f'An error occurred while handling a file creation: {e}')
 
@@ -31,15 +32,13 @@ class FileChangeHandler(FileSystemEventHandler):
         try:
             logger.info('Watchdog detected a file deletion.')
             series = get_series_name(event.src_path)
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
             if series:
-                asyncio.run(validate_series(series))
-                asyncio.run(scan_series(series))
-                asyncio.run(scan_system())
-
+                loop.run_until_complete(scan_service.enqueue(series))
             else:
-                asyncio.run(validate_all_series())
-                asyncio.run(scan_all_series())
-                asyncio.run(scan_system())
+                loop.run_until_complete(scan_service.enqueue_all())
+            loop.close()
         except Exception as e:
             logger.info(f'An error occurred while handling a file deletion: {e}')
 
@@ -48,12 +47,13 @@ class FileChangeHandler(FileSystemEventHandler):
             logger.info('Watchdog detected a file modification.')
             self.wait_until_done(event.src_path)
             series = get_series_name(event.src_path)
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
             if series:
-                asyncio.run(scan_series(series))
-                asyncio.run(scan_system())
+                loop.run_until_complete(scan_service.enqueue(series))
             else:
-                asyncio.run(scan_all_series())
-                asyncio.run(scan_system())
+                loop.run_until_complete(scan_service.enqueue_all())
+            loop.close()
         except Exception as e:
             logger.info(f'An error occurred while handling a file modification: {e}')
 
@@ -64,13 +64,11 @@ class FileChangeHandler(FileSystemEventHandler):
                 try:
                     new_file_size = os.path.getsize(path)
                     if new_file_size == old_file_size:
-                        # File size hasn't changed, so assume it's done being written to.
                         break
                     else:
                         old_file_size = new_file_size
-                        time.sleep(5)  # Wait for 1 second before checking again.
+                        time.sleep(5)
                 except OSError:
-                    # If the file doesn't exist yet, wait a bit before checking again.
                     time.sleep(5)
         except Exception as e:
             logger.error(f"An error occurred while waiting for file initialization: {e}")
@@ -91,12 +89,12 @@ def get_episode_name(path):
     return match.group(3) if match else None
 
 
-async def start_watchdog(directory):
+def start_watchdog(directory):
     try:
         logger.info(f"Starting the file watchdog for {directory}")
-        observer = Observer()
+        observer = PollingObserver()
         handler = FileChangeHandler()
         observer.schedule(handler, directory, recursive=True)
         observer.start()
     except Exception as e:
-        logger.error(f"An error occurred starting the file watchdog: {e}")
+        logger.error(f"An xwerror occurred starting the file watchdog: {e}")

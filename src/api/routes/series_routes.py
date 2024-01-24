@@ -2,8 +2,7 @@
 import asyncio
 from fastapi import APIRouter, Request
 from src.api.controllers.series_controller import get_all_series, get_series, set_series
-from src.tasks.scan import scan_series, scan_system
-from src.tasks.validate import validate_series
+from src.services.scan_service import scan_service
 router = APIRouter()
 
 
@@ -18,9 +17,7 @@ async def get_series_route(series_id):
 
 
 async def after_update(series_id):
-    await validate_series(series_id)
-    await scan_series(series_id)
-    await scan_system()
+    await scan_service.enqueue(series_id)
 
 
 @router.put('/api/series/{series_id}')

@@ -9,11 +9,11 @@ from src.api.controllers.profile_controller import get_all_profiles, get_profile
 from src.api.controllers.season_controller import set_season
 from src.api.controllers.series_controller import (
     get_all_series,
-    get_full_series,
     get_series,
     set_series,
 )
 from src.api.controllers.settings_controller import get_all_settings
+from src.services.encode_service import encode_service
 from src.api.controllers.system_controller import set_system
 from src.api.utils import (
     get_config_folder,
@@ -22,15 +22,12 @@ from src.api.utils import (
     verify_folders,
     get_movies_folder,
 )
-from src.tasks.metadata import get_series_metadata
+from src.services.metadata_service import metadata_service
 from src.utils.ffmpeg import analyze_media_file
 from src.models.episode import Episode
 from src.models.season import Season
 from src.models.series import Series
 import logging
-from src.models.queue import queue_instance
-
-from src.tasks.validate import validate_series
 
 logger = logging.getLogger('logger')
 
@@ -168,6 +165,7 @@ async def scan_series(series_id):
                     missing_metadata = True
                 season.episode_count += 1
                 await set_episode(asdict(episode))
+                await scan_queue(asdict(episode))
             series.episode_count += season.episode_count
             series.size += season.size
             series.space_saved += season.space_saved
@@ -175,11 +173,7 @@ async def scan_series(series_id):
             await set_season(asdict(season))
         await set_series(asdict(series))
         if missing_metadata:
-            await get_series_metadata(series.id)
-
-        await validate_series(series.id)
-        await scan_system()
-        await scan_queue(series.id)
+            await metadata_service.enqueue(series_id)
     except Exception as e:
         logger.error(f"An error occurred scanning series {series_id}: {e}")
     return
@@ -253,22 +247,18 @@ async def scan_system():
     return
 
 
-async def scan_queue(series_id):
+async def scan_queue(episode):
     try:
         profiles = await get_all_profiles()
-        series = await get_full_series(series_id)
+        series = await get_series(episode['series_id'])
         profile_id = series['profile_id']
         profile = profiles[profile_id]
         monitored = series['monitored']
-        for season_number in series['seasons']:
-            season = series['seasons'][season_number]
-            for episode_number in season['episodes']:
-                episode = season['episodes'][episode_number]
-                if not monitored:
-                    continue
-                targets = profile['codecs']
-                wanted = profile['codec']
-                if (episode['video_codec'] in targets or 'Any' in targets) and wanted != 'Any' and episode['video_codec'] != wanted:
-                    await queue_instance.enqueue(episode)
+        if not monitored:
+            return
+        targets = profile['codecs']
+        wanted = profile['codec']
+        if (episode['video_codec'] in targets or 'Any' in targets) and wanted != 'Any' and episode['video_codec'] != wanted:
+            await encode_service.enqueue(episode)
     except Exception as e:
         logger.error(f"An error occurred while scanning for the queue {e}")

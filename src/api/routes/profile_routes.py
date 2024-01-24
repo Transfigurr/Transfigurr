@@ -3,8 +3,6 @@ import asyncio
 from fastapi import APIRouter, Request
 from src.global_state import GlobalState
 from src.api.controllers.profile_controller import delete_profile, get_all_profiles, get_profile, set_profile
-from src.tasks.scan import scan_all_series, scan_system
-from src.tasks.validate import validate_all_series
 router = APIRouter()
 global_state = GlobalState()
 
@@ -20,9 +18,8 @@ async def get_profile_route(profile_id):
 
 
 async def after_profile():
-    await validate_all_series()
-    await scan_all_series()
-    await scan_system()
+    from src.services.scan_service import scan_service
+    await scan_service.enqueue_all()
     return
 
 

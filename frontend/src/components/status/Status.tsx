@@ -95,7 +95,8 @@ const Status = () => {
 										style={{
 											height: "100%",
 											width: `${
-												(system?.series_free_space /
+												((system?.series_total_space -
+													system?.series_free_space) /
 													system?.series_total_space) *
 												100
 											}%`,
@@ -128,8 +129,9 @@ const Status = () => {
 										style={{
 											height: "100%",
 											width: `${
-												(system?.transcode_free_space /
-													system?.transcode_total_space) *
+												((system?.movies_total_space -
+													system?.movies_free_space) /
+													system?.movies_total_space) *
 												100
 											}%`,
 											backgroundColor: "var(--transfigurrPurple)",

@@ -1,9 +1,5 @@
 import logging
 from fastapi import APIRouter
-from src.api.controllers.episode_controller import get_all_episodes
-from src.api.controllers.series_controller import get_series
-from src.api.routes.profile_routes import get_all_profiles
-from src.models.queue import queue_instance
 from src.tasks.metadata import get_all_series_metadata, get_series_metadata
 from src.tasks.scan import scan_all_series, scan_series
 
@@ -37,19 +33,4 @@ async def scan_series_route(series_name):
 
 @router.get('/api/scan/queue')
 async def scan_queue():
-    try:
-        episodes = await get_all_episodes()
-        profiles = await get_all_profiles()
-        for episode in episodes:
-            series = await get_series(episode['series_id'])
-            profile_id = series['profile_id']
-            monitored = series['monitored']
-            if not monitored:
-                continue
-            profile = profiles[profile_id]
-            targets = profile['codecs']
-            wanted = profile['codec']
-            if (episode['video_codec'] in targets or 'Any' in targets) and wanted != 'Any' and episode['video_codec'] != wanted:
-                await queue_instance.enqueue(episode)
-    except Exception as e:
-        logger.error(f"An error occurred while scanning the queue: {e}")
+    return

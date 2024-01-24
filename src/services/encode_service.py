@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import datetime
 from functools import partial
 import os
@@ -12,37 +13,65 @@ from src.api.controllers.episode_controller import get_episode, set_episode
 from src.api.controllers.history_controller import set_history
 from src.api.controllers.series_controller import get_series
 from src.api.routes.profile_routes import get_all_profiles
-from src.api.routes.scan_routes import (
-    scan_all_series,
-    scan_series,
-)
 from src.api.utils import get_series_folder, get_transcode_folder
-from src.models.queue import queue_instance
-import logging
-from src.tasks.scan import scan_system
 from src.utils.ffmpeg import analyze_media_file
 
 logger = logging.getLogger('logger')
 
 
-async def process_episodes_in_queue_periodic():
-    while True:
-        q = queue_instance.queue
-        w = True
-        while q and w:
-            await asyncio.sleep(5)
-            item = queue_instance.peek()
-            if item:
-                await process_episode(item)
-                await scan_all_series()
-                await queue_instance.dequeue()
+class EncodeService:
+    def __init__(self):
+        self.encode_queue = asyncio.Queue()
+        self.encode_set = set()
+        self.active = True
+        self.stage = 'idle'
+        self.current = None
+        self.processing = False
+        self.current_progress = 0
+        self.current_eta = 0
+
+    async def enqueue(self, episode):
+        episode_id = episode['id']
+        if episode_id not in self.encode_set:
+            self.encode_set.add(episode['id'])
+            await self.encode_queue.put(episode)
+
+    async def process(self):
+        while True:
+            try:
+                episode = await self.encode_queue.get()
+                self.current = episode
+                if not episode:
+                    continue
+                await process_episode(episode)
+                self.encode_set.remove(episode['id'])
+                self.current = None
+            except Exception as e:
+                logger.error("An error occurred while processing series %s", str(e))
+            await asyncio.sleep(1)
+
+    async def to_list(self):
+        return list(self.encode_queue._queue)
+
+    async def get_encode_queue_data(self):
+        return {
+            'queue': await self.to_list(),
+            'stage': self.stage,
+            'processing': self.processing,
+            'progress': self.current_progress,
+            'eta': self.current_eta,
+            'current': self.current
+        }
+
+
+encode_service = EncodeService()
 
 
 async def run_ffmpeg(input_file, output_file, encoder, output_container, preset=None):
     try:
         logger.info(f"Encoding {input_file}")
         loop = asyncio.get_event_loop()
-        queue_instance.processing = True
+        encode_service.processing = True
         # Get the total duration of the video
         probe = ffmpeg.probe(input_file)
         total_duration = float(probe["format"]["duration"])
@@ -84,7 +113,7 @@ async def run_ffmpeg(input_file, output_file, encoder, output_container, preset=
         )
 
         start_time = time.time()
-        queue_instance.stage = "transcoding"
+        encode_service.stage = "transcoding"
         while True:
             output = await loop.run_in_executor(None, process.stdout.readline)
             if output == "" and process.poll() is not None:
@@ -98,15 +127,15 @@ async def run_ffmpeg(input_file, output_file, encoder, output_container, preset=
                         current_time, FMT
                     ) - datetime.datetime.strptime("00:00:00.00", FMT)
                     current_seconds = tdelta.total_seconds()
-                    queue_instance.current_progress = (
+                    encode_service.current_progress = (
                         current_seconds / total_duration
                     ) * 100
 
                     elapsed_time = time.time() - start_time
                     estimated_total_time = elapsed_time / (
-                        queue_instance.current_progress / 100
+                        encode_service.current_progress / 100
                     )
-                    queue_instance.current_eta = estimated_total_time - elapsed_time
+                    encode_service.current_eta = estimated_total_time - elapsed_time
     except Exception as e:
         logger.error(f"An error occurred while running ffmpeg on {input_file}: {e}")
     return
@@ -117,7 +146,7 @@ async def process_episode(e):
         logger.info(f"Processing {e['filename']}")
         if not e:
             return
-        queue_instance.stage = "analyzing"
+        encode_service.stage = "analyzing"
         episode = await get_episode(e["id"])
         series = await get_series(episode["series_id"])
         profiles = await get_all_profiles()
@@ -164,7 +193,7 @@ async def process_episode(e):
 
         await run_ffmpeg(input_file, output_file, encoder, output_container, preset)
 
-        queue_instance.stage = "Copying"
+        encode_service.stage = "Copying"
 
         await loop.run_in_executor(None, partial(shutil.move, output_file, input_file))
 
@@ -174,14 +203,12 @@ async def process_episode(e):
         episode["space_saved"] = episode["original_size"] - new_size
         episode["size"] = new_size
         await set_episode(episode)
-        await scan_series(series["id"])
-        await scan_system()
 
         await set_history(episode, profile)
 
-        queue_instance.stage = "idle"
-        queue_instance.current_progress = 0
-        queue_instance.current_eta = 0
+        encode_service.stage = "idle"
+        encode_service.current_progress = 0
+        encode_service.current_eta = 0
     except Exception as e:
         logger.error(f"An error occurred processing {input_file}: {e}")
     return

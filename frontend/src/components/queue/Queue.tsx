@@ -14,6 +14,7 @@ const Queue = () => {
 	const profiles = wsContext?.data?.profiles;
 	const series = wsContext?.data?.series;
 	const queue = wsContext?.data?.queue;
+	console.log(queue);
 
 	const recordsPerPage = 13;
 	const [currentPage, setCurrentPage] = useState(1);
@@ -54,145 +55,209 @@ const Queue = () => {
 				rightToolBarItems={[]}
 			/>
 			<div className={styles.content}>
-				{queue && queue.queue.length !== 0 ? (
-					<>
-						<table className={styles.table}>
-							<thead>
-								<tr className={styles.headRow}>
-									<th></th>
-									<th>Series</th>
-									<th>Episode</th>
-									<th>Episode Title</th>
-									<th>Profile</th>
-									<th>Codec</th>
-									<th>Future Codec</th>
-									<th>Stage</th>
-									<th>Time Left</th>
-									<th>Progress</th>
-								</tr>
-							</thead>
-							<tbody>
-								{currentRecords?.map((q: any, index: number) => (
-									<tr className={styles.row}>
-										<td className={styles.iconCell}>
-											{index === 1 ? (
-												<QueueIcon
-													style={{
-														height: "25px",
-														width: "25px",
-														fill: "#515253",
-													}}
-												/>
-											) : (
-												<ResetWrench
-													style={{
-														height: "25px",
-														width: "25px",
-														fill: "#515253",
-													}}
-												/>
-											)}
-										</td>
-										<td>
-											<a
-												href={"/series/" + q?.series_id}
-												className={styles.name}
-											>
-												{q?.series_id}
-											</a>
-										</td>
-										<td>
-											{q.season_number}x{q.episode_number}
-										</td>
-										<td>{q.episode_name}</td>
-										<td>
-											{profiles
-												? profiles[series[q?.series_id].profile_id].name
-												: ""}
-										</td>
-										<td className={styles.codecRow}>
-											<div className={styles.codec}>{q.video_codec}</div>
-										</td>
-										<td className={styles.codecRow}>
-											<div className={styles.codec}>
-												{profiles
-													? profiles[series[q?.series_id].profile_id].codec
-													: ""}
-											</div>
-										</td>
+				<>
+					<table className={styles.table}>
+						<thead>
+							<tr className={styles.headRow}>
+								<th>Series</th>
+								<th>Episode</th>
+								<th>Episode Title</th>
+								<th>Profile</th>
+								<th>Codec</th>
+								<th>Future Codec</th>
+								<th>Stage</th>
+								<th>Time Left</th>
+								<th>Progress</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr className={styles.row}>
+								<td>
+									<a
+										href={"/series/" + queue?.current?.series_id}
+										className={styles.name}
+									>
+										{queue?.current?.series_id}
+									</a>
+								</td>
+								<td>
+									{queue?.current?.season_number}x
+									{queue?.current?.episode_number}
+								</td>
+								<td>{queue?.current?.episode_name}</td>
+								<td>
+									{profiles &&
+									series &&
+									series[queue?.current?.series_id] &&
+									profiles[series[queue?.current?.series_id].profile_id]
+										? profiles[series[queue?.current?.series_id].profile_id]
+												.name
+										: ""}
+								</td>
+								<td className={styles.codecRow}>
+									<div className={styles.codec}>
+										{queue?.current?.video_codec}
+									</div>
+								</td>
+								<td className={styles.codecRow}>
+									<div className={styles.codec}>
+										{profiles &&
+										series &&
+										series[queue?.current?.series_id] &&
+										profiles[series[queue?.current?.series_id].profile_id]
+											? profiles[series[queue?.current?.series_id].profile_id]
+													.codec
+											: ""}
+									</div>
+								</td>
 
-										<td>{index === 0 ? queue?.stage : "-"}</td>
-										<td>
-											{index === 0
-												? Math.floor(parseInt(queue.eta || 0) / 60).toString() +
-													":" +
-													(parseInt(queue.eta || 0) % 60).toString()
-												: "-"}
-										</td>
-										<td>
-											<div
-												style={{
-													height: "20px",
-													width: "100%",
-													backgroundColor: "#f3f3f3",
-													boxShadow: "inset 0 1px 2px rgba(0, 0, 0, 0.1)",
-													borderRadius: "4px",
-												}}
-											>
-												<div
-													style={{
-														height: "100%",
-														width: `${index === 0 ? queue.progress || 0 : 0}%`,
-														backgroundColor: "var(--transfigurrPurple)",
-														borderRadius: "4px",
-													}}
-												/>
-											</div>
-										</td>
+								<td>{queue?.stage}</td>
+								<td>
+									{Math.floor(parseInt(queue?.eta || 0) / 60).toString() +
+										":" +
+										(parseInt(queue?.eta || 0) % 60).toString()}
+								</td>
+								<td>
+									<div
+										style={{
+											height: "20px",
+											width: "100%",
+											backgroundColor: "#f3f3f3",
+											boxShadow: "inset 0 1px 2px rgba(0, 0, 0, 0.1)",
+											borderRadius: "4px",
+										}}
+									>
+										<div
+											style={{
+												height: "100%",
+												width: `${queue?.progress || 0}%`,
+												backgroundColor: "var(--transfigurrPurple)",
+												borderRadius: "4px",
+											}}
+										/>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					{currentRecords?.length > 0 ? (
+						<>
+							<table className={styles.table}>
+								<thead>
+									<tr className={styles.headRow}>
+										<th></th>
+										<th>Series</th>
+										<th>Episode</th>
+										<th>Episode Title</th>
+										<th>Profile</th>
+										<th>Codec</th>
+										<th>Future Codec</th>
 									</tr>
-								))}
-							</tbody>
-						</table>
-						<div className={styles.navigation}>
-							<div
-								onClick={firstPage}
-								className={currentPage === 1 ? styles.disabled : styles.button}
-							>
-								<SkipPrevious />
+								</thead>
+								<tbody>
+									{currentRecords?.map((q: any, index: number) => (
+										<tr className={styles.row}>
+											<td className={styles.iconCell}>
+												{index === 1 ? (
+													<QueueIcon
+														style={{
+															height: "25px",
+															width: "25px",
+															fill: "#515253",
+														}}
+													/>
+												) : (
+													<ResetWrench
+														style={{
+															height: "25px",
+															width: "25px",
+															fill: "#515253",
+														}}
+													/>
+												)}
+											</td>
+											<td>
+												<a
+													href={"/series/" + q?.series_id}
+													className={styles.name}
+												>
+													{q?.series_id}
+												</a>
+											</td>
+											<td>
+												{q.season_number}x{q.episode_number}
+											</td>
+											<td>{q.episode_name}</td>
+											<td>
+												{profiles &&
+												series &&
+												series[q?.series_id] &&
+												profiles[series[q?.series_id].profile_id]
+													? profiles[series[q?.series_id].profile_id].name
+													: ""}
+											</td>
+											<td className={styles.codecRow}>
+												<div className={styles.codec}>{q.video_codec}</div>
+											</td>
+											<td className={styles.codecRow}>
+												<div className={styles.codec}>
+													{profiles &&
+													series &&
+													series[q?.series_id] &&
+													profiles[series[q?.series_id].profile_id]
+														? profiles[series[q?.series_id].profile_id].codec
+														: ""}
+												</div>
+											</td>
+										</tr>
+									))}
+								</tbody>
+							</table>
+							<div className={styles.navigation}>
+								<div
+									onClick={firstPage}
+									className={
+										currentPage === 1 ? styles.disabled : styles.button
+									}
+								>
+									<SkipPrevious />
+								</div>
+								<div
+									onClick={prevPage}
+									className={
+										currentPage === 1 ? styles.disabled : styles.button
+									}
+								>
+									<NavigateBefore />
+								</div>
+								<div className={styles.pageInfo}>
+									{currentPage} / {totalPages}
+								</div>
+								<div
+									onClick={nextPage}
+									className={
+										currentPage === totalPages ? styles.disabled : styles.button
+									}
+								>
+									<NavigateNext />
+								</div>
+								<div
+									onClick={lastPage}
+									className={
+										currentPage === totalPages ? styles.disabled : styles.button
+									}
+								>
+									<SkipNext />
+								</div>
 							</div>
-							<div
-								onClick={prevPage}
-								className={currentPage === 1 ? styles.disabled : styles.button}
-							>
-								<NavigateBefore />
+							<div className={styles.totalRecords}>
+								Total Records: {queueArray.length}
 							</div>
-							<div className={styles.pageInfo}>
-								{currentPage} / {totalPages}
-							</div>
-							<div
-								onClick={nextPage}
-								className={
-									currentPage === totalPages ? styles.disabled : styles.button
-								}
-							>
-								<NavigateNext />
-							</div>
-							<div
-								onClick={lastPage}
-								className={
-									currentPage === totalPages ? styles.disabled : styles.button
-								}
-							>
-								<SkipNext />
-							</div>
-						</div>
-						<div className={styles.totalRecords}>
-							Total Records: {queueArray.length}
-						</div>
-					</>
-				) : (
-					<>Queue is empty</>
-				)}
+						</>
+					) : (
+						<></>
+					)}
+				</>
 			</div>
 		</div>
 	);

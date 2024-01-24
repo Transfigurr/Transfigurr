@@ -40,7 +40,7 @@ class SQLiteHandler(logging.Handler):
                 conn.close()
 
 
-def setup_logger():
+def start_logger():
     log_queue = queue.Queue(-1)  # Infinite size
     queue_handler = logging.handlers.QueueHandler(log_queue)
     sqlite_handler = SQLiteHandler()
