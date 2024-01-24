@@ -31,18 +31,19 @@ import logging
 
 logger = logging.getLogger('logger')
 
+season_pattern = re.compile(r"\d+")
+episode_pattern = re.compile(r"(?:S(\d{2})E(\d{2})|E(\d{2}))")
+
 
 async def scan_all_series():
-    logger.info("Scanning all series")
+    logger.info("Scanning all series", extra={'service': 'Scan'})
     try:
         await verify_folders()
         series_folder = await get_series_folder()
         for series_name in os.listdir(series_folder):
-            if series_name == ".DS_Store":
-                continue
             await scan_series(series_name)
     except Exception as e:
-        logger.error(f"An error occurred scanning all series: {e}")
+        logger.error(f"An error occurred scanning all series: {e}", extra={'service': 'Scan'})
     return
 
 
@@ -50,9 +51,8 @@ async def parse_episode(
     file, series_id, season_id, season_path, season_number, season_name
 ):
     try:
-        logger.info(f"Parsing episode: {file}")
-        pattern = re.compile(r"(?:S(\d{2})E(\d{2})|E(\d{2}))")
-        match = pattern.search(file)
+        logger.info(f"Parsing episode: {file}", extra={'service': 'Scan'})
+        match = episode_pattern.search(file)
         episode_number = 0
         if match.group(1):
             episode_number = int(match.group(2))
@@ -82,14 +82,15 @@ async def parse_episode(
             episode.space_saved = 0
         episode.size = episode_size
     except Exception as e:
-        logger.error(f"An error occurred parsing episode {file}: {e}")
+        logger.error(f"An error occurred parsing episode {file}: {e}", extra={'service': 'Scan'})
+        return None
     return episode
 
 
 async def parse_season(season_name, series_id):
     try:
-        logger.info(f"Parsing season: {season_name}")
-        digits = re.findall(r"\d+", season_name)
+        logger.info(f"Parsing season: {season_name}", extra={'service': 'Scan'})
+        digits = season_pattern.findall(season_name)
         season_number = 0
         if digits:
             season_number = int("".join(digits))
@@ -104,15 +105,14 @@ async def parse_season(season_name, series_id):
         season.space_saved = 0
         season.episode_count = 0
     except Exception as e:
-        logger.error(f"An error occurred parsing season {season_name}: {e}")
+        logger.error(f"An error occurred parsing season {season_name}: {e}", extra={'service': 'Scan'})
+        return None
     return season
 
 
 async def scan_series(series_id):
     try:
-        if series_id in [".DS_Store", ""]:
-            return
-        logger.info(f"Scanning series: {series_id}")
+        logger.info(f"Scanning series: {series_id}", extra={'service': 'Scan'})
         series: Series = Series(**await get_series(series_id))
         series_path = os.path.join(await get_series_folder(), series_id)
         if not os.path.isdir(series_path):
@@ -133,12 +133,11 @@ async def scan_series(series_id):
         if not series.name:
             missing_metadata = True
         profile = await get_profile(series.profile_id)
-        settings = await get_all_settings()
         for season_name in os.listdir(series_path):
-            if season_name == ".DS_Store":
-                continue
             season_path = os.path.join(series_path, season_name)
             season: Season = await parse_season(season_name, series.id)
+            if not season:
+                continue
             if not os.path.isdir(season_path):
                 continue
             files = [
@@ -147,8 +146,6 @@ async def scan_series(series_id):
                 if os.path.isfile(os.path.join(season_path, f))
             ]
             for file in files:
-                if file == ".DS_Store":
-                    continue
                 episode: Episode = await parse_episode(
                     file,
                     series_id,
@@ -157,6 +154,8 @@ async def scan_series(series_id):
                     season.season_number,
                     season_name,
                 )
+                if not episode:
+                    continue
                 if episode.video_codec != profile["codec"]:
                     season.missing_episodes += 1
                 season.size += episode.size
@@ -165,7 +164,7 @@ async def scan_series(series_id):
                     missing_metadata = True
                 season.episode_count += 1
                 await set_episode(asdict(episode))
-                await scan_queue(asdict(episode))
+                await scan_queue(asdict(episode), asdict(series), profile)
             series.episode_count += season.episode_count
             series.size += season.size
             series.space_saved += season.space_saved
@@ -175,13 +174,13 @@ async def scan_series(series_id):
         if missing_metadata:
             await metadata_service.enqueue(series_id)
     except Exception as e:
-        logger.error(f"An error occurred scanning series {series_id}: {e}")
+        logger.error(f"An error occurred scanning series {series_id}: {e}", extra={'service': 'Scan'})
     return
 
 
 async def scan_system():
     try:
-        logger.info("Scanning system")
+        logger.info("Scanning system", extra={'service': 'Scan'})
         series = await get_all_series()
         series_count = 0
         episode_count = 0
@@ -243,22 +242,20 @@ async def scan_system():
         await set_system({"id": "transcode_total_space", "value": transcode_total_space})
         await set_system({"id": "transcode_free_space", "value": transcode_free_space})
     except Exception as e:
-        logger.error(f"An error occurred scanning system: {e}")
+        logger.error(f"An error occurred scanning system: {e}", extra={'service': 'Scan'})
     return
 
 
-async def scan_queue(episode):
+async def scan_queue(episode, series, profile):
     try:
-        profiles = await get_all_profiles()
-        series = await get_series(episode['series_id'])
-        profile_id = series['profile_id']
-        profile = profiles[profile_id]
         monitored = series['monitored']
         if not monitored:
             return
+        profiles = await get_all_profiles()
+        profile = profiles[series['profile_id']]
         targets = profile['codecs']
         wanted = profile['codec']
         if (episode['video_codec'] in targets or 'Any' in targets) and wanted != 'Any' and episode['video_codec'] != wanted:
             await encode_service.enqueue(episode)
     except Exception as e:
-        logger.error(f"An error occurred while scanning for the queue {e}")
+        logger.error(f"An error occurred while scanning for the queue {e}", extra={'service': 'Scan'})

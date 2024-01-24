@@ -14,7 +14,7 @@ logger = logging.getLogger('logger')
 class FileChangeHandler(FileSystemEventHandler):
     def on_created(self, event):
         try:
-            logger.info("Watchdog detected a file creation")
+            logger.info("Watchdog detected a file creation", extra={'service': 'Watchdog'})
             self.wait_until_done(event.src_path)
             series = get_series_name(event.src_path)
             loop = asyncio.new_event_loop()
@@ -26,11 +26,11 @@ class FileChangeHandler(FileSystemEventHandler):
                 loop.run_until_complete(scan_service.enqueue_all())
             loop.close()
         except Exception as e:
-            logger.info(f'An error occurred while handling a file creation: {e}')
+            logger.info(f'An error occurred while handling a file creation: {e}', extra={'service': 'Watchdog'})
 
     def on_deleted(self, event):
         try:
-            logger.info('Watchdog detected a file deletion.')
+            logger.info('Watchdog detected a file deletion.', extra={'service': 'Watchdog'})
             series = get_series_name(event.src_path)
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
@@ -40,11 +40,11 @@ class FileChangeHandler(FileSystemEventHandler):
                 loop.run_until_complete(scan_service.enqueue_all())
             loop.close()
         except Exception as e:
-            logger.info(f'An error occurred while handling a file deletion: {e}')
+            logger.info(f'An error occurred while handling a file deletion: {e}', extra={'service': 'Watchdog'})
 
     def on_modified(self, event):
         try:
-            logger.info('Watchdog detected a file modification.')
+            logger.info('Watchdog detected a file modification.', extra={'service': 'Watchdog'})
             self.wait_until_done(event.src_path)
             series = get_series_name(event.src_path)
             loop = asyncio.new_event_loop()
@@ -55,7 +55,7 @@ class FileChangeHandler(FileSystemEventHandler):
                 loop.run_until_complete(scan_service.enqueue_all())
             loop.close()
         except Exception as e:
-            logger.info(f'An error occurred while handling a file modification: {e}')
+            logger.info(f'An error occurred while handling a file modification: {e}', extra={'service': 'Watchdog'})
 
     def wait_until_done(self, path):
         try:
@@ -71,7 +71,7 @@ class FileChangeHandler(FileSystemEventHandler):
                 except OSError:
                     time.sleep(5)
         except Exception as e:
-            logger.error(f"An error occurred while waiting for file initialization: {e}")
+            logger.error(f"An error occurred while waiting for file initialization: {e}", extra={'service': 'Watchdog'})
 
 
 def get_series_name(path):
@@ -91,10 +91,10 @@ def get_episode_name(path):
 
 def start_watchdog(directory):
     try:
-        logger.info(f"Starting the file watchdog for {directory}")
+        logger.info(f"Starting the file watchdog for {directory}", extra={'service': 'Watchdog'})
         observer = PollingObserver()
         handler = FileChangeHandler()
         observer.schedule(handler, directory, recursive=True)
         observer.start()
     except Exception as e:
-        logger.error(f"An xwerror occurred starting the file watchdog: {e}")
+        logger.error(f"An xwerror occurred starting the file watchdog: {e}", extra={'service': 'Watchdog'})

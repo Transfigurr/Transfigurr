@@ -24,6 +24,8 @@ const Events = () => {
 		indexOfLastRecord,
 	);
 
+	console.log(logs);
+
 	const totalPages = Math.ceil(logs.length / recordsPerPage);
 
 	const firstPage = () => {
@@ -60,6 +62,7 @@ const Events = () => {
 								<tr className={styles.headRow}>
 									<th></th>
 									<th>Timestamp</th>
+									<th>Service</th>
 									<th>Message</th>
 								</tr>
 							</thead>
@@ -93,11 +96,12 @@ const Events = () => {
 												/>
 											) : null}
 										</td>
-										<td>
+										<td style={{ width: "200px" }}>
 											{new Date(
 												entry?.timestamp.replace(",", "."),
 											).toLocaleString()}
 										</td>
+										<td style={{ width: "50px" }}>{entry?.service}</td>
 										<td>{entry?.message}</td>
 									</tr>
 								))}

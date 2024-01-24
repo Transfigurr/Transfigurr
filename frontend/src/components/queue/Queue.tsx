@@ -81,8 +81,14 @@ const Queue = () => {
 									</a>
 								</td>
 								<td>
-									{queue?.current?.season_number}x
-									{queue?.current?.episode_number}
+									{queue?.current ? (
+										<>
+											{queue?.current?.season_number}x
+											{queue?.current?.episode_number}
+										</>
+									) : (
+										<></>
+									)}
 								</td>
 								<td>{queue?.current?.episode_name}</td>
 								<td>
@@ -113,9 +119,15 @@ const Queue = () => {
 
 								<td>{queue?.stage}</td>
 								<td>
-									{Math.floor(parseInt(queue?.eta || 0) / 60).toString() +
-										":" +
-										(parseInt(queue?.eta || 0) % 60).toString()}
+									{queue?.current ? (
+										<>
+											{Math.floor(parseInt(queue?.eta || 0) / 60).toString() +
+												":" +
+												(parseInt(queue?.eta || 0) % 60).toString()}
+										</>
+									) : (
+										<></>
+									)}
 								</td>
 								<td>
 									<div

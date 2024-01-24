@@ -28,7 +28,7 @@ class MetadataService:
                 await get_series_metadata(series_id)
                 self.metadata_set.remove(series_id)
             except Exception as e:
-                logger.error("An error occurred while processing series %s", str(e))
+                logger.error("An error occurred while processing series %s", str(e), extra={'service': 'Metadata'})
             await asyncio.sleep(1)
 
 

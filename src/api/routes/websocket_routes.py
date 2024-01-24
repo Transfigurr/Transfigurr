@@ -1,6 +1,5 @@
 import asyncio
 import json
-import logging
 from typing import Callable
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from fastapi.websockets import WebSocketState
@@ -14,8 +13,6 @@ from src.api.controllers.codec_controller import get_all_codecs, get_all_contain
 from src.api.controllers.log_controller import get_all_logs
 from src.services.encode_service import encode_service
 router = APIRouter()
-
-logger = logging.getLogger('logger')
 
 
 async def send_data(websocket: WebSocket, data_type: str, getter: Callable[[], object], delay: float):

@@ -31,15 +31,15 @@ class ScanService:
         while True:
             try:
                 series_id = await self.scan_queue.get()
-                await validate_series(series_id)
                 await scan_series(series_id)
+                await validate_series(series_id)
                 self.scan_set.remove(series_id)
                 if self.scan_queue.empty() and not self.scan_system_called:
                     await scan_system()
                     self.scan_system_called = True
                 await asyncio.sleep(1)
             except Exception as e:
-                logger.error("An error occurred while processing series %s", str(e))
+                logger.error("An error occurred while processing series %s", str(e), extra={'service': 'Scan'})
             await asyncio.sleep(1)
 
 

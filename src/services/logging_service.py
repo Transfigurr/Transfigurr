@@ -11,6 +11,7 @@ class SQLiteHandler(logging.Handler):
         self.formatter = logging.Formatter()
 
     def emit(self, record):
+        conn = None
         try:
             conn = sqlite3.connect(self.db)
             conn.execute("""
@@ -18,6 +19,7 @@ class SQLiteHandler(logging.Handler):
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     timestamp TEXT,
                     level TEXT,
+                    service TEXT,
                     message TEXT
                 )
             """)
@@ -29,8 +31,10 @@ class SQLiteHandler(logging.Handler):
                     DELETE FROM logs WHERE id = (SELECT MIN(id) FROM logs);
                 END;
             """)
-            conn.execute("INSERT INTO logs (timestamp, level, message) VALUES (?, ?, ?)",
-                         (self.formatter.formatTime(record), record.levelname, record.message))
+            conn.execute("""
+            INSERT INTO logs (timestamp, level, service, message)
+                VALUES (?, ?, ?, ?)
+                    """, (self.formatter.formatTime(record), record.levelname, getattr(record, 'service', 'undefined'), record.message))
             conn.commit()
             conn.close()
         except sqlite3.Error as e:
@@ -44,10 +48,11 @@ def start_logger():
     log_queue = queue.Queue(-1)  # Infinite size
     queue_handler = logging.handlers.QueueHandler(log_queue)
     sqlite_handler = SQLiteHandler()
-    formatter = logging.Formatter("%(asctime)s [%(levelname)s] %(message)s")
+    formatter = logging.Formatter("%(asctime)s [%(levelname)s] [%(service)s] %(message)s")
     sqlite_handler.setFormatter(formatter)
     logger = logging.getLogger('logger')
     logger.setLevel(logging.DEBUG)
     logger.addHandler(queue_handler)
     queue_listener = logging.handlers.QueueListener(log_queue, sqlite_handler)
     queue_listener.start()
+    return logger

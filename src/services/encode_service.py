@@ -47,7 +47,7 @@ class EncodeService:
                 self.encode_set.remove(episode['id'])
                 self.current = None
             except Exception as e:
-                logger.error("An error occurred while processing series %s", str(e))
+                logger.error("An error occurred while processing series %s", str(e), extra={'service': 'Encode'})
             await asyncio.sleep(1)
 
     async def to_list(self):
@@ -69,7 +69,7 @@ encode_service = EncodeService()
 
 async def run_ffmpeg(input_file, output_file, encoder, output_container, preset=None):
     try:
-        logger.info(f"Encoding {input_file}")
+        logger.info(f"Encoding {input_file}", extra={'service': 'Encode'})
         loop = asyncio.get_event_loop()
         encode_service.processing = True
         # Get the total duration of the video
@@ -137,13 +137,13 @@ async def run_ffmpeg(input_file, output_file, encoder, output_container, preset=
                     )
                     encode_service.current_eta = estimated_total_time - elapsed_time
     except Exception as e:
-        logger.error(f"An error occurred while running ffmpeg on {input_file}: {e}")
+        logger.error(f"An error occurred while running ffmpeg on {input_file}: {e}", extra={'service': 'Encode'})
     return
 
 
 async def process_episode(e):
     try:
-        logger.info(f"Processing {e['filename']}")
+        logger.info(f"Processing {e['filename']}", extra={'service': 'Encode'})
         if not e:
             return
         encode_service.stage = "analyzing"
@@ -170,18 +170,18 @@ async def process_episode(e):
 
         # Check if input_file exists and is readable and writable
         if not os.path.exists(input_file):
-            logger.error(f"{input_file} does not exist")
+            logger.error(f"{input_file} does not exist", extra={'service': 'Encode'})
             return
         if not os.access(input_file, os.R_OK):
-            logger.info(f"Changing permissions of {input_file} to make it readable")
+            logger.info(f"Changing permissions of {input_file} to make it readable", extra={'service': 'Encode'})
             os.chmod(input_file, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
         if not os.access(input_file, os.W_OK):
-            logger.info(f"Changing permissions of {input_file} to make it writable")
+            logger.info(f"Changing permissions of {input_file} to make it writable", extra={'service': 'Encode'})
             os.chmod(input_file, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
 
         # Check if output_file is writable
         if os.path.exists(output_file) and not os.access(output_file, os.W_OK):
-            logger.info(f"Changing permissions of {output_file} to make it writable")
+            logger.info(f"Changing permissions of {output_file} to make it writable", extra={'service': 'Encode'})
             os.chmod(output_file, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
 
         video_stream = await analyze_media_file(input_file)
@@ -210,5 +210,5 @@ async def process_episode(e):
         encode_service.current_progress = 0
         encode_service.current_eta = 0
     except Exception as e:
-        logger.error(f"An error occurred processing {input_file}: {e}")
+        logger.error(f"An error occurred processing {input_file}: {e}", extra={'service': 'Encode'})
     return

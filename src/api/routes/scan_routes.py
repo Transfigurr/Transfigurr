@@ -1,10 +1,8 @@
-import logging
 from fastapi import APIRouter
 from src.tasks.metadata import get_all_series_metadata, get_series_metadata
 from src.tasks.scan import scan_all_series, scan_series
 
 router = APIRouter()
-logger = logging.getLogger('logger')
 
 
 @router.put("/api/scan/series/metadata")

@@ -3,9 +3,6 @@ from collections import defaultdict
 from functools import partial
 from pathlib import Path
 import os
-import logging
-
-logger = logging.getLogger('logger')
 
 file_locks = defaultdict(asyncio.Lock)
 
@@ -16,6 +13,7 @@ async def verify_folders():
     config_folder_path = root_folder_path + '/config'
     paths.append(config_folder_path + '/artwork/series')
     paths.append(config_folder_path + '/artwork/movies')
+    paths.append(config_folder_path + '/db')
     paths.append(root_folder_path + '/series')
     paths.append(root_folder_path + '/movies')
     paths.append(root_folder_path + '/transcode')

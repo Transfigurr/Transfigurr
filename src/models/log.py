@@ -9,4 +9,5 @@ class Log(Base):
     __tablename__ = 'logs'
     timestamp: str = Column(String)
     level: str = Column(String)
+    service: str = Column(String)
     message: str = Column(String)

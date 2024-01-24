@@ -37,7 +37,8 @@ const Status = () => {
 										style={{
 											height: "100%",
 											width: `${
-												(system?.config_free_space /
+												((system?.config_total_space -
+													system?.config_free_space) /
 													system?.config_total_space) *
 												100
 											}%`,
@@ -66,7 +67,8 @@ const Status = () => {
 										style={{
 											height: "100%",
 											width: `${
-												(system?.movies_free_space /
+												((system?.movies_total_space -
+													system?.movies_free_space) /
 													system?.movies_total_space) *
 												100
 											}%`,
@@ -129,9 +131,9 @@ const Status = () => {
 										style={{
 											height: "100%",
 											width: `${
-												((system?.movies_total_space -
-													system?.movies_free_space) /
-													system?.movies_total_space) *
+												((system?.transcode_total_space -
+													system?.transcode_free_space) /
+													system?.transcode_total_space) *
 												100
 											}%`,
 											backgroundColor: "var(--transfigurrPurple)",

@@ -7,6 +7,8 @@
 .content {
 	overflow-y: scroll;
 	margin: 20px;
+	display: flex;
+	flex-direction: column;
 }
 
 .table {
@@ -15,6 +17,7 @@
 	width: 100%;
 	border: none;
 	font-size: 14px;
+	float: left;
 	.row {
 		border-top: 1px solid #eee;
 	}
