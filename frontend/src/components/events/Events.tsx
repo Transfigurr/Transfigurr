@@ -24,8 +24,6 @@ const Events = () => {
 		indexOfLastRecord,
 	);
 
-	console.log(logs);
-
 	const totalPages = Math.ceil(logs.length / recordsPerPage);
 
 	const firstPage = () => {

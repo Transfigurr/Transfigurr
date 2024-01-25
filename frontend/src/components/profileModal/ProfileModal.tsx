@@ -162,7 +162,13 @@ const ProfileModal = ({
 					<label>Targets </label>
 					<div className={styles.targets}>
 						{Object.entries(codecs)?.map(([key, value]: any) => (
-							<div key={key} className={styles.target}>
+							<div
+								key={key}
+								className={styles.target}
+								style={
+									!content?.codecs?.includes(key) ? { opacity: "50%" } : {}
+								}
+							>
 								<input
 									type="checkbox"
 									value={key}

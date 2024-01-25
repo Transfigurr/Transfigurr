@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import os
+from src.api.controllers.series_controller import get_all_series
 from src.api.utils import get_series_folder
 from src.tasks.scan import scan_series, scan_system
 from src.tasks.validate import validate_series
@@ -20,11 +21,15 @@ class ScanService:
             self.scan_system_called = False
             await self.scan_queue.put(series_id)
 
+    async def enqueue_by_profile(self, profile_id):
+        series_dict = await get_all_series()
+        for series_id in series_dict:
+            if series_dict[series_id]['profile_id'] == profile_id:
+                await self.enqueue(series_id)
+
     async def enqueue_all(self):
         series_folder = await get_series_folder()
         for series_name in os.listdir(series_folder):
-            if series_name == ".DS_Store":
-                continue
             await self.enqueue(series_name)
 
     async def process(self):

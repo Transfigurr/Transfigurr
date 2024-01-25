@@ -1,5 +1,4 @@
 
-from fastapi import Request
 from src.models.profile import Profile, profile_codec
 from sqlalchemy import delete, insert
 from src.global_state import GlobalState, instance_to_dict
@@ -28,8 +27,7 @@ async def get_profile(profile_id):
     return await global_state.get_object_from_table(Profile, profile_id)
 
 
-async def set_profile(request: Request):
-    profile = await request.json()
+async def set_profile(profile):
     codec_ids = profile.pop('codecs', [])
     profile_id = 0
     async with AsyncSession(engine) as async_session:

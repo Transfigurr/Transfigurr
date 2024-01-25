@@ -14,7 +14,6 @@ const Queue = () => {
 	const profiles = wsContext?.data?.profiles;
 	const series = wsContext?.data?.series;
 	const queue = wsContext?.data?.queue;
-	console.log(queue);
 
 	const recordsPerPage = 13;
 	const [currentPage, setCurrentPage] = useState(1);

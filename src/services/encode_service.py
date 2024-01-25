@@ -113,7 +113,7 @@ async def run_ffmpeg(input_file, output_file, encoder, output_container, preset=
         )
 
         start_time = time.time()
-        encode_service.stage = "transcoding"
+        encode_service.stage = "encoding"
         while True:
             output = await loop.run_in_executor(None, process.stdout.readline)
             if output == "" and process.poll() is not None:

@@ -17,16 +17,17 @@ async def get_profile_route(profile_id):
     return await get_profile(profile_id)
 
 
-async def after_profile():
+async def after_profile(profile):
     from src.services.scan_service import scan_service
-    await scan_service.enqueue_all()
+    await scan_service.enqueue_by_profile(profile['id'])
     return
 
 
 @router.put('/api/profiles')
 async def set_profile_route(request: Request):
-    await set_profile(request)
-    asyncio.create_task(after_profile())
+    profile = await request.json()
+    await set_profile(profile)
+    asyncio.create_task(after_profile(profile))
     return
 
 
