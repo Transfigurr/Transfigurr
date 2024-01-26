@@ -5,7 +5,7 @@ from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 from fastapi.middleware.cors import CORSMiddleware
-from src.api.utils import get_root_folder, verify_folders
+from src.utils.folders import get_root_folder, verify_folders
 from src.services.logging_service import start_logger
 from src.services.watchdog_service import start_watchdog
 from src.services.metadata_service import metadata_service
@@ -14,9 +14,11 @@ from src.services.scan_service import scan_service
 from src.api.routes import (
     artwork_routes,
     codec_routes,
+    history_routes,
     profile_routes,
     scan_routes,
     series_routes,
+    episode_routes,
     settings_routes,
     season_routes,
     system_routes,
@@ -45,7 +47,9 @@ routers = [
     series_routes.router,
     system_routes.router,
     artwork_routes.router,
-    websocket_routes.router
+    websocket_routes.router,
+    history_routes.router,
+    episode_routes.router
 ]
 
 for router in routers:

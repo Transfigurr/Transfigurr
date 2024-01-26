@@ -13,7 +13,7 @@ from src.api.controllers.episode_controller import get_episode, set_episode
 from src.api.controllers.history_controller import set_history
 from src.api.controllers.series_controller import get_series
 from src.api.routes.profile_routes import get_all_profiles
-from src.api.utils import get_series_folder, get_transcode_folder
+from src.utils.folders import get_series_folder, get_transcode_folder
 from src.utils.ffmpeg import analyze_media_file
 
 logger = logging.getLogger('logger')

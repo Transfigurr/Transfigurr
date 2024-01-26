@@ -16,6 +16,11 @@ from src.models.base import Base  # noqa
 
 
 def init_db():
+
+    directory = os.path.dirname("config/db/")
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
     engine = create_engine("sqlite:///config/db/database.db")
 
     profiles = False

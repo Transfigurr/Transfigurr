@@ -15,11 +15,10 @@ from src.api.controllers.series_controller import (
 from src.api.controllers.settings_controller import get_all_settings
 from src.services.encode_service import encode_service
 from src.api.controllers.system_controller import set_system
-from src.api.utils import (
+from src.utils.folders import (
     get_config_folder,
     get_series_folder,
     get_transcode_folder,
-    verify_folders,
     get_movies_folder,
 )
 from src.services.metadata_service import metadata_service
@@ -33,18 +32,6 @@ logger = logging.getLogger('logger')
 
 season_pattern = re.compile(r"\d+")
 episode_pattern = re.compile(r"(?:S(\d{2})E(\d{2})|E(\d{2}))")
-
-
-async def scan_all_series():
-    logger.info("Scanning all series", extra={'service': 'Scan'})
-    try:
-        await verify_folders()
-        series_folder = await get_series_folder()
-        for series_name in os.listdir(series_folder):
-            await scan_series(series_name)
-    except Exception as e:
-        logger.error(f"An error occurred scanning all series: {e}", extra={'service': 'Scan'})
-    return
 
 
 async def parse_episode(

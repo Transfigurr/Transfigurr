@@ -1,10 +1,8 @@
 
 import asyncio
 from fastapi import APIRouter, Request
-from src.global_state import GlobalState
 from src.api.controllers.profile_controller import delete_profile, get_all_profiles, get_profile, set_profile
 router = APIRouter()
-global_state = GlobalState()
 
 
 @router.get("/api/profiles")

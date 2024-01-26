@@ -4,7 +4,6 @@ import ToolBar from "../ToolBar/ToolBar";
 import Footer from "../footer/Footer";
 import ToolBarItem from "../ToolBarItem/ToolBarItem";
 import { useContext } from "react";
-
 import { ReactComponent as Rss } from "../svgs/rss_feed.svg";
 import { ReactComponent as Sync } from "../svgs/cached.svg";
 import { ReactComponent as AppsIcon } from "../svgs/apps.svg";
@@ -19,14 +18,14 @@ const ExplorerComponent = () => {
 	const wsContext = useContext(WebSocketContext);
 	const series = wsContext?.data?.series;
 	const onUpdate = async () => {
-		await fetch(`http://${window.location.hostname}:8000/api/scan/series`, {
+		await fetch(`http://${window.location.hostname}:7889/api/scan/series`, {
 			method: "PUT",
 		});
 	};
 
 	const onRefresh = async () => {
 		await fetch(
-			`http://${window.location.hostname}:8000/api/scan/series/metadata`,
+			`http://${window.location.hostname}:7889/api/scan/series/metadata`,
 			{
 				method: "PUT",
 			},

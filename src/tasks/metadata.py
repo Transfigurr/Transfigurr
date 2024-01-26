@@ -14,7 +14,7 @@ from src.api.controllers.series_controller import (
     set_series,
 )
 from src.api.controllers.settings_controller import get_all_settings
-from src.api.utils import get_series_artwork_folder
+from src.utils.folders import get_series_artwork_folder
 from src.models.episode import Episode
 from src.models.series import Series
 

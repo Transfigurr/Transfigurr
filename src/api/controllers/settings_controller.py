@@ -2,33 +2,28 @@
 from fastapi import Request
 from src.models.setting import Setting
 from sqlalchemy import delete
-
-from src.global_state import GlobalState
 from sqlalchemy.future import select
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-engine = create_async_engine("sqlite+aiosqlite:///config/db/database.db")
-
-
-global_state = GlobalState()
+from sqlalchemy.ext.asyncio import AsyncSession
+from src.utils.db import engine, instance_to_dict
 
 
 async def get_all_settings():
-    settings = await global_state.get_all_from_table(Setting)
-    s = {}
-    for setting in settings:
-        s[setting['id']] = setting['value']
-    return s
+    async with AsyncSession(engine) as async_session:
+        res = await async_session.execute(select(Setting))
+        return {instance_to_dict(obj)['id']: instance_to_dict(obj)['value'] for obj in res.scalars().all()}
 
 
 async def get_setting(setting_id):
-    return await global_state.get_object_from_table(Setting, setting_id)
+    async with AsyncSession(engine) as async_session:
+        res = await async_session.execute(select(Setting).where(Setting.id == setting_id))
+        return instance_to_dict(res.scalars().first())
 
 
 async def set_setting(request: Request):
     setting = await request.json()
     async with AsyncSession(engine) as async_session:
-        result = await async_session.execute(select(Setting).where(Setting.id == setting['id']))
-        obj = result.scalars().first()
+        res = await async_session.execute(select(Setting).where(Setting.id == setting['id']))
+        obj = res.scalars().first()
         if obj:
             for key, value in setting.items():
                 if value is not None:

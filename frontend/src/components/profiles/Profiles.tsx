@@ -28,7 +28,7 @@ const Profiles = () => {
 
 	const onModalDelete = async () => {
 		await fetch(
-			`http://${window.location.hostname}:8000/api/profiles/${selectedProfile?.id}`,
+			`http://${window.location.hostname}:7889/api/profiles/${selectedProfile?.id}`,
 			{
 				method: "DELETE",
 				headers: {
@@ -40,7 +40,7 @@ const Profiles = () => {
 	};
 
 	const onModalSave = async () => {
-		await fetch(`http://${window.location.hostname}:8000/api/profiles`, {
+		await fetch(`http://${window.location.hostname}:7889/api/profiles`, {
 			method: "PUT",
 			headers: {
 				"Content-Type": "application/json",

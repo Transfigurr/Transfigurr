@@ -15,7 +15,7 @@ const SeriesModal = () => {
 
 	const onSave = async () => {
 		await fetch(
-			`http://${window.location.hostname}:8000/api/series/${modalData.name}`,
+			`http://${window.location.hostname}:7889/api/series/${modalData.name}`,
 			{
 				method: "PUT",
 				headers: {

@@ -40,6 +40,7 @@ const ProfileModal = ({
 	}, [setIsOpen]);
 
 	if (!isOpen) return null;
+	console.log(content);
 	return (
 		<div className={styles.modal}>
 			<div className={styles.header}>
@@ -168,23 +169,24 @@ const ProfileModal = ({
 								style={
 									!content?.codecs?.includes(key) ? { opacity: "50%" } : {}
 								}
+								onClick={() => {
+									const selectedValues = [...content.codecs];
+									if (selectedValues.includes(key)) {
+										const index = selectedValues.indexOf(key);
+										if (index > -1) {
+											selectedValues.splice(index, 1);
+										}
+									} else {
+										selectedValues.push(key);
+									}
+									setContent({ ...content, codecs: selectedValues });
+								}}
 							>
 								<input
 									type="checkbox"
 									value={key}
 									checked={content?.codecs?.includes(key)}
-									onChange={(e) => {
-										const selectedValues = [...content.codecs];
-										if (e.target.checked) {
-											selectedValues.push(e.target.value);
-										} else {
-											const index = selectedValues.indexOf(e.target.value);
-											if (index > -1) {
-												selectedValues.splice(index, 1);
-											}
-										}
-										setContent({ ...content, codecs: selectedValues });
-									}}
+									readOnly
 								/>
 								<span className={styles.key}>{key}</span>
 							</div>

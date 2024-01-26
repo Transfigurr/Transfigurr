@@ -6,6 +6,7 @@ import { useContext } from "react";
 import { ReactComponent as Timer } from "../svgs/timer.svg";
 import { ReactComponent as Build } from "../svgs/build.svg";
 import { ReactComponent as Pending } from "../svgs/pending.svg";
+import { Link } from "react-router-dom";
 
 const HeaderComponent = () => {
 	const wsContext = useContext(WebSocketContext);
@@ -13,7 +14,7 @@ const HeaderComponent = () => {
 	return (
 		<div className={styles.header}>
 			<div className={styles.left}>
-				<a href="/" className={styles.logo}>
+				<Link to="/" className={styles.logo}>
 					<Logo
 						style={{
 							height: "100%",
@@ -21,7 +22,7 @@ const HeaderComponent = () => {
 							fill: "var(--transfigurrPurple)",
 						}}
 					/>
-				</a>
+				</Link>
 				<div className={styles.status}>
 					<div className={styles.line}>
 						<div className={styles.icon}>

@@ -1,34 +1,28 @@
 from fastapi import APIRouter
-from src.tasks.metadata import get_all_series_metadata, get_series_metadata
-from src.tasks.scan import scan_all_series, scan_series
-
+from src.services.metadata_service import metadata_service
+from src.services.scan_service import scan_service
 router = APIRouter()
 
 
 @router.put("/api/scan/series/metadata")
 async def get_all_series_metadata_route():
-    await get_all_series_metadata()
+    await metadata_service.enqueue_all()
     return
 
 
 @router.get("/api/scan/series/metadata/{series_id}")
 async def get_series_metadata_route(series_id):
-    await get_series_metadata(series_id)
+    await metadata_service.enqueue(series_id)
     return
 
 
 @router.put('/api/scan/series')
 async def scan_all_series_route():
-    await scan_all_series()
+    await scan_service.enqueue_all()
     return
 
 
-@router.get("/api/scan/series/{series_name}")
+@router.put("/api/scan/series/{series_name}")
 async def scan_series_route(series_name):
-    await scan_series(series_name)
-    return
-
-
-@router.get('/api/scan/queue')
-async def scan_queue():
+    await scan_service.enqueue(series_name)
     return

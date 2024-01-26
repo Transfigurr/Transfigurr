@@ -27,5 +27,5 @@ RUN apk add --no-cache --update \
 WORKDIR /
 COPY init /init
 RUN chmod +x /init
-EXPOSE 8000
+EXPOSE 7889
 CMD ["/init"]

@@ -10,10 +10,10 @@ async def get_all_series_route():
 
 
 @router.get("/api/system/{system_id}")
-async def get_series_route(system_id):
+async def get_system_route(system_id):
     return await get_system(system_id)
 
 
 @router.put('/api/system/{system_id}')
-async def set_series_route(request: Request):
+async def set_system_route(request: Request):
     return await set_system(await request.json())

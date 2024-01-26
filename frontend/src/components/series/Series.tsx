@@ -22,9 +22,32 @@ const Series = ({ series_name }: any) => {
 		modalContext?.setModalData(series);
 		modalContext?.setShowModal(true);
 	};
+
+	const handleScanClick = async () => {
+		await fetch(
+			`http://${window.location.hostname}:7889/api/scan/series/${series_name}`,
+			{
+				method: "PUT",
+			},
+		);
+	};
+
+	const handleMetadataClick = async () => {
+		await fetch(
+			`http://${window.location.hostname}:7889/api/scan/series/metadata${series_name}`,
+			{
+				method: "PUT",
+			},
+		);
+	};
+
 	const leftToolBarItems: any = [
-		<ToolBarItem text="Scan" icon={<SyncIcon />} />,
-		<ToolBarItem text="Metadata" icon={<RssFeedIcon />} />,
+		<ToolBarItem text="Scan" icon={<SyncIcon />} onClick={handleScanClick} />,
+		<ToolBarItem
+			text="Metadata"
+			icon={<RssFeedIcon />}
+			onClick={handleMetadataClick}
+		/>,
 		<ToolBarItem
 			text="Edit"
 			icon={<RssFeedIcon />}
@@ -55,7 +78,7 @@ const Series = ({ series_name }: any) => {
 				<img
 					className={styles.backdrop}
 					src={
-						`http://${window.location.hostname}:8000/api/backdrop/series/` +
+						`http://${window.location.hostname}:7889/api/backdrop/series/` +
 						series?.id
 					}
 					alt="backdrop"
@@ -65,7 +88,7 @@ const Series = ({ series_name }: any) => {
 					<img
 						className={styles.poster}
 						src={
-							`http://${window.location.hostname}:8000/api/poster/series/` +
+							`http://${window.location.hostname}:7889/api/poster/series/` +
 							series?.id
 						}
 						alt={"poster"}

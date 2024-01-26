@@ -23,7 +23,7 @@ const MediaManagement = () => {
 	};
 
 	const saveSettings = async () => {
-		await fetch(`http://${window.location.hostname}:8000/api/settings`, {
+		await fetch(`http://${window.location.hostname}:7889/api/settings`, {
 			method: "PUT",
 			headers: {
 				"Content-Type": "application/json",

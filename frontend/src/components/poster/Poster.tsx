@@ -33,7 +33,7 @@ const PosterComponent = ({ name }: any) => {
 					<img
 						className={styles.img}
 						src={
-							`http://${window.location.hostname}:8000/api/poster/series/` +
+							`http://${window.location.hostname}:7889/api/poster/series/` +
 							series?.id
 						}
 						alt={name}
