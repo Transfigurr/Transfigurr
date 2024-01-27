@@ -1,10 +1,9 @@
 .series {
 	width: 100%;
-	overflow: scroll;
-	height: 100%;
 	display: flex;
 	flex-direction: column;
 	z-index: 1;
+	overflow: hidden;
 
 	.modalBackdrop {
 		position: fixed;
@@ -13,7 +12,7 @@
 		left: 0;
 		width: 100%;
 		height: 100%;
-		background: rgba(0, 0, 0, 0.5); // Semi-transparent black overlay
+		background: rgba(0, 0, 0, 0.5);
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -27,99 +26,102 @@
 		width: 1080px;
 	}
 
-	.header {
-		width: 100%;
-		height: 425px;
-		display: flex;
-		align-items: center;
-		justify-content: flex-start;
-		position: relative;
-		.backdrop {
-			width: 100%; /* Make sure the image takes up 100% of the container's width */
-			height: 100%; /* Make sure the image takes up 100% of the container's height */
-			object-fit: cover; /* Prevent distortion by covering the ent*/
-			z-index: -3;
-			object-position: top left; /* Align the top left corner of the image content */
+	.test {
+		overflow-y: scroll;
+		.header {
+			width: 100%;
+			height: 425px;
 			display: flex;
 			align-items: center;
-			justify-content: center;
-		}
-		.filter {
-			position: absolute;
-			height: 100%;
-			width: 100%;
-			background: black;
-			opacity: 0.7;
-		}
-		.content {
-			display: flex;
-			flex-direction: row;
-			align-items: flex-start;
 			justify-content: flex-start;
-			position: absolute;
-			padding: 30px;
-			.poster {
-				width: 250px;
-				height: 368px;
-				margin-right: 35px;
-			}
-			.details {
+			position: relative;
+			.backdrop {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				z-index: -3;
+				object-position: top left;
 				display: flex;
-				flex-direction: column;
-				flex-grow: 1;
-				.titleRow {
-					color: white;
-					height: 60px;
-					font-size: 50px;
-					margin-bottom: 5px;
+				align-items: center;
+				justify-content: center;
+			}
+			.filter {
+				position: absolute;
+				height: 100%;
+				width: 100%;
+				background: black;
+				opacity: 0.7;
+			}
+			.content {
+				display: flex;
+				flex-direction: row;
+				align-items: flex-start;
+				justify-content: flex-start;
+				position: absolute;
+				padding: 30px;
+				.poster {
+					width: 250px;
+					height: 368px;
+					margin-right: 35px;
 				}
-				.tags {
-					color: white;
+				.details {
 					display: flex;
-					flex-direction: row;
-					flex-wrap: wrap;
-					.tag {
-						margin: 5px 10px 5px 0px;
-						padding: 3px 7px;
-						font-weight: bold;
-						font-size: 17px;
-						font-weight: 300;
-						background-color: #4f566f;
-						border-radius: 2px;
-						border: 1px solid #4f566f;
+					flex-direction: column;
+					flex-grow: 1;
+					.titleRow {
+						color: white;
+						height: 60px;
+						font-size: 50px;
+						margin-bottom: 5px;
 					}
-					.icon {
+					.tags {
+						color: white;
+						display: flex;
+						flex-direction: row;
+						flex-wrap: wrap;
+						.tag {
+							margin: 5px 10px 5px 0px;
+							padding: 3px 7px;
+							font-weight: bold;
+							font-size: 17px;
+							font-weight: 300;
+							background-color: #4f566f;
+							border-radius: 2px;
+							border: 1px solid #4f566f;
+						}
+						.icon {
+						}
+						.text {
+						}
 					}
-					.text {
+					.seriesDetails {
+						color: white;
+						font-size: 20px;
+						margin-bottom: 8px;
+						.runtime {
+							margin-right: 15px;
+						}
+						.genre {
+							margin-right: 15px;
+						}
+						.runYears {
+							margin-right: 15px;
+						}
 					}
-				}
-				.seriesDetails {
-					color: white;
-					font-size: 20px;
-					margin-bottom: 8px;
-					.runtime {
-						margin-right: 15px;
+					.overview {
+						color: white;
+						line-height: 1.5;
 					}
-					.genre {
-						margin-right: 15px;
-					}
-					.runYears {
-						margin-right: 15px;
-					}
-				}
-				.overview {
-					color: white;
-					line-height: 1.5;
 				}
 			}
 		}
-	}
-	.seasonsContainer {
-		z-index: 3;
-		padding: 20px;
-		background-color: #fafbfc;
-		display: flex;
-		flex-direction: column;
-		height: 100%;
+
+		.seasonsContainer {
+			z-index: 3;
+			padding: 20px;
+			background-color: #fafbfc;
+			display: flex;
+			flex-direction: column;
+		}
 	}
 }

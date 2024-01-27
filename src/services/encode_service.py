@@ -79,6 +79,7 @@ async def run_ffmpeg(input_file, output_file, encoder, output_container, preset=
         if preset:
             command = [
                 "ffmpeg",
+                "-y",
                 "-i",
                 input_file,
                 "-vcodec",
@@ -92,6 +93,7 @@ async def run_ffmpeg(input_file, output_file, encoder, output_container, preset=
         else:
             command = [
                 "ffmpeg",
+                "-y",
                 "-i",
                 input_file,
                 "-vcodec",
@@ -116,7 +118,10 @@ async def run_ffmpeg(input_file, output_file, encoder, output_container, preset=
         encode_service.stage = "encoding"
         while True:
             output = await loop.run_in_executor(None, process.stdout.readline)
-            if output == "" and process.poll() is not None:
+            if process.poll() is not None:
+                if process.poll() != 0:
+                    logger.error(f"An error occurred while running ffmpeg on {input_file}: {output}", extra={'service': 'Encode'})
+                    return False
                 break
             if output:
                 match = re.search(r"time=(\d+:\d+:\d+.\d+)", output)
@@ -138,7 +143,8 @@ async def run_ffmpeg(input_file, output_file, encoder, output_container, preset=
                     encode_service.current_eta = estimated_total_time - elapsed_time
     except Exception as e:
         logger.error(f"An error occurred while running ffmpeg on {input_file}: {e}", extra={'service': 'Encode'})
-    return
+        return False
+    return True
 
 
 async def process_episode(e):
@@ -191,7 +197,12 @@ async def process_episode(e):
 
         loop = asyncio.get_event_loop()
 
-        await run_ffmpeg(input_file, output_file, encoder, output_container, preset)
+        encoding_succesful = await run_ffmpeg(input_file, output_file, encoder, output_container, preset)
+
+        if not encoding_succesful:
+            encode_service.stage = "idle"
+            logger.error(f"An error occurred while encoding {input_file}", extra={'service': 'Encode'})
+            return
 
         encode_service.stage = "Copying"
 

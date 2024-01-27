@@ -73,72 +73,73 @@ const Series = ({ series_name }: any) => {
 				middleToolBarItems={middleToolBarItems}
 				rightToolBarItems={rightToolBarItems}
 			/>
-
-			<div className={styles.header}>
-				<img
-					className={styles.backdrop}
-					src={
-						`http://${window.location.hostname}:7889/api/backdrop/series/` +
-						series?.id
-					}
-					alt="backdrop"
-				/>
-				<div className={styles.filter}></div>
-				<div className={styles.content}>
+			<div className={styles.test}>
+				<div className={styles.header}>
 					<img
-						className={styles.poster}
+						className={styles.backdrop}
 						src={
-							`http://${window.location.hostname}:7889/api/poster/series/` +
+							`http://${window.location.hostname}:7889/api/backdrop/series/` +
 							series?.id
 						}
-						alt={"poster"}
+						alt="backdrop"
 					/>
-					<div className={styles.details}>
-						<div className={styles.titleRow}>
-							{series?.name ? series?.name : series?.id}
-						</div>
-						<div className={styles.seriesDetails}>
-							<span className={styles.runtime}>
-								{series?.episode_run_time ? series?.episode_run_time : "-"}{" "}
-								Minutes
-							</span>
-							{genre ? <span className={styles.genre}>{genre}</span> : <></>}
-							{status ? (
-								<span className={styles.runYears}>{runYears}</span>
-							) : (
-								<></>
-							)}
-						</div>
-						<div className={styles.tags}>
-							<div className={styles.tag}>
-								{"/series/" + (series?.name ? series?.name : series?.id)}
+					<div className={styles.filter}></div>
+					<div className={styles.content}>
+						<img
+							className={styles.poster}
+							src={
+								`http://${window.location.hostname}:7889/api/poster/series/` +
+								series?.id
+							}
+							alt={"poster"}
+						/>
+						<div className={styles.details}>
+							<div className={styles.titleRow}>
+								{series?.name ? series?.name : series?.id}
 							</div>
+							<div className={styles.seriesDetails}>
+								<span className={styles.runtime}>
+									{series?.episode_run_time ? series?.episode_run_time : "-"}{" "}
+									Minutes
+								</span>
+								{genre ? <span className={styles.genre}>{genre}</span> : <></>}
+								{status ? (
+									<span className={styles.runYears}>{runYears}</span>
+								) : (
+									<></>
+								)}
+							</div>
+							<div className={styles.tags}>
+								<div className={styles.tag}>
+									{"/series/" + (series?.name ? series?.name : series?.id)}
+								</div>
 
-							<div className={styles.tag}>
-								{((series?.size || 0) / 1000000000).toFixed(2).toString() +
-									" GB"}
+								<div className={styles.tag}>
+									{((series?.size || 0) / 1000000000).toFixed(2).toString() +
+										" GB"}
+								</div>
+								<div className={styles.tag}>
+									{profiles && series?.profile_id in profiles
+										? profiles[series?.profile_id]?.name
+										: ""}
+								</div>
+								<div className={styles.tag}>
+									{series?.monitored ? "Monitored" : "Unmonitored"}
+								</div>
+								{status ? <div className={styles.tag}>{status}</div> : <></>}
+								{network ? <div className={styles.tag}>{network}</div> : <></>}
 							</div>
-							<div className={styles.tag}>
-								{profiles && series?.profile_id in profiles
-									? profiles[series?.profile_id]?.name
-									: ""}
-							</div>
-							<div className={styles.tag}>
-								{series?.monitored ? "Monitored" : "Unmonitored"}
-							</div>
-							{status ? <div className={styles.tag}>{status}</div> : <></>}
-							{network ? <div className={styles.tag}>{network}</div> : <></>}
+							<div className={styles.overview}>{overview}</div>
 						</div>
-						<div className={styles.overview}>{overview}</div>
 					</div>
 				</div>
-			</div>
-			<div className={styles.seasonsContainer}>
-				{Object.values(series?.seasons || {})
-					.reverse()
-					.map((season: any) => {
-						return <Season season={season} />;
-					})}
+				<div className={styles.seasonsContainer}>
+					{Object.values(series?.seasons || {})
+						.reverse()
+						.map((season: any) => {
+							return <Season season={season} />;
+						})}
+				</div>
 			</div>
 		</div>
 	);

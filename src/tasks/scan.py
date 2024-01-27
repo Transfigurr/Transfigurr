@@ -34,17 +34,21 @@ season_pattern = re.compile(r"\d+")
 episode_pattern = re.compile(r"(?:S(\d{2})E(\d{2})|E(\d{2}))")
 
 
+def parse_episode_number(file):
+    match = episode_pattern.search(file)
+    if match.group(1):
+        return int(match.group(2))
+    else:
+        return int(match.group(3))
+
+
 async def parse_episode(
     file, series_id, season_id, season_path, season_number, season_name
 ):
     try:
         logger.info(f"Parsing episode: {file}", extra={'service': 'Scan'})
-        match = episode_pattern.search(file)
         episode_number = 0
-        if match.group(1):
-            episode_number = int(match.group(2))
-        else:
-            episode_number = int(match.group(3))
+        episode_number = parse_episode_number(file)
 
         episode_id = str(series_id) + str(season_number) + str(episode_number)
         episode: Episode = Episode(**await get_episode(episode_id))

@@ -3,6 +3,7 @@
 	flex-direction: column;
 	height: 100%;
 	width: 100%;
+	overflow-y: scroll;
 	background-color: rgb(250, 251, 252);
 	.content {
 		margin: 20px;
@@ -107,9 +108,9 @@ tr {
 
 .currentContainer {
 	display: flex;
-	align-items: center;
+	align-items: flex-start;
 	justify-content: center;
-	height: 150px;
+	height: 100px;
 	width: 100%;
 }
 

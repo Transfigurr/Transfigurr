@@ -15,7 +15,7 @@ const Queue = () => {
 	const series = wsContext?.data?.series;
 	const queue = wsContext?.data?.queue;
 
-	const recordsPerPage = 13;
+	const recordsPerPage = 8;
 	const [currentPage, setCurrentPage] = useState(1);
 	const queueArray = Array.from(Object.values(queue?.queue || []));
 
