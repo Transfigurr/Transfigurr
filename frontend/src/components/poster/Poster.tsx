@@ -1,5 +1,5 @@
 import styles from "./Poster.module.scss";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { WebSocketContext } from "../../contexts/webSocketContext";
 const PosterComponent = ({ name }: any) => {
 	const wsContext = useContext(WebSocketContext);
@@ -19,6 +19,30 @@ const PosterComponent = ({ name }: any) => {
 			return series?.monitored ? "rgb(240, 80, 80)" : "rgb(255, 165, 0)";
 		}
 	};
+
+	const [imgSrc, setImgSrc] = useState<string | null>(null);
+
+	useEffect(() => {
+		const fetchImage = async () => {
+			try {
+				const response = await fetch(
+					`http://${window.location.hostname}:7889/api/poster/series/${series?.id}`,
+					{
+						headers: {
+							Authorization: `Bearer ${localStorage.getItem("token")}`,
+						},
+					},
+				);
+				const blob = await response.blob();
+				setImgSrc(URL.createObjectURL(blob));
+			} catch (e) {
+				console.log(e);
+			}
+		};
+
+		fetchImage();
+	}, [series?.id]);
+
 	return (
 		<div className={styles.cardArea}>
 			<div className={styles.card}>
@@ -30,14 +54,7 @@ const PosterComponent = ({ name }: any) => {
 					)}
 					{}
 
-					<img
-						className={styles.img}
-						src={
-							`http://${window.location.hostname}:7889/api/poster/series/` +
-							series?.id
-						}
-						alt={name}
-					></img>
+					<img className={styles.img} src={imgSrc || ""} alt={name}></img>
 					<div className={styles.footer}>
 						<div className={styles.progressBar}>
 							<div

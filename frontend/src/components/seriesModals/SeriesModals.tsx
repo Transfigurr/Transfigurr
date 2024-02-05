@@ -12,7 +12,6 @@ const SeriesModal = () => {
 	};
 
 	const { setShowModal, modalData, setModalData }: any = modalContext || {};
-
 	const onSave = async () => {
 		await fetch(
 			`http://${window.location.hostname}:7889/api/series/${modalData.name}`,
@@ -20,13 +19,14 @@ const SeriesModal = () => {
 				method: "PUT",
 				headers: {
 					"Content-Type": "application/json",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				body: JSON.stringify(modalData),
 			},
 		);
 		setShowModal(false);
 	};
-
+	console.log(modalData);
 	return (
 		<div className={styles.modal}>
 			<div className={styles.header}>

@@ -3,9 +3,8 @@
 	flex-direction: row;
 	min-height: 60px;
 	width: 100%;
-	background-color: #4c4651;
-	opacity: 90%;
-	z-index: 10;
+	background-color: rgba(76, 70, 81, 0.9);
+	z-index: 3;
 	.left {
 		display: flex;
 		flex-direction: row;

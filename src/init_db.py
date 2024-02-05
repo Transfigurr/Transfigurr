@@ -8,6 +8,7 @@ from src.models.season import Season  # noqa
 from src.models.series import Series  # noqa
 from src.models.setting import Setting  # noqa
 from src.models.profile import Profile, profile_codec  # noqa
+from src.models.user import User  # noqa
 from src.seeds.seed_system import seed_system  # noqa
 from src.seeds.seed_settings import seed_settings  # noqa
 from src.seeds.seed_profiles import seed_profiles  # noqa

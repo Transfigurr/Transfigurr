@@ -40,7 +40,6 @@ const ProfileModal = ({
 	}, [setIsOpen]);
 
 	if (!isOpen) return null;
-	console.log(content);
 	return (
 		<div className={styles.modal}>
 			<div className={styles.header}>

@@ -33,6 +33,7 @@ const Profiles = () => {
 				method: "DELETE",
 				headers: {
 					"Content-Type": "application/json",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 			},
 		);
@@ -44,6 +45,7 @@ const Profiles = () => {
 			method: "PUT",
 			headers: {
 				"Content-Type": "application/json",
+				Authorization: `Bearer ${localStorage.getItem("token")}`,
 			},
 			body: JSON.stringify(content),
 		});

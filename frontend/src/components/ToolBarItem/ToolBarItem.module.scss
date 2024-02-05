@@ -1,4 +1,5 @@
 .toolBarOption {
+	position: relative;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -14,6 +15,9 @@
 		min-height: 30px;
 		min-width: 30px;
 	}
+	.svg:hover {
+		fill: var(--themePurple);
+	}
 	.text {
 		display: flex;
 		align-items: center;
@@ -23,11 +27,34 @@
 		color: #8895aa;
 	}
 }
-.toolBarOption:hover {
-	fill: var(--themePurple);
-}
 
 .dropdown {
-	height: 600px;
-	width: 70px;
+	position: absolute;
+	width: 185px;
+	top: 100%;
+	right: 0px;
+	background-color: #4c4651;
+	.item {
+		display: flex;
+		align-items: center;
+		justify-content: flex-start;
+		height: 40px;
+		padding: 0px 20px;
+		.text {
+			color: white;
+			font-size: 14px;
+		}
+		.svg {
+			display: flex;
+			align-items: flex-start;
+			justify-content: flex-end;
+			flex: 1;
+			fill: white;
+		}
+
+		cursor: pointer;
+		&:hover {
+			background-color: #3e3a42;
+		}
+	}
 }

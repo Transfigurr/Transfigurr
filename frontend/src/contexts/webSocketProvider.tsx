@@ -12,7 +12,11 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
 	const ws = useRef<WebSocket | null>(null);
 
 	useEffect(() => {
-		ws.current = new WebSocket(`ws://${window.location.hostname}:7889/ws`);
+		ws.current = new WebSocket(
+			`ws://${window.location.hostname}:7889/ws?token=${localStorage.getItem(
+				"token",
+			)}`,
+		);
 		ws.current.onmessage = (e) => {
 			const newData = JSON.parse(e.data);
 			setData((prevData) => ({ ...prevData, ...newData }));

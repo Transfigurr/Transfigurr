@@ -12,6 +12,7 @@ const General = () => {
 	const [currentSettings, setCurrentSettings] = useState<any>();
 	const hasSetCurrentSettings = useRef(false);
 	const [settingsChanged, setSettingsChanged] = useState(false);
+	const [selected, setSelected] = useState<string | null>(null);
 
 	useEffect(() => {
 		if (initialSettings !== undefined && !hasSetCurrentSettings.current) {
@@ -44,6 +45,7 @@ const General = () => {
 				method: "PUT",
 				headers: {
 					"Content-Type": "application/json",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				body: JSON.stringify({ id: key, value: currentSettings[key] }),
 			});
@@ -56,6 +58,8 @@ const General = () => {
 			icon={<SaveIcon fontSize="medium" />}
 			onClick={handleSave}
 			disabled={!settingsChanged}
+			selected={selected}
+			setSelected={setSelected}
 		/>,
 	];
 	return (

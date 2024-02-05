@@ -1,6 +1,6 @@
 import asyncio
 import os
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
@@ -22,7 +22,9 @@ from src.api.routes import (
     settings_routes,
     season_routes,
     system_routes,
-    websocket_routes
+    websocket_routes,
+    auth_routes,
+    action_routes
 )
 
 # Create app
@@ -37,6 +39,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# catch route for login
+
+
+@app.get("/login")
+async def login():
+    return FileResponse("frontend/build/index.html")
+
+
 # Add Routes
 routers = [
     season_routes.router,
@@ -49,7 +59,9 @@ routers = [
     artwork_routes.router,
     websocket_routes.router,
     history_routes.router,
-    episode_routes.router
+    episode_routes.router,
+    auth_routes.router,
+    action_routes.router
 ]
 
 for router in routers:
@@ -58,8 +70,6 @@ for router in routers:
 # Mount directories
 os.makedirs("../config", exist_ok=True)
 app.mount("/static", StaticFiles(directory="frontend/build/static"), name="static")
-app.mount("/images", StaticFiles(directory="src/images"), name="images")
-# Start tasks
 
 
 async def startup_event():
@@ -81,7 +91,7 @@ start_logger()
 
 
 @app.get("/{full_path:path}")
-async def read_item(full_path: str):
+async def read_item(full_path: str, request: Request):
     file_path = Path(f"frontend/build/{full_path}")
     if not file_path.exists() or file_path.is_dir():
         file_path = Path("frontend/build/index.html")

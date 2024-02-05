@@ -27,6 +27,7 @@ import { WebSocketProvider } from "./contexts/webSocketProvider";
 import Modal from "./components/modal/Modal";
 import { ModalContext } from "./contexts/modalContext";
 import Events from "./components/events/Events";
+import Authenticaton from "./components/authentication/Authentication";
 function App() {
 	const [selectedItem, setSelectedItem] = useState<any>(null);
 	const [selectedOption, setSelectedOption] = useState<any>(null);
@@ -66,10 +67,38 @@ function App() {
 			document.documentElement.style.setProperty(`--${key}`, value);
 		});
 	}
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [loaded, setLoaded] = useState(false);
+	useEffect(() => {
+		const fetchToken = async () => {
+			const token = localStorage.getItem("token");
+			if (token) {
+				const response = await fetch(
+					`http://${window.location.hostname}:7889/api/logintoken`,
+					{
+						method: "POST",
+						headers: {
+							Authorization: token,
+						},
+					},
+				);
+				const data = await response;
+				setIsLoggedIn(data.ok);
+			}
+			setLoaded(true);
+		};
+
+		fetchToken();
+	}, []);
 	const modalContext = useContext(ModalContext);
-	return (
-		<Router>
-			{t ? (
+	if (!t || !loaded) {
+		return null;
+	}
+	return !isLoggedIn ? (
+		<Authenticaton />
+	) : (
+		<>
+			<Router>
 				<div className={styles.app}>
 					<>
 						{modalContext?.showModal ? (
@@ -100,8 +129,8 @@ function App() {
 						</div>
 					</WebSocketProvider>
 				</div>
-			) : null}
-		</Router>
+			</Router>
+		</>
 	);
 
 	function Page({ setSelectedOption, setSelectedItem }: any) {

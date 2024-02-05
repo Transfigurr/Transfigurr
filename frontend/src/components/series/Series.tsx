@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import ToolBar from "../ToolBar/ToolBar";
 import styles from "./Series.module.scss";
 import ToolBarItem from "../ToolBarItem/ToolBarItem";
@@ -23,11 +23,16 @@ const Series = ({ series_name }: any) => {
 		modalContext?.setShowModal(true);
 	};
 
+	const [selected, setSelected] = useState<string | null>(null);
+
 	const handleScanClick = async () => {
 		await fetch(
 			`http://${window.location.hostname}:7889/api/scan/series/${series_name}`,
 			{
 				method: "PUT",
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
 			},
 		);
 	};
@@ -37,21 +42,34 @@ const Series = ({ series_name }: any) => {
 			`http://${window.location.hostname}:7889/api/scan/series/metadata${series_name}`,
 			{
 				method: "PUT",
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
 			},
 		);
 	};
 
 	const leftToolBarItems: any = [
-		<ToolBarItem text="Scan" icon={<SyncIcon />} onClick={handleScanClick} />,
+		<ToolBarItem
+			text="Scan"
+			icon={<SyncIcon />}
+			onClick={handleScanClick}
+			selected={selected}
+			setSelected={setSelected}
+		/>,
 		<ToolBarItem
 			text="Metadata"
 			icon={<RssFeedIcon />}
 			onClick={handleMetadataClick}
+			selected={selected}
+			setSelected={setSelected}
 		/>,
 		<ToolBarItem
 			text="Edit"
 			icon={<RssFeedIcon />}
 			onClick={handleEditClick}
+			selected={selected}
+			setSelected={setSelected}
 		/>,
 	];
 
@@ -66,6 +84,29 @@ const Series = ({ series_name }: any) => {
 	const overview = series?.overview;
 	const runYears =
 		status === "Ended" ? firstAirDate + "-" + lastAirDate : firstAirDate + "-";
+	const [backdropSrc, setBackdropSrc] = useState<string | null>(null);
+	const [posterSrc, setPosterSrc] = useState<string | null>(null);
+	useEffect(() => {
+		const fetchImage = async (
+			path: string,
+			setSrc: (src: string | null) => void,
+		) => {
+			const response = await fetch(
+				`http://${window.location.hostname}:7889/api/${path}/series/${series?.id}`,
+				{
+					headers: {
+						Authorization: `Bearer ${localStorage.getItem("token")}`,
+					},
+				},
+			);
+			const blob = await response.blob();
+			setSrc(URL.createObjectURL(blob));
+		};
+
+		fetchImage("backdrop", setBackdropSrc);
+		fetchImage("poster", setPosterSrc);
+	}, [series?.id]);
+
 	return (
 		<div className={styles.series}>
 			<ToolBar
@@ -77,20 +118,14 @@ const Series = ({ series_name }: any) => {
 				<div className={styles.header}>
 					<img
 						className={styles.backdrop}
-						src={
-							`http://${window.location.hostname}:7889/api/backdrop/series/` +
-							series?.id
-						}
+						src={backdropSrc || ""}
 						alt="backdrop"
 					/>
 					<div className={styles.filter}></div>
 					<div className={styles.content}>
 						<img
 							className={styles.poster}
-							src={
-								`http://${window.location.hostname}:7889/api/poster/series/` +
-								series?.id
-							}
+							src={posterSrc || ""}
 							alt={"poster"}
 						/>
 						<div className={styles.details}>

@@ -11,3 +11,4 @@ sqlalchemy
 greenlet
 watchdog
 unidecode
+jose

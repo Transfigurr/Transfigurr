@@ -3,7 +3,11 @@ import { useEffect, useState } from "react";
 const useSettingsAPI = () => {
 	const [settings, setSettings] = useState<object>({});
 	useEffect(() => {
-		fetch(`http://${window.location.hostname}:7889/api/settings`)
+		fetch(`http://${window.location.hostname}:7889/api/settings`, {
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem("token")}`,
+			},
+		})
 			.then((response) => response.json())
 			.then((data) => setSettings(data))
 			.catch((error) => console.error(error));
