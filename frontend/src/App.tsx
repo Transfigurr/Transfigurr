@@ -20,12 +20,9 @@ import {
 	useLocation,
 } from "react-router-dom";
 import Series from "./components/series/Series";
-
 import { getTheme } from "./styles/themes";
 import { WebSocketContext } from "./contexts/webSocketContext";
 import { WebSocketProvider } from "./contexts/webSocketProvider";
-import Modal from "./components/modal/Modal";
-import { ModalContext } from "./contexts/modalContext";
 import Events from "./components/events/Events";
 import Authenticaton from "./components/authentication/Authentication";
 function App() {
@@ -34,27 +31,6 @@ function App() {
 	const wsContext: any = useContext(WebSocketContext);
 	const settings: any = wsContext?.settings;
 	const [theme, setTheme] = useState<any>(null);
-
-	useEffect(() => {
-		const modalBackdropClass = "modalBackdrop";
-
-		const handleKeyDown = (event: KeyboardEvent) => {
-			if (event.key === "Escape") {
-				modalContext?.setShowModal(false);
-			}
-		};
-		const handleOutsideClick = (event: any) => {
-			if (event.target.classList.value.includes(modalBackdropClass)) {
-				modalContext?.setShowModal(false);
-			}
-		};
-		window.addEventListener("click", handleOutsideClick);
-		window.addEventListener("keydown", handleKeyDown);
-		return () => {
-			window.removeEventListener("click", handleOutsideClick);
-			window.removeEventListener("keydown", handleKeyDown);
-		};
-	});
 
 	let t = null;
 	useEffect(() => {
@@ -90,7 +66,6 @@ function App() {
 
 		fetchToken();
 	}, []);
-	const modalContext = useContext(ModalContext);
 	if (!t || !loaded) {
 		return null;
 	}
@@ -100,17 +75,6 @@ function App() {
 		<>
 			<Router>
 				<div className={styles.app}>
-					<>
-						{modalContext?.showModal ? (
-							<div className={styles.modalBackdrop}>
-								<div className={styles.modalContent}>
-									<Modal />
-								</div>
-							</div>
-						) : (
-							<></>
-						)}
-					</>
 					<WebSocketProvider>
 						<HeaderComponent />
 						<div className={styles.content}>
@@ -151,10 +115,11 @@ function App() {
 			"/system/events": [3, 1],
 		};
 
-		setSelectedOption(pathname in sidebar ? sidebar[pathname][0] : 0);
-		setSelectedItem(pathname in sidebar ? sidebar[pathname][1] : -1);
+		useEffect(() => {
+			setSelectedOption(pathname in sidebar ? sidebar[pathname][0] : 0);
+			setSelectedItem(pathname in sidebar ? sidebar[pathname][1] : -1);
+		}, [pathname, setSelectedOption, setSelectedItem]);
 
-		const [selectedSeries, setSelectedSeries] = useState<any>([]);
 		return (
 			<Routes>
 				<Route path="/" element={<MediaComponent />} />
@@ -198,7 +163,6 @@ function App() {
 
 	function NotFound() {
 		const navigate = useNavigate();
-
 		useEffect(() => {
 			navigate("/");
 		}, [navigate]);

@@ -1,82 +1,45 @@
 .cardArea {
-	flex: 1;
-	min-width: 94px;
-	max-width: 150px;
-	padding: 10px;
-	aspect-ratio: 9 / 18;
-
-	flex-grow: 1;
-	flex-shrink: 1;
-
 	display: flex;
-	align-items: center;
-	justify-content: flex-start;
-	flex-direction: column;
-
+	padding: 15px;
 	.card {
-		width: 100%;
 		display: flex;
 		.cardContent {
 			position: relative;
 			height: 100%;
 			width: 100%;
-
 			display: flex;
 			flex-direction: column;
-
-			.ended {
-				display: flex;
-				align-self: flex-end;
-				justify-self: flex-end;
-				position: absolute;
-				border-color: transparent #f05050 transparent transparent;
-				z-index: 1;
-				border-width: 0 25px 25px 0;
-				border-style: solid;
-			}
 
 			.img {
 				cursor: pointer;
 			}
+
 			.footer {
 				display: flex;
 				flex-direction: column;
+
 				.progressBar {
+					position: relative;
 					transition: width 200ms ease;
-					height: 5px;
 					display: flex;
 					flex-direction: row;
-					background-color: rgb(91, 91, 91);
-
-					.progress {
-						background-color: #27c24c;
+					background-color: #5b5b5b;
+					color: white;
+					font-size: 12px;
+					.detailText {
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						position: absolute;
+						width: 100%;
+						height: 100%;
 					}
 				}
-				.name {
-					background-color: white;
-					color: #515253;
-					font-family: "Roboto", "open sans", "Helvetica Neue", "Helvetica",
-						"Arial", sans-serif;
-					display: flex;
-					align-items: flex-end;
-					justify-content: center;
-					height: 18px;
-					font-size: 12px;
-				}
-				.status {
-					background-color: white;
-					color: #515253;
-					font-family: "Roboto", "open sans", "Helvetica Neue", "Helvetica",
-						"Arial", sans-serif;
-					display: flex;
-					align-items: flex-end;
-					justify-content: center;
-					height: 18px;
-					font-size: 12px;
-				}
+
+				.name,
+				.status,
 				.profile {
 					background-color: white;
-
 					color: #515253;
 					font-family: "Roboto", "open sans", "Helvetica Neue", "Helvetica",
 						"Arial", sans-serif;
@@ -86,13 +49,19 @@
 					height: 18px;
 					font-size: 12px;
 				}
+
 				height: 20%;
 			}
 		}
+
+		&:hover {
+			transition: box-shadow 0.3s;
+			-webkit-box-shadow: 0 0 10px black;
+			box-shadow: 0 0 10px black;
+		}
 	}
-	.card:hover {
-		transition: box-shadow 0.3s;
-		-webkit-box-shadow: 0 0 10px black;
-		box-shadow: 0 0 10px black;
-	}
+}
+
+.poster {
+	text-decoration: none;
 }

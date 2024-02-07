@@ -124,6 +124,7 @@ async def scan_series(series_id):
         if not series.name:
             missing_metadata = True
         profile = await get_profile(series.profile_id)
+        series.seasons_count = 0
         for season_name in os.listdir(series_path):
             season_path = os.path.join(series_path, season_name)
             season: Season = await parse_season(season_name, series.id)
@@ -158,6 +159,7 @@ async def scan_series(series_id):
                 await scan_queue(asdict(episode), asdict(series), profile)
             series.episode_count += season.episode_count
             series.size += season.size
+            series.seasons_count += 1
             series.space_saved += season.space_saved
             series.missing_episodes += season.missing_episodes
             await set_season(asdict(season))

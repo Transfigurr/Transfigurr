@@ -4,6 +4,7 @@ import { WebSocketContext } from "../../contexts/webSocketContext";
 import ToolBar from "../ToolBar/ToolBar";
 import ToolBarItem from "../ToolBarItem/ToolBarItem";
 import { ReactComponent as SaveIcon } from "../svgs/save.svg";
+import InputSelect from "../inputSelect/InputSelect";
 
 const General = () => {
 	const wsContext = useContext(WebSocketContext);
@@ -67,42 +68,41 @@ const General = () => {
 			<ToolBar leftToolBarItems={leftToolBarItems} />
 			<div className={styles.content}>
 				<div className={styles.inputContainer}>
-					<label>Default Profile</label>
-					<select
-						className={styles.select}
-						value={currentSettings?.default_profile}
-						onChange={(e) => handleChange("default_profile", e.target.value)}
+					<label className={styles.label}>Default Profile</label>
+					<InputSelect
+						selected={currentSettings?.default_profile}
+						onChange={(e: any) =>
+							handleChange("default_profile", e.target.value)
+						}
 					>
 						{Object.entries(profiles || {})?.map(([key, profile]: any) => (
 							<option value={key}>{profile?.name}</option>
 						))}
-					</select>
+					</InputSelect>
 				</div>
 				<div className={styles.inputContainer}>
-					<label>Queue Startup State</label>
-					<select
-						className={styles.select}
-						value={currentSettings?.queue_startup_state}
-						onChange={(e) =>
+					<label className={styles.label}>Queue Startup State</label>
+					<InputSelect
+						selected={currentSettings?.queue_startup_state}
+						onChange={(e: any) =>
 							handleChange("queue_startup_state", e.target.value)
 						}
 					>
 						<option value="previous">Previous</option>
 						<option value="inactive">Inactive</option>
 						<option value="active">Active</option>
-					</select>
+					</InputSelect>
 				</div>
 				<div className={styles.inputContainer}>
-					<label>Theme</label>
-					<select
-						className={styles.select}
-						value={currentSettings?.theme}
-						onChange={(e) => handleChange("theme", e.target.value)}
+					<label className={styles.label}>Theme</label>
+					<InputSelect
+						selected={currentSettings?.theme}
+						onChange={(e: any) => handleChange("theme", e.target.value)}
 					>
 						<option value="auto">Auto</option>
 						<option value="light">Light</option>
 						<option value="dark">Dark</option>
-					</select>
+					</InputSelect>
 				</div>
 			</div>
 		</div>

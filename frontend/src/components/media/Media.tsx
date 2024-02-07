@@ -1,5 +1,4 @@
 import styles from "./Media.module.scss";
-import PosterComponent from "../poster/Poster";
 import ToolBar from "../ToolBar/ToolBar";
 import Footer from "../footer/Footer";
 import ToolBarItem from "../ToolBarItem/ToolBarItem";
@@ -11,13 +10,10 @@ import { ReactComponent as ViewIcon } from "../svgs/visibility.svg";
 import { ReactComponent as SortIcon } from "../svgs/sort.svg";
 import { ReactComponent as FilterIcon } from "../svgs/filter.svg";
 import { WebSocketContext } from "../../contexts/webSocketContext";
-import { ReactComponent as BookmarkFilled } from "../svgs/bookmark_filled.svg";
-import { ReactComponent as BookmarkUnfilled } from "../svgs/bookmark_unfilled.svg";
-import { ReactComponent as ContinuingIcon } from "../svgs/play_arrow.svg";
-import { ReactComponent as StoppedIcon } from "../svgs/stop.svg";
+import Table from "../table/Table";
 import MediaModel from "../mediaModal/MediaModal";
-import Overview from "../overview/Overview";
-import { Link } from "react-router-dom";
+import Posters from "../posters/Posters";
+import Overviews from "../overviews/Overviews";
 
 const ExplorerComponent = () => {
 	const wsContext = useContext(WebSocketContext);
@@ -216,12 +212,6 @@ const ExplorerComponent = () => {
 					id: "posters",
 					onClick: () => setSetting("media_view", "posters"),
 				},
-				{
-					text: "Overview",
-					setting_id: "media_view",
-					id: "overview",
-					onClick: () => setSetting("media_view", "overview"),
-				},
 			]}
 		/>,
 		<ToolBarItem
@@ -339,7 +329,7 @@ const ExplorerComponent = () => {
 				middleToolBarItems={middleToolBarItems}
 				rightToolBarItems={rightToolBarItems}
 			/>
-			{isModalOpen ? (
+			{isModalOpen && (
 				<div className={styles.modalBackdrop}>
 					<div className={styles.modalContent}>
 						<MediaModel
@@ -352,79 +342,21 @@ const ExplorerComponent = () => {
 						/>
 					</div>
 				</div>
-			) : (
-				<></>
 			)}
 			<div className={styles.mediaContent}>
 				<div className={styles.contentContainer}>
-					<div className={styles.content}>
-						{view === "table" ? (
-							<table className={styles.table}>
-								<tr>
-									<th></th>
-									<th>Series</th>
-									<th>Profile</th>
-									<th>Path</th>
-									<th>Space Saved</th>
-									<th>Size on Disk</th>
-									<th>Setting Icon</th>
-								</tr>
-								{sortedSeries.map((series: any) => (
-									<tr className={styles.row}>
-										<td className={styles.iconCell}>
-											{series?.monitored ? (
-												<BookmarkFilled className={styles.monitored} />
-											) : (
-												<BookmarkUnfilled className={styles.monitored} />
-											)}
-											{series?.status !== "Ended" ? (
-												<ContinuingIcon className={styles.continue} />
-											) : (
-												<StoppedIcon className={styles.stopped} />
-											)}
-										</td>
-										<td>
-											<a href={"/series/" + series?.id} className={styles.name}>
-												{series?.id}
-											</a>
-										</td>
-										<td>{profiles ? profiles[series.profile_id]?.name : ""}</td>
-										<td>/series/{series.id}</td>
-										<td>{(series.space_saved / 1000000000).toFixed(2)} GB</td>
-										<td>{(series.size / 1000000000).toFixed(2)} GB</td>
-									</tr>
-								))}
-							</table>
-						) : (
-							<></>
-						)}
-
-						{view === "posters" ? (
-							<>
-								{sortedSeries.map((series: any) => (
-									<Link to={`series/${series?.id}`} className={styles.poster}>
-										<PosterComponent name={series?.id} />
-									</Link>
-								))}
-							</>
-						) : (
-							<></>
-						)}
-
-						{view === "overview" ? (
-							<>
-								{sortedSeries.map((series: any) => (
-									<Overview series={series} />
-								))}
-							</>
-						) : (
-							<></>
-						)}
-					</div>
-
-					<div className={styles.footerContent}>
-						{series ? <Footer /> : <></>}
-					</div>
+					{view === "table" && (
+						<Table
+							settings={settings}
+							profiles={profiles}
+							sortedSeries={sortedSeries}
+						/>
+					)}
+					{view === "posters" && (
+						<Posters settings={settings} sortedSeries={sortedSeries || []} />
+					)}
+					{view === "overview" && <Overviews />}
+					<div className={styles.footerContent}>{series && <Footer />}</div>
 				</div>
 			</div>
 		</div>

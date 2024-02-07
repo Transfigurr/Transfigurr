@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import ToolBar from "../ToolBar/ToolBar";
 import styles from "./Series.module.scss";
 import ToolBarItem from "../ToolBarItem/ToolBarItem";
@@ -6,10 +6,9 @@ import { ReactComponent as RssFeedIcon } from "../svgs/rss_feed.svg";
 import { ReactComponent as SyncIcon } from "../svgs/sync.svg";
 import Season from "../season/Season";
 import { WebSocketContext } from "../../contexts/webSocketContext";
-import { ModalContext } from "../../contexts/modalContext";
+import SeriesModals from "../seriesModals/SeriesModals";
 
 const Series = ({ series_name }: any) => {
-	const modalContext = useContext(ModalContext);
 	series_name = series_name.replace(/-/g, " ");
 	const wsContext = useContext(WebSocketContext);
 	const profiles = wsContext?.data?.profiles;
@@ -17,13 +16,15 @@ const Series = ({ series_name }: any) => {
 		wsContext?.data?.series && profiles
 			? wsContext?.data?.series[series_name]
 			: {};
+
+	const [content, setContent] = useState<any>({});
 	const handleEditClick = () => {
-		modalContext?.setModalType("editSeries");
-		modalContext?.setModalData(series);
-		modalContext?.setShowModal(true);
+		setIsModalOpen(true);
+		setContent(series);
 	};
 
 	const [selected, setSelected] = useState<string | null>(null);
+	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	const handleScanClick = async () => {
 		await fetch(
@@ -84,31 +85,70 @@ const Series = ({ series_name }: any) => {
 	const overview = series?.overview;
 	const runYears =
 		status === "Ended" ? firstAirDate + "-" + lastAirDate : firstAirDate + "-";
-	const [backdropSrc, setBackdropSrc] = useState<string | null>(null);
-	const [posterSrc, setPosterSrc] = useState<string | null>(null);
+	const [backdropSrc, setBackdropSrc] = useState<string>("");
+	const [posterSrc, setPosterSrc] = useState<string>("");
+
+	const loaded = useRef(false);
+
 	useEffect(() => {
-		const fetchImage = async (
-			path: string,
-			setSrc: (src: string | null) => void,
-		) => {
-			const response = await fetch(
-				`http://${window.location.hostname}:7889/api/${path}/series/${series?.id}`,
-				{
-					headers: {
-						Authorization: `Bearer ${localStorage.getItem("token")}`,
-					},
-				},
-			);
-			const blob = await response.blob();
-			setSrc(URL.createObjectURL(blob));
+		if (loaded.current == true) {
+			return;
+		}
+		const fetchImage = async (path: string, setSrc: (src: string) => void) => {
+			try {
+				const cache = await caches.open("image-cache");
+				const cachedResponse = await cache.match(
+					`http://${window.location.hostname}:7889/api/${path}/series/${series?.id}`,
+				);
+
+				if (cachedResponse) {
+					const blob = await cachedResponse.blob();
+					setSrc(URL.createObjectURL(blob));
+				} else {
+					const response = await fetch(
+						`http://${window.location.hostname}:7889/api/${path}/series/${series?.id}`,
+						{
+							headers: {
+								Authorization: `Bearer ${localStorage.getItem("token")}`,
+							},
+						},
+					);
+					const clonedResponse = response.clone();
+					const blob = await response.blob();
+					setSrc(URL.createObjectURL(blob));
+
+					cache.put(
+						`http://${window.location.hostname}:7889/api/${path}/series/${series?.id}`,
+						clonedResponse,
+					);
+				}
+			} catch (e) {
+				console.log(e);
+			}
 		};
 
-		fetchImage("backdrop", setBackdropSrc);
-		fetchImage("poster", setPosterSrc);
+		if (series?.id && series?.id !== "") {
+			fetchImage("backdrop", setBackdropSrc);
+			fetchImage("poster", setPosterSrc);
+			loaded.current = true;
+		}
 	}, [series?.id]);
-
+	console.log(posterSrc || "poster.png");
 	return (
 		<div className={styles.series}>
+			{isModalOpen ? (
+				<div className={styles.modalBackdrop}>
+					<div className={styles.modalContent}>
+						<SeriesModals
+							setIsModalOpen={setIsModalOpen}
+							content={content}
+							setContent={setContent}
+						/>
+					</div>
+				</div>
+			) : (
+				<></>
+			)}
 			<ToolBar
 				leftToolBarItems={leftToolBarItems}
 				middleToolBarItems={middleToolBarItems}
@@ -118,15 +158,15 @@ const Series = ({ series_name }: any) => {
 				<div className={styles.header}>
 					<img
 						className={styles.backdrop}
-						src={backdropSrc || ""}
+						src={backdropSrc || "/backdrop.jpg"}
 						alt="backdrop"
 					/>
 					<div className={styles.filter}></div>
 					<div className={styles.content}>
 						<img
 							className={styles.poster}
-							src={posterSrc || ""}
-							alt={"poster"}
+							src={posterSrc || "/poster.png"}
+							alt="poster"
 						/>
 						<div className={styles.details}>
 							<div className={styles.titleRow}>

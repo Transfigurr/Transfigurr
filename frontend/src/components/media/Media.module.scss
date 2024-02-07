@@ -1,7 +1,6 @@
 .media {
 	display: flex;
 	flex-direction: column;
-	height: 100%;
 	width: 100%;
 	.mediaContent {
 		display: flex;
@@ -16,14 +15,6 @@
 			display: flex;
 			flex-direction: column;
 			flex-grow: 1;
-			.content {
-				margin: 15px;
-				display: flex;
-				flex-direction: row;
-				flex-wrap: wrap;
-				background-color: #fafbfc;
-			}
-
 			.footerContent {
 				margin-bottom: 15px;
 				margin-left: 15px;
@@ -35,48 +26,6 @@
 			}
 		}
 	}
-}
-
-.poster {
-	text-decoration: none;
-}
-
-.table {
-	color: #515253;
-	border-collapse: collapse;
-	width: 100%;
-	border: none;
-	font-size: 14px;
-	.row {
-		border-top: 1px solid #eee;
-		padding: 15px;
-	}
-	.row:hover {
-		background-color: white;
-	}
-	.headRow {
-		border: none;
-		font-size: 14px;
-	}
-}
-
-.name {
-	color: var(--transfigurrPurple);
-	text-decoration: none;
-}
-
-.name:hover {
-	color: black;
-	text-decoration: underline;
-}
-
-.iconCell {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 50px;
-	margin: 1px;
-	fill: #515253;
 }
 
 .modalBackdrop {

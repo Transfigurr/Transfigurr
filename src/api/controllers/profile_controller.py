@@ -1,5 +1,5 @@
 
-from src.models.profile import Profile, profile_codec
+from src.models.profile import Profile, Profile_Codec
 from sqlalchemy import delete, insert
 from sqlalchemy.future import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -12,7 +12,7 @@ async def get_all_profiles():
         profiles = [instance_to_dict(profile) for profile in res.scalars().all()]
         p = {}
         for profile in profiles:
-            profile_codecs = await async_session.execute(select(profile_codec).where(profile_codec.profile_id == profile['id']))
+            profile_codecs = await async_session.execute(select(Profile_Codec).where(Profile_Codec.profile_id == profile['id']))
             profile['codecs'] = [(instance_to_dict(obj))['codec_id'] for obj in profile_codecs.scalars().all()]
             p[profile['id']] = profile
         return p
@@ -22,7 +22,7 @@ async def get_profile(profile_id):
     async with AsyncSession(engine) as async_session:
         res = await async_session.execute(select(Profile).where(Profile.id == profile_id))
         profile = instance_to_dict(res.scalars().first())
-        profile_codecs = await async_session.execute(select(profile_codec).where(profile_codec.profile_id == profile['id']))
+        profile_codecs = await async_session.execute(select(Profile_Codec).where(Profile_Codec.profile_id == profile['id']))
         profile['codecs'] = [(instance_to_dict(obj))['codec_id'] for obj in profile_codecs.scalars().all()]
         return profile
 
@@ -52,9 +52,9 @@ async def set_profile(profile):
             profile_id = obj.id
 
     async with AsyncSession(engine) as async_session:
-        await async_session.execute(delete(profile_codec).where(profile_codec.profile_id == profile_id))
+        await async_session.execute(delete(Profile_Codec).where(Profile_Codec.profile_id == profile_id))
         for codec_id in codec_ids:
-            stmt = insert(profile_codec).values(profile_id=profile_id, codec_id=codec_id)
+            stmt = insert(Profile_Codec).values(profile_id=profile_id, codec_id=codec_id)
             await async_session.execute(stmt)
         await async_session.commit()
 

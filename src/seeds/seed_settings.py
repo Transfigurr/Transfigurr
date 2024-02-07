@@ -37,7 +37,7 @@ default_settings = [
     },
     {
         "id": "media_poster_posterSize",
-        "value": 'small'
+        "value": 'medium'
     },
     {
         "id": "media_poster_detailedProgressBar",
@@ -45,15 +45,15 @@ default_settings = [
     },
     {
         "id": "media_poster_showTitle",
-        "value": False
+        "value": True
     },
     {
         "id": "media_poster_showMonitored",
-        "value": False
+        "value": True
     },
     {
         "id": "media_poster_showProfile",
-        "value": False
+        "value": True
     },
     {
         "id": "media_table_showNetwork",
@@ -61,15 +61,15 @@ default_settings = [
     },
     {
         "id": "media_table_showProfile",
-        "value": False
+        "value": True
     },
     {
         "id": "media_table_showSeasons",
-        "value": False
+        "value": True
     },
     {
         "id": "media_table_showEpisodes",
-        "value": False
+        "value": True
     },
     {
         "id": "media_table_showEpisodeCount",
@@ -77,11 +77,15 @@ default_settings = [
     },
     {
         "id": "media_table_showYear",
-        "value": False
+        "value": True
     },
     {
         "id": "media_table_showSizeOnDisk",
-        "value": False
+        "value": True
+    },
+    {
+        "id": "media_table_showSizeSaved",
+        "value": True
     },
     {
         "id": "media_table_showGenre",
@@ -89,7 +93,7 @@ default_settings = [
     },
     {
         "id": "media_overview_posterSize",
-        "value": 'small'
+        "value": 'medium'
     },
     {
         "id": "media_overview_detailedProgressBar",

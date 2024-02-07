@@ -7,9 +7,8 @@ import { WebSocketContext } from "../../contexts/webSocketContext";
 const Profiles = () => {
 	const wsContext = useContext(WebSocketContext);
 	const profiles = wsContext?.data?.profiles;
-	const [modalType, setModalType] = useState("");
-	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [selectedProfile, setSelectedProfile] = useState<any>({});
+	const [isModalOpen, setIsModalOpen] = useState(false);
 	const handleProfileClick = (profile: any) => {
 		setSelectedProfile(profile);
 		setContent({
@@ -22,7 +21,6 @@ const Profiles = () => {
 			encoder: profile?.encoder,
 			extension: profile?.extension,
 		});
-		setModalType("profile");
 		setIsModalOpen(true);
 	};
 
@@ -69,7 +67,7 @@ const Profiles = () => {
 
 	return (
 		<div className={styles.profiles}>
-			{isModalOpen && modalType === "profile" && (
+			{isModalOpen && (
 				<div className={styles.modalBackdrop}>
 					<div className={styles.modalContent}>
 						<ProfileModal

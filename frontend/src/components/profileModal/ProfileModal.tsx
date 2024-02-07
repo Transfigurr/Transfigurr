@@ -1,6 +1,9 @@
 import styles from "./ProfileModal.module.scss";
 import { useContext, useEffect } from "react";
 import { WebSocketContext } from "../../contexts/webSocketContext";
+import InputCheckbox from "../inputCheckbox/InputCheckbox";
+import InputSelect from "../inputSelect/InputSelect";
+import InputText from "../inputText/InputText";
 
 const ProfileModal = ({
 	isOpen,
@@ -54,20 +57,20 @@ const ProfileModal = ({
 			<div className={styles.content}>
 				<div className={styles.left}>
 					<div className={styles.inputContainer}>
-						<label>Name</label>
-						<input
-							className={styles.text}
+						<label className={styles.label}>Name</label>
+						<InputText
 							type="input"
-							value={content.name}
-							onChange={(e) => setContent({ ...content, name: e.target.value })}
+							selected={content.name}
+							onChange={(e: any) =>
+								setContent({ ...content, name: e.target.value })
+							}
 						/>
 					</div>
 					<div className={styles.inputContainer}>
-						<label>Wanted Codec </label>
-						<select
-							className={styles.select}
-							value={content.codec}
-							onChange={(e) => {
+						<label className={styles.label}>Wanted Codec </label>
+						<InputSelect
+							selected={content.codec}
+							onChange={(e: any) => {
 								setContent({
 									...content,
 									codec: e.target.value,
@@ -85,14 +88,13 @@ const ProfileModal = ({
 							{Object.entries(codecs)?.map(([key, value]: any) => (
 								<option value={key}>{key}</option>
 							))}
-						</select>
+						</InputSelect>
 					</div>
 					<div className={styles.inputContainer}>
-						<label>Encoder </label>
-						<select
-							className={styles.select}
-							value={content.encoder}
-							onChange={(e) =>
+						<label className={styles.label}>Encoder </label>
+						<InputSelect
+							selected={content.encoder}
+							onChange={(e: any) =>
 								setContent({
 									...content,
 									encoder: e.target.value,
@@ -107,28 +109,26 @@ const ProfileModal = ({
 							{codecs[content?.codec]?.encoders?.map((encoder: string) => (
 								<option value={encoder}>{encoder}</option>
 							))}
-						</select>
+						</InputSelect>
 					</div>
 					<div className={styles.inputContainer}>
-						<label>Encode Speed </label>
-						<select
-							className={styles.select}
-							value={content.speed}
-							onChange={(e) =>
+						<label className={styles.label}>Encode Speed </label>
+						<InputSelect
+							selected={content.speed}
+							onChange={(e: any) =>
 								setContent({ ...content, speed: e.target.value })
 							}
 						>
 							{encoders[content?.encoder]?.presets?.map((preset: any) => (
 								<option value={preset}>{preset}</option>
 							))}
-						</select>
+						</InputSelect>
 					</div>
 					<div className={styles.inputContainer}>
-						<label>Output Container </label>
-						<select
-							className={styles.select}
-							value={content.container}
-							onChange={(e) => {
+						<label className={styles.label}>Output Container </label>
+						<InputSelect
+							selected={content.container}
+							onChange={(e: any) => {
 								setContent({
 									...content,
 									container: e.target.value,
@@ -139,14 +139,13 @@ const ProfileModal = ({
 							{codecs[content?.codec]?.containers?.map((container: any) => (
 								<option value={container}>{container}</option>
 							))}
-						</select>
+						</InputSelect>
 					</div>
 					<div className={styles.inputContainer}>
-						<label>Output Extension </label>
-						<select
-							className={styles.select}
-							value={content.extension}
-							onChange={(e) =>
+						<label className={styles.label}>Output Extension </label>
+						<InputSelect
+							selected={content.extension}
+							onChange={(e: any) =>
 								setContent({ ...content, extension: e.target.value })
 							}
 						>
@@ -155,7 +154,7 @@ const ProfileModal = ({
 									<option value={extension}>{extension}</option>
 								),
 							)}
-						</select>
+						</InputSelect>
 					</div>
 				</div>
 				<div className={styles.right}>
@@ -181,11 +180,9 @@ const ProfileModal = ({
 									setContent({ ...content, codecs: selectedValues });
 								}}
 							>
-								<input
+								<InputCheckbox
 									type="checkbox"
-									value={key}
 									checked={content?.codecs?.includes(key)}
-									readOnly
 								/>
 								<span className={styles.key}>{key}</span>
 							</div>

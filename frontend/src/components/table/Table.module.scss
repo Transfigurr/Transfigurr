@@ -1,0 +1,40 @@
+.tableContainer {
+	padding: 20px;
+	.table {
+		color: #515253;
+		border-collapse: collapse;
+		width: 100%;
+		border: none;
+		font-size: 14px;
+		.row {
+			border-top: 1px solid #eee;
+			padding: 15px;
+		}
+		.row:hover {
+			background-color: white;
+		}
+		.headRow {
+			border: none;
+			font-size: 14px;
+		}
+	}
+}
+
+.name {
+	color: var(--transfigurrPurple);
+	text-decoration: none;
+}
+
+.name:hover {
+	color: black;
+	text-decoration: underline;
+}
+
+.iconCell {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 50px;
+	margin: 1px;
+	fill: #515253;
+}

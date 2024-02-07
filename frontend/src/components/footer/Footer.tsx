@@ -1,7 +1,5 @@
 import { useContext } from "react";
-import useSystem from "../../hooks/useSystem";
 import styles from "./Footer.module.scss";
-import { ModalContext } from "../../contexts/modalContext";
 import { WebSocketContext } from "../../contexts/webSocketContext";
 const Footer = () => {
 	const wsContext = useContext(WebSocketContext);

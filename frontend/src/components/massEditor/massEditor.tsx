@@ -6,6 +6,8 @@ import { ReactComponent as BookmarkUnfilled } from "../svgs/bookmark_unfilled.sv
 import { ReactComponent as ContinuingIcon } from "../svgs/play_arrow.svg";
 import { ReactComponent as StoppedIcon } from "../svgs/stop.svg";
 import ToolBar from "../ToolBar/ToolBar";
+import InputCheckbox from "../inputCheckbox/InputCheckbox";
+import InputSelect from "../inputSelect/InputSelect";
 
 const MassEditor = () => {
 	const wsContext: any = useContext(WebSocketContext);
@@ -55,9 +57,7 @@ const MassEditor = () => {
 							<thead>
 								<tr className={styles.headRow}>
 									<th>
-										<input
-											className={styles.checkbox}
-											type="checkbox"
+										<InputCheckbox
 											checked={selectAll}
 											onChange={handleSelectAllChange}
 										/>
@@ -74,9 +74,7 @@ const MassEditor = () => {
 								{seriesArray?.map((s: any, index: any) => (
 									<tr className={styles.row}>
 										<td className={styles.inputCell}>
-											<input
-												className={styles.checkbox}
-												type="checkbox"
+											<InputCheckbox
 												checked={selectedSeries.some(
 													(series: any) => series.id === s.id,
 												)}
@@ -116,25 +114,23 @@ const MassEditor = () => {
 			<div className={styles.footer}>
 				<div className={styles.input}>
 					<div className={styles.inputContainer}>
-						<label>Monitored </label>
-						<select
-							className={styles.select}
-							value={monitored}
-							onChange={(e) => {
+						<label className={styles.label}>Monitored </label>
+						<InputSelect
+							selected={monitored}
+							onChange={(e: any) => {
 								setMonitored(e.target.value);
 							}}
 						>
 							<option value={-1}>{"No Change"}</option>
 							<option value={0}>{"Not Monitored"}</option>
 							<option value={1}>{"Monitored"}</option>
-						</select>
+						</InputSelect>
 					</div>
 					<div className={styles.inputContainer}>
-						<label>Profile </label>
-						<select
-							className={styles.select}
-							value={profile}
-							onChange={(e) => {
+						<label className={styles.label}>Profile </label>
+						<InputSelect
+							selected={profile}
+							onChange={(e: any) => {
 								setProfile(e.target.value);
 							}}
 						>
@@ -142,7 +138,7 @@ const MassEditor = () => {
 							{Object.values(profiles || {}).map((profile: any) => (
 								<option value={profile.id}>{profile.name}</option>
 							))}
-						</select>
+						</InputSelect>
 					</div>
 					<div className={styles.buttonContainer}>
 						<button className={styles.apply} onClick={applyChanges}>
