@@ -10,7 +10,7 @@ logger = logging.getLogger('logger')
 
 async def analyze_media_file(file_path):
     try:
-        logger.info(f"Analyzing {file_path}", extra={'service': 'Scan'})
+        logger.debug(f"Analyzing {file_path}", extra={'service': 'Scan'})
         # Check if the file exists
         if not os.path.exists(file_path):
             logger.error(f"The file {file_path} does not exist.", extra={'service': 'Scan'})
@@ -18,7 +18,7 @@ async def analyze_media_file(file_path):
 
         # Check if the file is readable
         if not os.access(file_path, os.R_OK):
-            logger.info(f"The file {file_path} is not readable.", extra={'service': 'Scan'})
+            logger.debug(f"The file {file_path} is not readable.", extra={'service': 'Scan'})
             try:
                 os.chmod(file_path, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
             except PermissionError:
@@ -26,7 +26,7 @@ async def analyze_media_file(file_path):
                 return
         # Check if the file is writable, if not, change permissions
         if not os.access(file_path, os.W_OK):
-            logger.info(f"The file {file_path} is not writable.", extra={'service': 'Scan'})
+            logger.debug(f"The file {file_path} is not writable.", extra={'service': 'Scan'})
             try:
                 os.chmod(file_path, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
             except PermissionError:

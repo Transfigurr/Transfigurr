@@ -27,10 +27,7 @@ from src.api.routes import (
     action_routes
 )
 
-# Create app
 app = FastAPI()
-
-# Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -39,15 +36,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# catch route for login
 
-
-@app.get("/login")
-async def login():
-    return FileResponse("frontend/build/index.html")
-
-
-# Add Routes
 routers = [
     season_routes.router,
     scan_routes.router,
@@ -67,7 +56,6 @@ routers = [
 for router in routers:
     app.include_router(router)
 
-# Mount directories
 os.makedirs("../config", exist_ok=True)
 app.mount("/static", StaticFiles(directory="frontend/build/static"), name="static")
 
@@ -81,13 +69,7 @@ async def startup_event():
     start_watchdog(await get_root_folder() + '/series')
 app.add_event_handler("startup", startup_event)
 
-
-# Setup Logger
-
-
 start_logger()
-
-# Catch all static routes
 
 
 @app.get("/{full_path:path}")

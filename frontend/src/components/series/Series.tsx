@@ -85,8 +85,8 @@ const Series = ({ series_name }: any) => {
 	const overview = series?.overview;
 	const runYears =
 		status === "Ended" ? firstAirDate + "-" + lastAirDate : firstAirDate + "-";
-	const [backdropSrc, setBackdropSrc] = useState<string>("");
-	const [posterSrc, setPosterSrc] = useState<string>("");
+	const [backdropSrc, setBackdropSrc] = useState<string | null>("");
+	const [posterSrc, setPosterSrc] = useState<string | null>("");
 
 	const loaded = useRef(false);
 
@@ -94,7 +94,10 @@ const Series = ({ series_name }: any) => {
 		if (loaded.current == true) {
 			return;
 		}
-		const fetchImage = async (path: string, setSrc: (src: string) => void) => {
+		const fetchImage = async (
+			path: string,
+			setSrc: (src: string | null) => void,
+		) => {
 			try {
 				const cache = await caches.open("image-cache");
 				const cachedResponse = await cache.match(
@@ -113,6 +116,10 @@ const Series = ({ series_name }: any) => {
 							},
 						},
 					);
+					if (response.status !== 200) {
+						setSrc(null);
+						return;
+					}
 					const clonedResponse = response.clone();
 					const blob = await response.blob();
 					setSrc(URL.createObjectURL(blob));
@@ -133,7 +140,6 @@ const Series = ({ series_name }: any) => {
 			loaded.current = true;
 		}
 	}, [series?.id]);
-	console.log(posterSrc || "poster.png");
 	return (
 		<div className={styles.series}>
 			{isModalOpen ? (

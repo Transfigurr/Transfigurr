@@ -14,3 +14,4 @@ unidecode
 python-jose
 bcrypt
 passlib
+pillow

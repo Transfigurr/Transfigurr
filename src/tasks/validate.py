@@ -13,7 +13,7 @@ async def validate_all_series():
 
 async def validate_series(series_id):
     try:
-        logger.info(f"Validating {series_id}", extra={'service': 'Scan'})
+        logger.info(f"Validating series: {series_id}", extra={'service': 'Scan'})
         series = await get_full_series(series_id)
         series_path = os.path.join(await get_series_folder(), series_id)
         if not os.path.isdir(series_path):

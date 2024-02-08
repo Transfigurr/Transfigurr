@@ -51,7 +51,7 @@ def start_logger():
     formatter = logging.Formatter("%(asctime)s [%(levelname)s] [%(service)s] %(message)s")
     sqlite_handler.setFormatter(formatter)
     logger = logging.getLogger('logger')
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)
     logger.addHandler(queue_handler)
     queue_listener = logging.handlers.QueueListener(log_queue, sqlite_handler)
     queue_listener.start()

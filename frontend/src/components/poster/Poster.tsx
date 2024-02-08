@@ -22,7 +22,7 @@ const PosterComponent = ({ name, posterWidth, posterHeight }: any) => {
 		}
 	};
 
-	const [imgSrc, setImgSrc] = useState<string>("");
+	const [imgSrc, setImgSrc] = useState<string | null>("");
 
 	useEffect(() => {
 		const fetchImage = async () => {
@@ -44,6 +44,12 @@ const PosterComponent = ({ name, posterWidth, posterHeight }: any) => {
 							},
 						},
 					);
+
+					if (response.status !== 200) {
+						setImgSrc(null);
+						return;
+					}
+
 					const clonedResponse = response.clone();
 					const blob = await response.blob();
 					setImgSrc(URL.createObjectURL(blob));
@@ -60,7 +66,6 @@ const PosterComponent = ({ name, posterWidth, posterHeight }: any) => {
 
 		fetchImage();
 	}, [series?.id]);
-	console.log(settings);
 	return (
 		<div
 			className={styles.cardArea}

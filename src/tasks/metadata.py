@@ -2,7 +2,6 @@ import base64
 from dataclasses import asdict
 import logging
 import os
-import aiofiles
 from fastapi import APIRouter
 import httpx
 from unidecode import unidecode
@@ -17,6 +16,8 @@ from src.api.controllers.settings_controller import get_all_settings
 from src.utils.folders import get_series_artwork_folder
 from src.models.episode import Episode
 from src.models.series import Series
+from PIL import Image
+from io import BytesIO
 
 router = APIRouter()
 
@@ -86,14 +87,14 @@ async def download_series_artwork(series_data, series_id):
                 logger.error("No poster path provided.", extra={'service': 'Metadata'})
             else:
                 poster_url = f"https://image.tmdb.org/t/p/original{poster_path}"
-                poster_path = os.path.join(series_folder, "poster.jpg")
+                poster_path = os.path.join(series_folder, "poster.webp")
                 if not os.path.exists(poster_path):
                     response = await client.get(poster_url)
                     if response.status_code != 200:
                         logger.error("Failed to download poster.", extra={'service': 'Metadata'})
                     else:
-                        async with aiofiles.open(poster_path, "wb") as poster_file:
-                            await poster_file.write(response.content)
+                        img = Image.open(BytesIO(response.content))
+                        img.save(poster_path, "WEBP", quality=5)
         except Exception as e:
             logger.error(f"An error occurred while downloading the poster: {e}", extra={'service': 'Metadata'})
 
@@ -101,20 +102,18 @@ async def download_series_artwork(series_data, series_id):
         try:
             backdrop_path = series_data.get("backdrop_path")
             if not backdrop_path:
-                logger.info("No backdrop path provided.", extra={'service': 'Metadata'})
+                logger.debug("No backdrop path provided.", extra={'service': 'Metadata'})
             else:
                 backdrop_url = f"https://image.tmdb.org/t/p/original{backdrop_path}"
                 backdrop_file_path = os.path.join(
-                    series_folder, "backdrop.jpg")
+                    series_folder, "backdrop.webp")
                 if not os.path.exists(backdrop_file_path):
                     response = await client.get(backdrop_url)
                     if response.status_code != 200:
-                        logger.info("Failed to download backdrop.", extra={'service': 'Metadata'})
+                        logger.error("Failed to download backdrop.", extra={'service': 'Metadata'})
                     else:
-                        async with aiofiles.open(
-                            backdrop_file_path, "wb"
-                        ) as backdrop_file:
-                            await backdrop_file.write(response.content)
+                        img = Image.open(BytesIO(response.content))
+                        img.save(backdrop_file_path, "WEBP", quality=5)
         except Exception as e:
             logger.error(f"An error occurred while downloading the backdrop: {e}", extra={'service': 'Metadata'})
 

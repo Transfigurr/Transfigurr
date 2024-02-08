@@ -46,7 +46,7 @@ async def parse_episode(
     file, series_id, season_id, season_path, season_number, season_name
 ):
     try:
-        logger.info(f"Parsing episode: {file}", extra={'service': 'Scan'})
+        logger.debug(f"Parsing episode: {file}", extra={'service': 'Scan'})
         episode_number = 0
         episode_number = parse_episode_number(file)
 
@@ -80,7 +80,7 @@ async def parse_episode(
 
 async def parse_season(season_name, series_id):
     try:
-        logger.info(f"Parsing season: {season_name}", extra={'service': 'Scan'})
+        logger.debug(f"Parsing season: {season_name}", extra={'service': 'Scan'})
         digits = season_pattern.findall(season_name)
         season_number = 0
         if digits:
@@ -173,7 +173,7 @@ async def scan_series(series_id):
 
 async def scan_system():
     try:
-        logger.info("Scanning system", extra={'service': 'Scan'})
+        logger.info("Scanning System", extra={'service': 'Scan'})
         series = await get_all_series()
         series_count = 0
         episode_count = 0

@@ -43,6 +43,7 @@ class EncodeService:
                 self.current = episode
                 if not episode:
                     continue
+                logger.info(f"Encoding {episode['filename']}", extra={'service': 'Encode'})
                 await process_episode(episode)
                 self.encode_set.remove(episode['id'])
                 self.current = None
@@ -69,7 +70,6 @@ encode_service = EncodeService()
 
 async def run_ffmpeg(input_file, output_file, encoder, output_container, preset=None):
     try:
-        logger.info(f"Encoding {input_file}", extra={'service': 'Encode'})
         loop = asyncio.get_event_loop()
         encode_service.processing = True
         # Get the total duration of the video
@@ -149,7 +149,6 @@ async def run_ffmpeg(input_file, output_file, encoder, output_container, preset=
 
 async def process_episode(e):
     try:
-        logger.info(f"Processing {e['filename']}", extra={'service': 'Encode'})
         if not e:
             return
         encode_service.stage = "analyzing"
@@ -174,20 +173,18 @@ async def process_episode(e):
             await get_transcode_folder(), f"{file_name}.{output_extension}"
         )
 
-        # Check if input_file exists and is readable and writable
         if not os.path.exists(input_file):
             logger.error(f"{input_file} does not exist", extra={'service': 'Encode'})
             return
         if not os.access(input_file, os.R_OK):
-            logger.info(f"Changing permissions of {input_file} to make it readable", extra={'service': 'Encode'})
+            logger.debug(f"Changing permissions of {input_file} to make it readable", extra={'service': 'Encode'})
             os.chmod(input_file, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
         if not os.access(input_file, os.W_OK):
-            logger.info(f"Changing permissions of {input_file} to make it writable", extra={'service': 'Encode'})
+            logger.debug(f"Changing permissions of {input_file} to make it writable", extra={'service': 'Encode'})
             os.chmod(input_file, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
 
-        # Check if output_file is writable
         if os.path.exists(output_file) and not os.access(output_file, os.W_OK):
-            logger.info(f"Changing permissions of {output_file} to make it writable", extra={'service': 'Encode'})
+            logger.debug(f"Changing permissions of {output_file} to make it writable", extra={'service': 'Encode'})
             os.chmod(output_file, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
 
         video_stream = await analyze_media_file(input_file)
