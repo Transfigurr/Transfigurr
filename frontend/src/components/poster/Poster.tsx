@@ -27,10 +27,14 @@ const PosterComponent = ({ name, posterWidth, posterHeight }: any) => {
 	useEffect(() => {
 		const fetchImage = async () => {
 			try {
-				const cache = await caches.open("image-cache");
-				const cachedResponse = await cache.match(
-					`http://${window.location.hostname}:7889/api/poster/series/${series?.id}`,
-				);
+				let cachedResponse = null;
+				let cache = null;
+				if ("caches" in window) {
+					cache = await caches.open("image-cache");
+					cachedResponse = await cache.match(
+						`http://${window.location.hostname}:7889/api/poster/series/${series?.id}`,
+					);
+				}
 
 				if (cachedResponse) {
 					const blob = await cachedResponse.blob();
@@ -53,11 +57,12 @@ const PosterComponent = ({ name, posterWidth, posterHeight }: any) => {
 					const clonedResponse = response.clone();
 					const blob = await response.blob();
 					setImgSrc(URL.createObjectURL(blob));
-
-					cache.put(
-						`http://${window.location.hostname}:7889/api/poster/series/${series?.id}`,
-						clonedResponse,
-					);
+					if (cache) {
+						cache.put(
+							`http://${window.location.hostname}:7889/api/poster/series/${series?.id}`,
+							clonedResponse,
+						);
+					}
 				}
 			} catch (e) {
 				console.log(e);

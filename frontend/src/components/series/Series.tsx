@@ -109,10 +109,14 @@ const Series = ({ series_name }: any) => {
 			setSrc: (src: string | null) => void,
 		) => {
 			try {
-				const cache = await caches.open("image-cache");
-				const cachedResponse = await cache.match(
-					`http://${window.location.hostname}:7889/api/${path}/series/${series?.id}`,
-				);
+				let cache = null;
+				let cachedResponse = null;
+				if ("caches" in window) {
+					cache = await caches.open("image-cache");
+					cachedResponse = await cache.match(
+						`http://${window.location.hostname}:7889/api/${path}/series/${series?.id}`,
+					);
+				}
 
 				if (cachedResponse) {
 					const blob = await cachedResponse.blob();
@@ -133,11 +137,12 @@ const Series = ({ series_name }: any) => {
 					const clonedResponse = response.clone();
 					const blob = await response.blob();
 					setSrc(URL.createObjectURL(blob));
-
-					cache.put(
-						`http://${window.location.hostname}:7889/api/${path}/series/${series?.id}`,
-						clonedResponse,
-					);
+					if (cache) {
+						cache.put(
+							`http://${window.location.hostname}:7889/api/${path}/series/${series?.id}`,
+							clonedResponse,
+						);
+					}
 				}
 			} catch (e) {
 				console.log(e);

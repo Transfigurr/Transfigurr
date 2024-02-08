@@ -25,6 +25,7 @@ class MetadataService:
         while True:
             try:
                 series_id = await self.metadata_queue.get()
+                logger.info("Grabbing Metadata for series: %s", series_id, extra={'service': 'Metadata'})
                 await get_series_metadata(series_id)
                 self.metadata_set.remove(series_id)
             except Exception as e:
