@@ -1,5 +1,5 @@
-const sonarrBlue = "#35c5f4";
-const sonarrAlternateBlue = "#2193b5";
+const transfigurrPurple = "#9C27B0";
+const transfigurrAlternativePurple = "#B641CA";
 const darkGray = "#888";
 const mediumGray = "#999";
 const gray = "#adadad";
@@ -24,10 +24,11 @@ const light = {
 	successColor: "#27c24c",
 	dangerColor: "#f05050",
 	warningColor: "#ffa500",
-	infoColor: sonarrBlue,
+	infoColor: transfigurrPurple,
 	purple,
 	pink,
-	sonarrBlue,
+	transfigurrPurple,
+	transfigurrAlternativePurple,
 	helpTextColor: "#909293",
 	darkGray,
 	gray,
@@ -36,16 +37,13 @@ const light = {
 
 	// Theme Colors
 
-	themeBlue: sonarrBlue,
-	themeAlternateBlue: sonarrAlternateBlue,
+	themePurple: transfigurrPurple,
+	themeAlternatePurple: transfigurrAlternativePurple,
 	themeRed: "#c4273c",
 	themeDarkColor: "#3a3f51",
 	themeLightColor: "#4f566f",
 	pageBackground: "#f5f7fa",
 	pageFooterBackground: "#f1f1f1",
-
-	torrentColor: "#00853d",
-	usenetColor: "#17b1d9",
 
 	// Labels
 	inverseLabelColor: "#ddd",
@@ -59,19 +57,19 @@ const light = {
 	linkHoverColor: "#1b72e2",
 
 	// Header
-	pageHeaderBackgroundColor: sonarrAlternateBlue,
+	pageHeaderBackgroundColor: "#3a323b",
 
 	// Sidebar
 
 	sidebarColor: "#e1e2e3",
-	sidebarBackgroundColor: "#3a3f51",
+	sidebarBackgroundColor: "#4c4651",
 	sidebarActiveBackgroundColor: "#252833",
 
 	// Toolbar
 	toolbarColor: "#e1e2e3",
-	toolbarBackgroundColor: "#4f566f",
-	toolbarMenuItemBackgroundColor: "#454b60",
-	toolbarMenuItemHoverBackgroundColor: "#3a3f51",
+	toolbarBackgroundColor: "rgba(76, 70, 81, 0.9)",
+	toolbarMenuItemBackgroundColor: "#4c4651",
+	toolbarMenuItemHoverBackgroundColor: "#3e3a42",
 	toolbarLabelColor: "#8895aa",
 
 	// Accents
@@ -129,6 +127,7 @@ const light = {
 
 	modalBackdropBackgroundColor: "rgba(0, 0, 0, 0.6)",
 	modalBackgroundColor: "#fff",
+	modalBorderBoxShadowColor: "rgba(0, 0, 0, 0.1)",
 	modalCloseButtonHoverColor: "#888",
 
 	//

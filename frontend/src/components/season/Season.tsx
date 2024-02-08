@@ -1,5 +1,7 @@
 import { useState } from "react";
 import styles from "./Season.module.scss";
+import { ReactComponent as Open } from "../svgs/expand_circle_up.svg";
+import { ReactComponent as Close } from "../svgs/expand_circle_down.svg";
 const Season = ({ season }: any) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const onSeasonClick = () => {
@@ -7,7 +9,7 @@ const Season = ({ season }: any) => {
 	};
 	return (
 		<div className={styles.season}>
-			<div className={styles.seasonHeader}>
+			<div className={styles.seasonHeader} onClick={onSeasonClick}>
 				<div className={styles.left}>
 					<div className={styles.seasonNumber}>{season?.name}</div>
 					<div className={styles.profileRatio}>
@@ -18,8 +20,16 @@ const Season = ({ season }: any) => {
 						{(season?.size / 1000000000).toFixed(2).toString() + " GB"}
 					</div>
 				</div>
-				<div className={styles.center} onClick={onSeasonClick}>
-					<div className={styles.open}>{isOpen ? <>Close</> : <>Open</>}</div>
+				<div className={styles.center}>
+					<div className={styles.open}>
+						{isOpen ? (
+							<>
+								<Open />
+							</>
+						) : (
+							<Close />
+						)}
+					</div>
 				</div>
 			</div>
 			<div
@@ -67,7 +77,7 @@ const Season = ({ season }: any) => {
 					</tbody>
 				</table>
 				<div className={styles.seasonInfoFooter} onClick={onSeasonClick}>
-					Close
+					<Open />
 				</div>
 			</div>
 		</div>

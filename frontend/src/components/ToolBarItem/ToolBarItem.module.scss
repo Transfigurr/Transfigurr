@@ -25,6 +25,7 @@
 		font-size: 11px;
 		height: 20px;
 		color: #8895aa;
+		user-select: none;
 	}
 }
 
@@ -33,7 +34,7 @@
 	width: 185px;
 	top: 100%;
 	right: 0px;
-	background-color: #4c4651;
+	background-color: var(--toolbarMenuItemBackgroundColor);
 	.item {
 		display: flex;
 		align-items: center;
@@ -54,7 +55,11 @@
 
 		cursor: pointer;
 		&:hover {
-			background-color: #3e3a42;
+			background-color: var(--toolbarMenuItemHoverBackgroundColor);
 		}
 	}
+}
+
+.toolBarOption:hover {
+	fill: var(--themePurple);
 }

@@ -1,4 +1,5 @@
 
+from src.api.controllers.settings_controller import get_all_settings
 from src.models.profile import Profile, Profile_Codec
 from sqlalchemy import delete, insert
 from sqlalchemy.future import select
@@ -62,6 +63,10 @@ async def set_profile(profile):
 
 
 async def delete_profile(profile_id):
+    settings = await get_all_settings()
+    default_profile = settings.get('default_profile', '')
+    if profile_id == default_profile:
+        return
     async with AsyncSession(engine) as async_session:
         await async_session.execute(delete(Profile).where(Profile.id == profile_id))
         await async_session.commit()

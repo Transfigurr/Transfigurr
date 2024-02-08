@@ -4,6 +4,16 @@ import styles from "./Series.module.scss";
 import ToolBarItem from "../ToolBarItem/ToolBarItem";
 import { ReactComponent as RssFeedIcon } from "../svgs/rss_feed.svg";
 import { ReactComponent as SyncIcon } from "../svgs/sync.svg";
+
+import { ReactComponent as Folder } from "../svgs/folder.svg";
+import { ReactComponent as Drive } from "../svgs/hard_drive.svg";
+import { ReactComponent as Profile } from "../svgs/person.svg";
+import { ReactComponent as Monitored } from "../svgs/bookmark_filled.svg";
+import { ReactComponent as Unmonitored } from "../svgs/bookmark_unfilled.svg";
+import { ReactComponent as Continuing } from "../svgs/play_arrow.svg";
+import { ReactComponent as Ended } from "../svgs/stop.svg";
+import { ReactComponent as Network } from "../svgs/tower.svg";
+
 import Season from "../season/Season";
 import { WebSocketContext } from "../../contexts/webSocketContext";
 import SeriesModals from "../seriesModals/SeriesModals";
@@ -176,6 +186,13 @@ const Series = ({ series_name }: any) => {
 						/>
 						<div className={styles.details}>
 							<div className={styles.titleRow}>
+								<div className={styles.headerIcon}>
+									{series?.monitored ? (
+										<Monitored style={{ height: "50px", width: "50px" }} />
+									) : (
+										<Unmonitored style={{ height: "50px", width: "50px" }} />
+									)}
+								</div>
 								{series?.name ? series?.name : series?.id}
 							</div>
 							<div className={styles.seriesDetails}>
@@ -192,23 +209,53 @@ const Series = ({ series_name }: any) => {
 							</div>
 							<div className={styles.tags}>
 								<div className={styles.tag}>
+									<div className={styles.icon}>
+										<Folder />
+									</div>
 									{"/series/" + (series?.name ? series?.name : series?.id)}
 								</div>
 
 								<div className={styles.tag}>
+									<div className={styles.icon}>
+										<Drive />
+									</div>
 									{((series?.size || 0) / 1000000000).toFixed(2).toString() +
 										" GB"}
 								</div>
 								<div className={styles.tag}>
+									<div className={styles.icon}>
+										<Profile />
+									</div>
 									{profiles && series?.profile_id in profiles
 										? profiles[series?.profile_id]?.name
 										: ""}
 								</div>
 								<div className={styles.tag}>
+									<div className={styles.icon}>
+										{series?.monitored ? <Monitored /> : <Unmonitored />}
+									</div>
 									{series?.monitored ? "Monitored" : "Unmonitored"}
 								</div>
-								{status ? <div className={styles.tag}>{status}</div> : <></>}
-								{network ? <div className={styles.tag}>{network}</div> : <></>}
+								{status ? (
+									<div className={styles.tag}>
+										<div className={styles.icon}>
+											{status === "Ended" ? <Ended /> : <Continuing />}
+										</div>
+										{status}
+									</div>
+								) : (
+									<></>
+								)}
+								{network ? (
+									<div className={styles.tag}>
+										<div className={styles.icon}>
+											<Network />
+										</div>
+										{network}
+									</div>
+								) : (
+									<></>
+								)}
 							</div>
 							<div className={styles.overview}>{overview}</div>
 						</div>

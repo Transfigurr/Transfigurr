@@ -4,23 +4,23 @@
 	height: 100%;
 	width: 100%;
 	overflow-y: scroll;
-	background-color: rgb(250, 251, 252);
+	background-color: var(--pageBackground);
 	.content {
 		margin: 20px;
 	}
 }
 
 .table {
-	color: #515253;
+	color: var(--textColor);
 	border-collapse: collapse;
 	width: 100%;
 	border: none;
 	font-size: 14px;
 	.row {
-		border-top: 1px solid #eee;
+		border-top: 1px solid var(--borderColor);
 	}
 	.row:hover {
-		background-color: white;
+		background-color: var(--tableRowHoverBackgroundColor);
 	}
 	.headRow {
 		border: none;
@@ -43,8 +43,8 @@ tr {
 }
 
 .navigation {
-	color: #515253;
-	fill: #515253;
+	color: var(--textColor);
+	fill: var(--textColor);
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -70,7 +70,7 @@ tr {
 }
 
 .totalRecords {
-	color: #999;
+	color: var(--textColor);
 	font-size: 14px;
 	display: flex;
 	justify-content: flex-end;
@@ -83,7 +83,7 @@ tr {
 }
 
 .name:hover {
-	color: black;
+	color: var(--transfigurrAlternativePurple);
 	text-decoration: underline;
 }
 
@@ -97,7 +97,7 @@ tr {
 	font-size: 11px;
 	padding: 1px 3px;
 	margin: 2px;
-	border: 1px solid #4f566f;
+	border: 1px solid var(--borderColor);
 	line-height: 1;
 	cursor: default;
 }
@@ -115,8 +115,8 @@ tr {
 }
 
 .current {
-	background-color: white;
-	border: 1px solid #eee;
+	background-color: var(--pageBackground);
+	border: 1px solid var(--borderColor);
 	border-radius: 4px;
 	height: 80px;
 	width: 100%;

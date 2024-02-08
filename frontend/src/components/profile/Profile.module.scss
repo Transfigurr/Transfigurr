@@ -1,7 +1,7 @@
 .profile {
 	.normal {
-		background-color: white;
-		box-shadow: 0 0 10px 1px #e1e1e1;
+		background-color: var(--cardBackgroundColor);
+		box-shadow: 0 0 10px 1px var(--cardShadowColor);
 		box-sizing: border-box;
 		border-radius: 3px;
 		padding: 10px;
@@ -13,6 +13,7 @@
 			font-size: 24px;
 			font-weight: 300;
 			margin-bottom: 20px;
+			color: var(--textColor);
 		}
 		.codecs {
 			margin-top: 5px;
@@ -22,7 +23,7 @@
 			.codec {
 				background-color: #4f566f;
 				border-radius: 2px;
-				color: white;
+				color: var(--white);
 				font-size: 11px;
 				padding: 1px 3px;
 				margin: 2px;
@@ -34,8 +35,8 @@
 	}
 
 	.add {
-		background-color: #f5f5f5;
-		box-shadow: 0 0 10px 1px #e1e1e1;
+		background-color: var(--cardBackgroundColor);
+		box-shadow: 0 0 10px 1px var(--cardShadowColor);
 		box-sizing: border-box;
 		border-radius: 3px;
 		padding: 10px;
@@ -47,10 +48,10 @@
 		justify-content: center;
 		.box {
 			padding: 5px 20px;
-			border: 1px solid #e5e5e5;
+			border: 1px solid var(--borderColor);
 			border-radius: 4px;
-			background-color: white;
-			color: #adadad;
+			background-color: var(--cardBackgroundColor);
+			color: var(--textColor);
 		}
 	}
 }

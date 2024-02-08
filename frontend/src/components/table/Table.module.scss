@@ -1,17 +1,17 @@
 .tableContainer {
 	padding: 20px;
 	.table {
-		color: #515253;
+		color: var(--textColor);
 		border-collapse: collapse;
 		width: 100%;
 		border: none;
 		font-size: 14px;
 		.row {
-			border-top: 1px solid #eee;
+			border-top: 1px solid var(--borderColor);
 			padding: 15px;
 		}
 		.row:hover {
-			background-color: white;
+			background-color: var(--tableRowHoverBackgroundColor);
 		}
 		.headRow {
 			border: none;
@@ -26,7 +26,7 @@
 }
 
 .name:hover {
-	color: black;
+	color: var(--transfigurrAlternativePurple);
 	text-decoration: underline;
 }
 
@@ -36,5 +36,5 @@
 	justify-content: center;
 	width: 50px;
 	margin: 1px;
-	fill: #515253;
+	fill: var(--textColor);
 }

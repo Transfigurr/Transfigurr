@@ -1,6 +1,6 @@
 .sideBar {
 	height: 100%;
 	width: 100%;
-	background-color: #4c4651;
+	background-color: var(--sidebarBackgroundColor);
 	overflow-y: scroll;
 }

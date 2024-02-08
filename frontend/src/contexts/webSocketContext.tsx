@@ -1,5 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
-import { WebSocketContext, WebSocketContextType } from "./webSocketContext";
+
+import { createContext } from "react";
+
+export type WebSocketContextType = {
+	data: any;
+	ws: WebSocket | null;
+};
+
+export const WebSocketContext = createContext<WebSocketContextType | undefined>(
+	undefined,
+);
 
 interface WebSocketProviderProps {
 	children: React.ReactNode;

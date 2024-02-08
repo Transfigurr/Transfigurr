@@ -28,7 +28,7 @@ const Status = () => {
 									style={{
 										height: "20px",
 										width: "100%",
-										backgroundColor: "#f3f3f3",
+										backgroundColor: "var(--progressBarBackgroundColor)",
 										boxShadow: "inset 0 1px 2px rgba(0, 0, 0, 0.1)",
 										borderRadius: "4px",
 									}}
@@ -58,7 +58,7 @@ const Status = () => {
 									style={{
 										height: "20px",
 										width: "100%",
-										backgroundColor: "#f3f3f3",
+										backgroundColor: "var(--progressBarBackgroundColor)",
 										boxShadow: "inset 0 1px 2px rgba(0, 0, 0, 0.1)",
 										borderRadius: "4px",
 									}}
@@ -88,7 +88,7 @@ const Status = () => {
 									style={{
 										height: "20px",
 										width: "100%",
-										backgroundColor: "#f3f3f3",
+										backgroundColor: "var(--progressBarBackgroundColor)",
 										boxShadow: "inset 0 1px 2px rgba(0, 0, 0, 0.1)",
 										borderRadius: "4px",
 									}}
@@ -122,7 +122,7 @@ const Status = () => {
 									style={{
 										height: "20px",
 										width: "100%",
-										backgroundColor: "#f3f3f3",
+										backgroundColor: "var(--progressBarBackgroundColor)",
 										boxShadow: "inset 0 1px 2px rgba(0, 0, 0, 0.1)",
 										borderRadius: "4px",
 									}}

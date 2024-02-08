@@ -6,12 +6,11 @@
 		display: flex;
 		flex-direction: row;
 		overflow: scroll;
-		background-color: #fafbfc;
+		background-color: var(--pageBackground);
 		height: 100%;
 
 		.contentContainer {
 			overflow: scroll;
-			background-color: rgb(250, 251, 252);
 			display: flex;
 			flex-direction: column;
 			flex-grow: 1;
@@ -22,7 +21,6 @@
 				display: flex;
 				flex-direction: row;
 				flex-wrap: wrap;
-				background-color: #fafbfc;
 			}
 		}
 	}
@@ -34,17 +32,16 @@
 	left: 0;
 	width: 100%;
 	height: 100%;
-	background: rgba(0, 0, 0, 0.5); // Semi-transparent black overlay
+	background: var(--modalBackdropBackgroundColor);
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	z-index: 100; // Ensure the modal is on top
+	z-index: 100;
 }
 
 .modalContent {
-	background: white;
-	//padding: 20px;
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	background: var(--modalBackgroundColor);
+	box-shadow: 0 0 10px var(--modalBackdropBackgroundColor);
 	width: 1080px;
-	z-index: 101; // Ensure the modal content is on top of the overlay
+	z-index: 101;
 }

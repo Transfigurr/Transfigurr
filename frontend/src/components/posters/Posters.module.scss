@@ -1,5 +1,5 @@
 .postersView {
-	background-color: rgb(250, 251, 252);
+	background-color: var(--pageBackground);
 	display: flex;
 	flex-direction: column;
 	.content {
@@ -7,6 +7,6 @@
 		display: flex;
 		flex-direction: row;
 		flex-wrap: wrap;
-		background-color: #fafbfc;
+		background-color: var(--pageBackground);
 	}
 }

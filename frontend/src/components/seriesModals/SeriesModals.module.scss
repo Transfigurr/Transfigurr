@@ -3,6 +3,7 @@
 	flex-direction: column;
 	padding: 20px;
 	min-width: 400px;
+	background-color: var(--modalBackgroundColor);
 
 	.inputContainer {
 		display: flex;
@@ -18,7 +19,7 @@
 			line-height: 35px;
 			font-size: 14px;
 			font-weight: bold;
-			color: #515253;
+			color: var(--textColor);
 			width: 40%;
 			display: flex;
 			align-items: flex-end;
@@ -32,7 +33,7 @@
 		display: flex;
 		flex-direction: row;
 		padding: 15px 50px 15px 30px;
-		border-bottom: 1px solid #e5e5e5;
+		border-bottom: 1px solid var(--borderColor);
 		font-size: 18px;
 		.left {
 			width: 50%;
@@ -48,21 +49,12 @@
 .footer {
 	display: flex;
 	flex-direction: row;
-	border-top: 1px solid #e5e5e5;
+	border-top: 1px solid var(--borderColor);
 	padding: 15px 30px;
 	.left {
 		display: flex;
 		flex-direction: row;
 		width: 50%;
-		.delete {
-			padding: 6px 16px;
-			font-size: 14px;
-			background-color: #f05050;
-			border-color: #f04b4b;
-			color: white;
-			border-radius: 4px;
-			cursor: pointer;
-		}
 	}
 	.right {
 		display: flex;
@@ -73,9 +65,9 @@
 		.cancel {
 			padding: 6px 16px;
 			font-size: 14px;
-			background-color: white;
-			border: 1px solid #eaeaea;
-			color: black;
+			background-color: var(--defaultBackgroundColor);
+			border: 1px solid var(--borderColor);
+			color: var(--defaultButtonTextColoe);
 			border-radius: 4px;
 			cursor: pointer;
 		}
@@ -83,9 +75,9 @@
 		.save {
 			padding: 6px 16px;
 			font-size: 14px;
-			background-color: white;
-			border: 1px solid #eaeaea;
-			color: black;
+			background-color: var(--defaultBackgroundColor);
+			border: 1px solid var(--borderColor);
+			color: var(--defaultButtonTextColoe);
 			border-radius: 4px;
 			margin-left: 10px;
 			cursor: pointer;
@@ -117,7 +109,4 @@
 		width: 3px;
 		transform: rotate(45deg);
 	}
-}
-
-.settings {
 }

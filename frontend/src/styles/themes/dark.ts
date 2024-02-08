@@ -1,4 +1,5 @@
 const transfigurrPurple = "#9C27B0";
+const transfigurrAlternativePurple = "#B641CA";
 const darkGray = "#888";
 const mediumGray = "#999";
 const gray = "#adadad";
@@ -26,6 +27,7 @@ const dark = {
 	purple,
 	pink,
 	transfigurrPurple,
+	transfigurrAlternativePurple,
 	helpTextColor: "#909293",
 	darkGray,
 	gray,
@@ -35,7 +37,7 @@ const dark = {
 	// Theme Colors
 
 	themePurple: transfigurrPurple,
-	themeAlternateBlue: "#2193b5",
+	themeAlternatePurple: transfigurrAlternativePurple,
 	themeRed: "#c4273c",
 	themeDarkColor: "#494949",
 	themeLightColor: "#595959",
@@ -57,19 +59,19 @@ const dark = {
 	linkHoverColor: "#1b72e2",
 
 	// Header
-	pageHeaderBackgroundColor: "#2a2a2a",
+	pageHeaderBackgroundColor: "#292c2e",
 
 	// Sidebar
 
 	sidebarColor: "#e1e2e3",
-	sidebarBackgroundColor: "#2a2a2a",
-	sidebarActiveBackgroundColor: "#333333",
+	sidebarBackgroundColor: "#393e40",
+	sidebarActiveBackgroundColor: "#1e2029",
 
 	// Toolbar
 	toolbarColor: "#e1e2e3",
-	toolbarBackgroundColor: "#262626",
-	toolbarMenuItemBackgroundColor: "#333",
-	toolbarMenuItemHoverBackgroundColor: "#414141",
+	toolbarBackgroundColor: "rgba(57, 62, 64, 0.9)",
+	toolbarMenuItemBackgroundColor: "rgb(57, 62, 64)",
+	toolbarMenuItemHoverBackgroundColor: "rgb(47, 51, 53)",
 	toolbarLabelColor: "#e1e2e3",
 
 	// Accents
@@ -127,6 +129,7 @@ const dark = {
 
 	modalBackdropBackgroundColor: "rgba(0, 0, 0, 0.6)",
 	modalBackgroundColor: "#2a2a2a",
+	modalBorderBoxShadowColor: "rgba(0, 0, 0, 0.1)",
 	modalCloseButtonHoverColor: "#888",
 
 	//

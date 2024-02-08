@@ -1,32 +1,31 @@
 .profiles {
 	height: 100%;
-	background-color: #fafbfc;
-
+	background-color: var(--pageBackground);
+	color: var(--textColor);
 	.modalBackdrop {
 		position: fixed;
 		top: 0;
 		left: 0;
 		width: 100%;
 		height: 100%;
-		background: rgba(0, 0, 0, 0.5); // Semi-transparent black overlay
+		background: var(--modalBackdropBackgroundColor);
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		z-index: 100; // Ensure the modal is on top
+		z-index: 100;
 	}
 
 	.modalContent {
-		background: white;
-		//padding: 20px;
-		box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		background: var(--modalBackgroundColor);
+		box-shadow: 0 0 10px var(--borderColor);
 		width: 1080px;
-		z-index: 101; // Ensure the modal content is on top of the overlay
+		z-index: 101;
 	}
 
 	.content {
 		display: flex;
 		flex-direction: column;
-		background-color: #fafbfc;
+		background-color: var(--pageBackgroundColor);
 		padding: 20px;
 		overflow: scroll;
 
@@ -37,7 +36,7 @@
 				font-size: 21px;
 				margin-bottom: 21px;
 				width: 100%;
-				border-bottom: 1px solid #e5e5e5;
+				border-bottom: 1px solid var(--borderColor);
 				line-height: inherit;
 				padding: 0;
 			}

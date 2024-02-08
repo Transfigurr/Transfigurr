@@ -23,8 +23,8 @@
 					transition: width 200ms ease;
 					display: flex;
 					flex-direction: row;
-					background-color: #5b5b5b;
-					color: white;
+					background-color: var(--progressBarBackgroundColor);
+					color: var(--textColor);
 					font-size: 12px;
 					.detailText {
 						display: flex;
@@ -39,10 +39,8 @@
 				.name,
 				.status,
 				.profile {
-					background-color: white;
-					color: #515253;
-					font-family: "Roboto", "open sans", "Helvetica Neue", "Helvetica",
-						"Arial", sans-serif;
+					background-color: var(--cardBackgroundColor);
+					color: var(--textColor);
 					display: flex;
 					align-items: center;
 					justify-content: center;
@@ -56,8 +54,8 @@
 
 		&:hover {
 			transition: box-shadow 0.3s;
-			-webkit-box-shadow: 0 0 10px black;
-			box-shadow: 0 0 10px black;
+			-webkit-box-shadow: 0 0 10px var(--cardShadowColor);
+			box-shadow: 0 0 10px var(--cardShadowColor);
 		}
 	}
 }

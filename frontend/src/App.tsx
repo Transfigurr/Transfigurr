@@ -21,23 +21,15 @@ import {
 } from "react-router-dom";
 import Series from "./components/series/Series";
 import { getTheme } from "./styles/themes";
-import { WebSocketContext } from "./contexts/webSocketContext";
-import { WebSocketProvider } from "./contexts/webSocketProvider";
 import Events from "./components/events/Events";
 import Authenticaton from "./components/authentication/Authentication";
+import { ThemeContext } from "./contexts/themeContext";
+
 function App() {
 	const [selectedItem, setSelectedItem] = useState<any>(null);
 	const [selectedOption, setSelectedOption] = useState<any>(null);
-	const wsContext: any = useContext(WebSocketContext);
-	const settings: any = wsContext?.settings;
-	const [theme, setTheme] = useState<any>(null);
-
-	let t = null;
-	useEffect(() => {
-		setTheme("dark");
-	}, [settings]);
-
-	t = getTheme(theme);
+	const theme = useContext(ThemeContext);
+	const t = getTheme(theme);
 	if (t) {
 		Object.entries(t).forEach(([key, value]) => {
 			document.documentElement.style.setProperty(`--${key}`, value);
@@ -66,35 +58,31 @@ function App() {
 
 		fetchToken();
 	}, []);
-	if (!t || !loaded) {
+	if (!loaded) {
 		return null;
 	}
 	return !isLoggedIn ? (
 		<Authenticaton />
 	) : (
-		<>
-			<Router>
-				<div className={styles.app}>
-					<WebSocketProvider>
-						<HeaderComponent />
-						<div className={styles.content}>
-							<div className={styles.sideBar}>
-								<SideBar
-									selectedOption={selectedOption}
-									setSelectedOption={setSelectedOption}
-									selectedItem={selectedItem}
-									setSelectedItem={setSelectedItem}
-								/>
-							</div>
-							<Page
-								setSelectedOption={setSelectedOption}
-								setSelectedItem={setSelectedItem}
-							/>
-						</div>
-					</WebSocketProvider>
+		<Router>
+			<div className={styles.app}>
+				<HeaderComponent />
+				<div className={styles.content}>
+					<div className={styles.sideBar}>
+						<SideBar
+							selectedOption={selectedOption}
+							setSelectedOption={setSelectedOption}
+							selectedItem={selectedItem}
+							setSelectedItem={setSelectedItem}
+						/>
+					</div>
+					<Page
+						setSelectedOption={setSelectedOption}
+						setSelectedItem={setSelectedItem}
+					/>
 				</div>
-			</Router>
-		</>
+			</div>
+		</Router>
 	);
 
 	function Page({ setSelectedOption, setSelectedItem }: any) {

@@ -9,6 +9,8 @@ import { ReactComponent as AppsIcon } from "../svgs/apps.svg";
 import { ReactComponent as ViewIcon } from "../svgs/visibility.svg";
 import { ReactComponent as SortIcon } from "../svgs/sort.svg";
 import { ReactComponent as FilterIcon } from "../svgs/filter.svg";
+import { ReactComponent as TableIcon } from "../svgs/table.svg";
+
 import { WebSocketContext } from "../../contexts/webSocketContext";
 import Table from "../table/Table";
 import MediaModel from "../mediaModal/MediaModal";
@@ -172,12 +174,21 @@ const ExplorerComponent = () => {
 			index={2}
 			settings={settings}
 			icon={
-				<AppsIcon
-					style={{
-						height: "100%",
-						width: "100%",
-					}}
-				/>
+				view == "table" ? (
+					<TableIcon
+						style={{
+							height: "100%",
+							width: "100%",
+						}}
+					/>
+				) : (
+					<AppsIcon
+						style={{
+							height: "100%",
+							width: "100%",
+						}}
+					/>
+				)
 			}
 			onClick={handleOptionsClick}
 			selected={selected}

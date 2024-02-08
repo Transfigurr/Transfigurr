@@ -3,7 +3,7 @@
 	flex-direction: row;
 	min-height: 60px;
 	width: 100%;
-	background-color: rgba(76, 70, 81, 0.9);
+	background-color: var(--toolbarBackgroundColor);
 	z-index: 3;
 	.left {
 		display: flex;

@@ -2,7 +2,7 @@
 	display: flex;
 	flex-direction: column;
 	width: 100%;
-	background-color: rgb(250, 251, 252);
+	background-color: var(--pageBackground);
 }
 .content {
 	padding: 20px;
@@ -12,7 +12,7 @@
 .footer {
 	display: flex;
 	height: 20%;
-	background-color: #f1f1f1;
+	background-color: var(--pageFooterBackground);
 	.input {
 		display: flex;
 		flex-direction: row;
@@ -24,18 +24,8 @@
 			align-items: center;
 			width: 25%;
 			padding-right: 40px;
-
-			.select {
-				display: flex;
-				align-items: center;
-				padding: 6px 16px;
-				border: 1px solid #dde6e9;
-				border-radius: 4px;
-				background-color: #fff;
-				box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-			}
 			.label {
-				color: #515253;
+				color: var(--textColor);
 				padding-right: 10px;
 				display: flex;
 				font-weight: bold;
@@ -52,15 +42,14 @@
 			.apply {
 				width: 100px;
 				height: 50px;
-				background-color: white;
-				border-color: var(--transfigurrPurple);
+				background-color: var(--defaultBackgroundColor);
 			}
 		}
 	}
 }
 
 .table {
-	color: #515253;
+	color: var(--textColor);
 	border-collapse: collapse;
 	width: 100%;
 	border: none;
@@ -70,7 +59,7 @@
 		padding: 15px;
 	}
 	.row:hover {
-		background-color: white;
+		background-color: var(--tableRowHoverBackgroundColor);
 	}
 	.headRow {
 		border: none;
@@ -84,7 +73,7 @@
 }
 
 .name:hover {
-	color: black;
+	color: var(--transfigurrAlternativePurple);
 	text-decoration: underline;
 }
 
@@ -94,7 +83,7 @@
 	justify-content: center;
 	width: 50px;
 	margin: 1px;
-	fill: #515253;
+	fill: var(--textColor);
 }
 
 .inputCell {

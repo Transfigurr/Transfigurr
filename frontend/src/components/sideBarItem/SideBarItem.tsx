@@ -19,7 +19,7 @@ const SideBarItem = ({
 					selected
 						? {
 								color: "var(--transfigurrPurple)",
-								backgroundColor: "#252833",
+								backgroundColor: "var(--sidebarActiveBackgroundColor)",
 								fill: "var(--transfigurrPurple)",
 							}
 						: {}
