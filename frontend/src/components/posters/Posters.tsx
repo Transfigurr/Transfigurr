@@ -22,6 +22,7 @@ const Posters = ({ sortedSeries, settings }: any) => {
 				{sortedSeries.map((series: any) => (
 					<PosterComponent
 						name={series.id}
+						key={series.id}
 						posterWidth={posterWidth}
 						posterHeight={posterHeight}
 					/>

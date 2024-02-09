@@ -86,7 +86,9 @@ const ProfileModal = ({
 							}}
 						>
 							{Object.entries(codecs)?.map(([key, value]: any) => (
-								<option value={key}>{key}</option>
+								<option value={key} key={key}>
+									{key}
+								</option>
 							))}
 						</InputSelect>
 					</div>
@@ -183,6 +185,9 @@ const ProfileModal = ({
 								<InputCheckbox
 									type="checkbox"
 									checked={content?.codecs?.includes(key)}
+									onChange={() => {
+										undefined;
+									}}
 								/>
 								<span className={styles.key}>{key}</span>
 							</div>

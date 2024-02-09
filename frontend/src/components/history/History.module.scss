@@ -12,11 +12,13 @@
 }
 
 .table {
-	color: #515253;
+	color: var(--textColor);
+	fill: var(--textColor);
 	border-collapse: collapse;
 	width: 100%;
 	border: none;
 	font-size: 14px;
+
 	.row {
 		border-top: 1px solid var(--borderColor);
 	}
@@ -42,6 +44,7 @@
 .iconCell {
 	padding: 0px;
 	margin: 0px;
+	fill: var(--textColor);
 }
 
 th,

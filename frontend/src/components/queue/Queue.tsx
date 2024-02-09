@@ -14,11 +14,9 @@ const Queue = () => {
 	const profiles = wsContext?.data?.profiles;
 	const series = wsContext?.data?.series;
 	const queue = wsContext?.data?.queue;
-
 	const recordsPerPage = 8;
 	const [currentPage, setCurrentPage] = useState(1);
 	const queueArray = Array.from(Object.values(queue?.queue || []));
-
 	const indexOfLastRecord = currentPage * recordsPerPage;
 	const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
 	const currentRecords = queueArray.slice(
@@ -58,85 +56,90 @@ const Queue = () => {
 					<div className={styles.currentContainer}>
 						<div className={styles.current}>
 							<table className={styles.table}>
-								<tr className={styles.headRow}>
-									<th></th>
-									<th>Series</th>
-									<th>Episode</th>
-									<th>Profile</th>
-									<th>Stage</th>
-									<th>ETA</th>
-									<th>Progress</th>
-								</tr>
-								<tr className={styles.row}>
-									<td>
-										<ResetWrench
-											style={{
-												height: "25px",
-												width: "25px",
-												fill: "#515253",
-											}}
-										/>
-									</td>
-									<td className={styles.name}>
-										<a
-											href={"/series/" + queue?.current?.series_id}
-											className={styles.name}
-										>
-											{queue?.current?.series_id}
-										</a>
-									</td>
-									<td>
-										{queue?.current ? (
-											<>
-												{queue?.current?.season_number}x
-												{queue?.current?.episode_number}
-											</>
-										) : (
-											<></>
-										)}
-									</td>
-									<td>
-										{profiles &&
-										series &&
-										series[queue?.current?.series_id] &&
-										profiles[series[queue?.current?.series_id].profile_id]
-											? profiles[series[queue?.current?.series_id].profile_id]
-													.codec
-											: ""}
-									</td>
-									<td>{queue?.stage}</td>
-									<td>
-										{queue?.current ? (
-											<>
-												{Math.floor(parseInt(queue?.eta || 0) / 60).toString() +
-													":" +
-													(parseInt(queue?.eta || 0) % 60).toString()}
-											</>
-										) : (
-											<></>
-										)}
-									</td>
-									<td>
-										<div
-											style={{
-												height: "20px",
-												width: "100%",
-												backgroundColor: "var(--progressBarBackgroundColor)",
-												boxShadow: "inset 0 1px 2px rgba(0, 0, 0, 0.1)",
-												borderRadius: "4px",
-											}}
-										>
-											<div
+								<thead>
+									<tr className={styles.headRow}>
+										<th></th>
+										<th>Series</th>
+										<th>Episode</th>
+										<th>Profile</th>
+										<th>Stage</th>
+										<th>ETA</th>
+										<th>Progress</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr className={styles.row}>
+										<td>
+											<ResetWrench
 												style={{
-													height: "100%",
-													width: `${queue?.progress || 0}%`,
-													backgroundColor: "var(--transfigurrPurple)",
-													borderRadius: "4px",
+													height: "25px",
+													width: "25px",
 												}}
 											/>
-										</div>
-									</td>
-								</tr>
+										</td>
+										<td className={styles.name}>
+											<a
+												href={"/series/" + queue?.current?.series_id}
+												className={styles.name}
+											>
+												{queue?.current?.series_id}
+											</a>
+										</td>
+										<td>
+											{queue?.current ? (
+												<>
+													{queue?.current?.season_number}x
+													{queue?.current?.episode_number}
+												</>
+											) : (
+												<></>
+											)}
+										</td>
+										<td>
+											{profiles &&
+											series &&
+											series[queue?.current?.series_id] &&
+											profiles[series[queue?.current?.series_id].profile_id]
+												? profiles[series[queue?.current?.series_id].profile_id]
+														.codec
+												: ""}
+										</td>
+										<td>{queue?.stage}</td>
+										<td>
+											{queue?.current ? (
+												<>
+													{Math.floor(
+														parseInt(queue?.eta || 0) / 60,
+													).toString() +
+														":" +
+														(parseInt(queue?.eta || 0) % 60).toString()}
+												</>
+											) : (
+												<></>
+											)}
+										</td>
+										<td>
+											<div
+												style={{
+													height: "20px",
+													width: "100%",
+													backgroundColor: "var(--progressBarBackgroundColor)",
+													boxShadow: "inset 0 1px 2px rgba(0, 0, 0, 0.1)",
+													borderRadius: "4px",
+												}}
+											>
+												<div
+													style={{
+														height: "100%",
+														width: `${queue?.progress || 0}%`,
+														backgroundColor: "var(--transfigurrPurple)",
+														borderRadius: "4px",
+													}}
+												/>
+											</div>
+										</td>
+									</tr>
+								</tbody>
 							</table>
 						</div>
 					</div>
@@ -163,7 +166,6 @@ const Queue = () => {
 													style={{
 														height: "25px",
 														width: "25px",
-														fill: "#515253",
 													}}
 												/>
 											</td>

@@ -8,7 +8,6 @@ import { ReactComponent as NavigateBefore } from "../svgs/navigate_before.svg";
 import { ReactComponent as Info } from "../svgs/info.svg";
 import { ReactComponent as Warning } from "../svgs/warning.svg";
 import { ReactComponent as Error } from "../svgs/error.svg";
-
 import ToolBar from "../ToolBar/ToolBar";
 
 const Events = () => {
@@ -65,8 +64,8 @@ const Events = () => {
 								</tr>
 							</thead>
 							<tbody>
-								{currentRecords.map((entry: any) => (
-									<tr className={styles.row}>
+								{currentRecords.map((entry: any, index: number) => (
+									<tr className={styles.row} key={index}>
 										<td className={styles.iconCell}>
 											{entry?.level === "INFO" ? (
 												<Info

@@ -58,7 +58,6 @@ const SeriesModal = ({ setIsModalOpen, content, setContent }: any) => {
 					</div>
 				</div>
 			</div>
-
 			<div className={styles.content}>
 				<div className={styles.inputContainer}>
 					<label className={styles.label}>Monitored </label>
@@ -81,8 +80,10 @@ const SeriesModal = ({ setIsModalOpen, content, setContent }: any) => {
 							setContent({ ...content, profile_id: e.target.value });
 						}}
 					>
-						{Object.values(profiles)?.map((profile: any) => (
-							<option value={profile.id}>{profile.name}</option>
+						{Object.values(profiles)?.map((profile: any, index: number) => (
+							<option value={profile.id} key={index}>
+								{profile.name}
+							</option>
 						))}
 					</InputSelect>
 				</div>

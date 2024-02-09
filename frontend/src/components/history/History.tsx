@@ -67,10 +67,10 @@ const History = () => {
 								</tr>
 							</thead>
 							<tbody>
-								{currentRecords.reverse().map((entry: any) => (
-									<tr className={styles.row}>
-										<td className={styles.iconCell}>
-											<ResetWrench style={{ fill: "#515253" }} />
+								{currentRecords.reverse().map((entry: any, index: number) => (
+									<tr className={styles.row} key={index}>
+										<td>
+											<ResetWrench />
 										</td>
 										<td>
 											<a

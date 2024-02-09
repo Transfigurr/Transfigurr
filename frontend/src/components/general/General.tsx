@@ -56,6 +56,7 @@ const General = () => {
 	const leftToolBarItems: any = [
 		<ToolBarItem
 			text={!settingsChanged ? "No Changes" : "Save"}
+			key="save"
 			icon={<SaveIcon fontSize="medium" />}
 			onClick={handleSave}
 			disabled={!settingsChanged}
@@ -76,7 +77,9 @@ const General = () => {
 						}
 					>
 						{Object.entries(profiles || {})?.map(([key, profile]: any) => (
-							<option value={key}>{profile?.name}</option>
+							<option key={key} value={key}>
+								{profile?.name}
+							</option>
 						))}
 					</InputSelect>
 				</div>

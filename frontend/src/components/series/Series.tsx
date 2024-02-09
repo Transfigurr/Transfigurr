@@ -4,7 +4,6 @@ import styles from "./Series.module.scss";
 import ToolBarItem from "../ToolBarItem/ToolBarItem";
 import { ReactComponent as RssFeedIcon } from "../svgs/rss_feed.svg";
 import { ReactComponent as SyncIcon } from "../svgs/sync.svg";
-
 import { ReactComponent as Folder } from "../svgs/folder.svg";
 import { ReactComponent as Drive } from "../svgs/hard_drive.svg";
 import { ReactComponent as Profile } from "../svgs/person.svg";
@@ -13,7 +12,6 @@ import { ReactComponent as Unmonitored } from "../svgs/bookmark_unfilled.svg";
 import { ReactComponent as Continuing } from "../svgs/play_arrow.svg";
 import { ReactComponent as Ended } from "../svgs/stop.svg";
 import { ReactComponent as Network } from "../svgs/tower.svg";
-
 import Season from "../season/Season";
 import { WebSocketContext } from "../../contexts/webSocketContext";
 import SeriesModals from "../seriesModals/SeriesModals";
@@ -63,6 +61,7 @@ const Series = ({ series_name }: any) => {
 	const leftToolBarItems: any = [
 		<ToolBarItem
 			text="Scan"
+			key="scan"
 			icon={<SyncIcon />}
 			onClick={handleScanClick}
 			selected={selected}
@@ -70,6 +69,7 @@ const Series = ({ series_name }: any) => {
 		/>,
 		<ToolBarItem
 			text="Metadata"
+			key="metadata"
 			icon={<RssFeedIcon />}
 			onClick={handleMetadataClick}
 			selected={selected}
@@ -77,6 +77,7 @@ const Series = ({ series_name }: any) => {
 		/>,
 		<ToolBarItem
 			text="Edit"
+			key="edit"
 			icon={<RssFeedIcon />}
 			onClick={handleEditClick}
 			selected={selected}
@@ -86,7 +87,6 @@ const Series = ({ series_name }: any) => {
 
 	const middleToolBarItems: any = [];
 	const rightToolBarItems: any = [];
-
 	const status = series?.status;
 	const network = series?.networks;
 	const genre = series?.genre;
@@ -175,14 +175,14 @@ const Series = ({ series_name }: any) => {
 				middleToolBarItems={middleToolBarItems}
 				rightToolBarItems={rightToolBarItems}
 			/>
-			<div className={styles.test}>
+			<div className={styles.seriesContent}>
 				<div className={styles.header}>
 					<img
 						className={styles.backdrop}
 						src={backdropSrc || "/backdrop.jpg"}
 						alt="backdrop"
 					/>
-					<div className={styles.filter}></div>
+					<div className={styles.filter} />
 					<div className={styles.content}>
 						<img
 							className={styles.poster}
@@ -270,7 +270,7 @@ const Series = ({ series_name }: any) => {
 					{Object.values(series?.seasons || {})
 						.reverse()
 						.map((season: any) => {
-							return <Season season={season} />;
+							return <Season season={season} key={season?.id} />;
 						})}
 				</div>
 			</div>

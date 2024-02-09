@@ -7,7 +7,6 @@ import Queue from "./components/queue/Queue";
 import History from "./components/history/History";
 import Settings from "./components/settings/Settings";
 import Profiles from "./components/profiles/Profiles";
-import MediaManagement from "./components/mediaManagement/MediaManagement";
 import General from "./components/general/General";
 import Status from "./components/status/Status";
 import { useContext, useEffect, useState } from "react";
@@ -119,13 +118,8 @@ function App() {
 				<Route path="/activity/history" element={<History />} />
 
 				<Route path="/settings" element={<Settings />} />
-				<Route
-					path="/settings/media-management"
-					element={<MediaManagement />}
-				/>
 				<Route path="/settings/profiles" element={<Profiles />} />
 				<Route path="/settings/general" element={<General />} />
-				<Route path="/settings/status" element={<Status />} />
 				<Route path="/system" element={<Status />} />
 
 				<Route path="/system/status" element={<Status />} />

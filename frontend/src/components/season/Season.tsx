@@ -49,8 +49,8 @@ const Season = ({ season }: any) => {
 					<tbody>
 						{Object.values(season.episodes || {})
 							.reverse()
-							.map((episode: any) => (
-								<tr>
+							.map((episode: any, index: number) => (
+								<tr key={index}>
 									<td>{episode?.episode_number}</td>
 									<td>
 										{episode?.episode_name

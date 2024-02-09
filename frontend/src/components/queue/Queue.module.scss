@@ -12,11 +12,14 @@
 
 .table {
 	color: var(--textColor);
+	fill: var(--textColor);
 	border-collapse: collapse;
 	width: 100%;
 	border: none;
 	font-size: 14px;
 	.row {
+		fill: var(--textColor);
+		color: var(--textColor);
 		border-top: 1px solid var(--borderColor);
 	}
 	.row:hover {
@@ -37,6 +40,7 @@ td {
 .iconCell {
 	padding: 0px;
 	margin: 0px;
+	fill: var(--textColor);
 }
 tr {
 	padding: 8px;

@@ -23,10 +23,8 @@ function Register() {
 		const data = await response.json();
 
 		if (response.ok) {
-			// Store the token in local storage
 			localStorage.setItem("token", data.access_token);
 		} else {
-			// Handle error
 			console.error(data.detail);
 		}
 	};

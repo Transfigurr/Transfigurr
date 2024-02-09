@@ -56,8 +56,8 @@ const ToolBarOption = ({
 				<div className={styles.text}>{text}</div>
 				{selected === index && (
 					<div className={styles.dropdown}>
-						{dropdownItems?.map((item: any) => (
-							<>
+						{dropdownItems?.map((item: any, itemIndex: number) => (
+							<div key={itemIndex}>
 								<div className={styles.item} onClick={item?.onClick}>
 									<div className={styles.text}>{item?.text}</div>
 									{item?.id === settings[item?.setting_id] || "" ? (
@@ -70,7 +70,7 @@ const ToolBarOption = ({
 										<></>
 									)}
 								</div>
-							</>
+							</div>
 						))}
 					</div>
 				)}

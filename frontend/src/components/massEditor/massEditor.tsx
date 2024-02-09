@@ -72,7 +72,7 @@ const MassEditor = () => {
 							</thead>
 							<tbody>
 								{seriesArray?.map((s: any, index: any) => (
-									<tr className={styles.row}>
+									<tr className={styles.row} key={index}>
 										<td className={styles.inputCell}>
 											<InputCheckbox
 												checked={selectedSeries.some(
@@ -135,9 +135,13 @@ const MassEditor = () => {
 							}}
 						>
 							<option value={0}>{"No Change"}</option>
-							{Object.values(profiles || {}).map((profile: any) => (
-								<option value={profile.id}>{profile.name}</option>
-							))}
+							{Object.values(profiles || {}).map(
+								(profile: any, index: number) => (
+									<option value={profile.id} key={index}>
+										{profile.name}
+									</option>
+								),
+							)}
 						</InputSelect>
 					</div>
 					<div className={styles.buttonContainer}>

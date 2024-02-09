@@ -239,6 +239,7 @@ const light = {
 	progressBarFrontTextColor: white,
 	progressBarBackTextColor: darkGray,
 	progressBarBackgroundColor: white,
+	posterProgressBarBackgroundColor: "rgb(91, 91, 91)",
 	logEventsBackgroundColor: white,
 };
 export default light;
