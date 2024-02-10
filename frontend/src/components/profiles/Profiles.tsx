@@ -88,18 +88,23 @@ const Profiles = () => {
 				<div className={styles.codecProfiles}>
 					<div className={styles.header}>Profiles</div>
 					<div className={styles.profileContainer}>
-						{profilesArray?.map((profile: any, index: number) => (
-							<div onClick={() => handleProfileClick(profile)} key={index}>
-								<Profile
-									name={profile?.name}
-									key={profile?.name}
-									codecs={profile?.codecs}
-								/>
-							</div>
+						{profilesArray?.map((profile: any) => (
+							<Profile
+								name={profile?.name}
+								key={profile?.name}
+								codecs={profile?.codecs}
+								onClick={handleProfileClick}
+								profile={profile}
+							/>
 						))}
-						<div onClick={() => handleProfileClick({})}>
-							<Profile type={"add"} key={"add"} name={""} codecs={[]} />
-						</div>
+						<Profile
+							type={"add"}
+							key={"add"}
+							name={""}
+							codecs={[]}
+							profile={{}}
+							onClick={handleProfileClick}
+						/>
 					</div>
 				</div>
 			</div>

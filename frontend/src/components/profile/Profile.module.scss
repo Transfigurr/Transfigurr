@@ -1,5 +1,9 @@
 .profile {
+	flex: 1;
+	display: flex;
+	max-width: 300px;
 	.normal {
+		flex: 1;
 		background-color: var(--cardBackgroundColor);
 		box-shadow: 0 0 10px 1px var(--cardShadowColor);
 		box-sizing: border-box;
@@ -35,6 +39,7 @@
 	}
 
 	.add {
+		flex: 1;
 		background-color: var(--cardBackgroundColor);
 		box-shadow: 0 0 10px 1px var(--cardShadowColor);
 		box-sizing: border-box;
@@ -47,8 +52,7 @@
 		align-items: center;
 		justify-content: center;
 		.box {
-			padding: 5px 20px;
-			border: 1px solid var(--borderColor);
+			padding: 10px 20px;
 			border-radius: 4px;
 			background-color: var(--cardBackgroundColor);
 			color: var(--textColor);

@@ -12,6 +12,7 @@ import ffmpeg
 from src.api.controllers.episode_controller import get_episode, set_episode
 from src.api.controllers.history_controller import set_history
 from src.api.controllers.series_controller import get_series
+from src.api.controllers.settings_controller import get_all_settings
 from src.api.routes.profile_routes import get_all_profiles
 from src.utils.folders import get_series_folder, get_transcode_folder
 from src.utils.ffmpeg import analyze_media_file
@@ -39,6 +40,10 @@ class EncodeService:
     async def process(self):
         while True:
             try:
+                settings = await get_all_settings()
+                if settings['queue_status'] != 'active':
+                    await asyncio.sleep(5)
+                    continue
                 episode = await self.encode_queue.get()
                 self.current = episode
                 if not episode:

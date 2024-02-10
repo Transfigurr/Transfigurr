@@ -84,6 +84,16 @@ const General = () => {
 					</InputSelect>
 				</div>
 				<div className={styles.inputContainer}>
+					<label className={styles.label}>Queue State</label>
+					<InputSelect
+						selected={currentSettings?.queue_status}
+						onChange={(e: any) => handleChange("queue_status", e.target.value)}
+					>
+						<option value="active">Active</option>
+						<option value="inactive">Inactive</option>
+					</InputSelect>
+				</div>
+				<div className={styles.inputContainer}>
 					<label className={styles.label}>Queue Startup State</label>
 					<InputSelect
 						selected={currentSettings?.queue_startup_state}

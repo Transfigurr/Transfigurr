@@ -8,6 +8,9 @@ import { ReactComponent as NavigateNext } from "../svgs/navigate_next.svg";
 import { ReactComponent as NavigateBefore } from "../svgs/navigate_before.svg";
 import { ReactComponent as ResetWrench } from "../svgs/reset_wrench.svg";
 import { ReactComponent as QueueIcon } from "../svgs/queue.svg";
+import { ReactComponent as Pause } from "../svgs/pauseCircle.svg";
+import { ReactComponent as Start } from "../svgs/play_arrow.svg";
+import ToolBarItem from "../ToolBarItem/ToolBarItem";
 
 const Queue = () => {
 	const wsContext = useContext(WebSocketContext);
@@ -44,11 +47,70 @@ const Queue = () => {
 			setCurrentPage(currentPage - 1);
 		}
 	};
+
+	const [selected, setSelected] = useState<string | null>(null);
+	const settings = wsContext?.data?.settings;
+
+	const setSetting = async (key: string, value: any) => {
+		await fetch(`http://${window.location.hostname}:7889/api/settings`, {
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${localStorage.getItem("token")}`,
+			},
+			body: JSON.stringify({ id: key, value: value }),
+		});
+	};
+
+	const middleToolBarItems: any = [
+		<ToolBarItem
+			text="Status"
+			index={4}
+			key={4}
+			settings={settings}
+			icon={
+				settings?.queue_status === "inactive" ? (
+					<Pause
+						style={{
+							height: "100%",
+							width: "100%",
+						}}
+					/>
+				) : (
+					<Start
+						style={{
+							height: "100%",
+							width: "100%",
+						}}
+					/>
+				)
+			}
+			selected={selected}
+			setSelected={setSelected}
+			dropdownItems={[
+				{
+					text: "Active",
+					id: "active",
+					key: "active",
+					setting_id: "queue_status",
+					onClick: () => setSetting("queue_status", "active"),
+				},
+				{
+					text: "Inactive",
+					id: "inactive",
+					key: "inactive",
+					setting_id: "queue_status",
+					onClick: () => setSetting("queue_status", "inactive"),
+				},
+			]}
+		/>,
+	];
+
 	return (
 		<div className={styles.queue}>
 			<ToolBar
 				leftToolBarItems={[]}
-				middleToolBarItems={[]}
+				middleToolBarItems={middleToolBarItems}
 				rightToolBarItems={[]}
 			/>
 			<div className={styles.content}>
@@ -166,6 +228,7 @@ const Queue = () => {
 													style={{
 														height: "25px",
 														width: "25px",
+														fill: "var(--textColor)",
 													}}
 												/>
 											</td>

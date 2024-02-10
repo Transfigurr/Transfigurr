@@ -17,6 +17,10 @@ default_settings = [
         "value": 1
     },
     {
+        "id": "queue_status",
+        "value": "active"
+    },
+    {
         "id": "queue_startup_state",
         "value": "previous"
     },

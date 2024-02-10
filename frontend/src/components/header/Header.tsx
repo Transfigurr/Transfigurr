@@ -55,6 +55,8 @@ const HeaderComponent = () => {
 		});
 	};
 
+	const settings = wsContext?.data?.settings;
+
 	return (
 		<div className={styles.header}>
 			<div className={styles.left}>
@@ -96,7 +98,12 @@ const HeaderComponent = () => {
 						<div className={styles.icon}>
 							<Build />
 						</div>
-						<div className={styles.text}>{queue?.stage || "--"}</div>
+
+						<div className={styles.text}>
+							{settings?.queue_status == "active"
+								? queue?.stage || "--"
+								: "paused"}
+						</div>
 					</div>
 				</div>
 			</div>
