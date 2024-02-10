@@ -3,6 +3,7 @@
 	background-color: var(--pageBackground);
 	color: var(--textColor);
 	overflow-y: scroll;
+	scrollbar-width: none;
 	.modalBackdrop {
 		position: fixed;
 		top: 0;
@@ -29,6 +30,7 @@
 		background-color: var(--pageBackgroundColor);
 		padding: 20px;
 		overflow: scroll;
+		scrollbar-width: none;
 
 		.codecProfiles {
 			display: flex;

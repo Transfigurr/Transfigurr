@@ -4,9 +4,11 @@
 	width: 100%;
 	background-color: var(--pageBackground);
 	overflow-y: scroll;
+	scrollbar-width: none;
 }
 .content {
 	overflow-y: scroll;
+	scrollbar-width: none;
 	margin: 20px;
 	color: var(--textColor);
 }

@@ -6,6 +6,7 @@
 }
 .content {
 	overflow-y: scroll;
+	scrollbar-width: none;
 	margin: 20px;
 	display: flex;
 	flex-direction: column;
