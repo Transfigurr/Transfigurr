@@ -8,8 +8,8 @@ import { ReactComponent as NavigateNext } from "../svgs/navigate_next.svg";
 import { ReactComponent as NavigateBefore } from "../svgs/navigate_before.svg";
 import { ReactComponent as ResetWrench } from "../svgs/reset_wrench.svg";
 import { ReactComponent as QueueIcon } from "../svgs/queue.svg";
-import { ReactComponent as Pause } from "../svgs/pauseCircle.svg";
-import { ReactComponent as Start } from "../svgs/play_arrow.svg";
+import { ReactComponent as Pause } from "../svgs/pause_circle.svg";
+import { ReactComponent as Start } from "../svgs/play_circle.svg";
 import ToolBarItem from "../ToolBarItem/ToolBarItem";
 
 const Queue = () => {

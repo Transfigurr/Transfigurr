@@ -25,6 +25,10 @@ default_settings = [
         "value": "previous"
     },
     {
+        "id": "log_level",
+        "value": "info"
+    },
+    {
         "id": "media_view",
         "value": "posters"
     }, {

@@ -44,14 +44,17 @@ class SQLiteHandler(logging.Handler):
                 conn.close()
 
 
-def start_logger():
+def start_logger(log_level):
     log_queue = queue.Queue(-1)  # Infinite size
     queue_handler = logging.handlers.QueueHandler(log_queue)
     sqlite_handler = SQLiteHandler()
     formatter = logging.Formatter("%(asctime)s [%(levelname)s] [%(service)s] %(message)s")
     sqlite_handler.setFormatter(formatter)
     logger = logging.getLogger('logger')
-    logger.setLevel(logging.INFO)
+    if log_level == 'debug':
+        logger.setLevel(logging.DEBUG)
+    else:
+        logger.setLevel(logging.INFO)
     logger.addHandler(queue_handler)
     queue_listener = logging.handlers.QueueListener(log_queue, sqlite_handler)
     queue_listener.start()

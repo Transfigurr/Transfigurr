@@ -1,9 +1,9 @@
 import styles from "./InputText.module.scss";
-const InputText = ({ selected, onChange }: any) => {
+const InputText = ({ selected, onChange, type }: any) => {
 	return (
 		<input
 			className={styles.inputText}
-			type="input"
+			type={type}
 			value={selected}
 			onChange={onChange}
 		/>

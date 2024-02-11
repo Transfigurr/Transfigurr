@@ -5,6 +5,7 @@ from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 from fastapi.middleware.cors import CORSMiddleware
+from src.api.controllers.settings_controller import get_all_settings
 from src.utils.folders import get_root_folder, verify_folders
 from src.services.logging_service import start_logger
 from src.services.watchdog_service import start_watchdog
@@ -24,7 +25,8 @@ from src.api.routes import (
     system_routes,
     websocket_routes,
     auth_routes,
-    action_routes
+    action_routes,
+    user_routes
 )
 
 app = FastAPI()
@@ -50,7 +52,8 @@ routers = [
     history_routes.router,
     episode_routes.router,
     auth_routes.router,
-    action_routes.router
+    action_routes.router,
+    user_routes.router
 ]
 
 for router in routers:
@@ -62,14 +65,14 @@ app.mount("/static", StaticFiles(directory="frontend/build/static"), name="stati
 
 async def startup_event():
     await verify_folders()
+    log_level = (await get_all_settings()).get('log_level', '')
+    start_logger(log_level)
     asyncio.create_task(scan_service.enqueue_all())
     asyncio.create_task(scan_service.process())
     asyncio.create_task(metadata_service.process())
     asyncio.create_task(encode_service.process())
     start_watchdog(await get_root_folder() + '/series')
 app.add_event_handler("startup", startup_event)
-
-start_logger()
 
 
 @app.get("/{full_path:path}")

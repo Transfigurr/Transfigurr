@@ -108,9 +108,13 @@ const ProfileModal = ({
 								})
 							}
 						>
-							{codecs[content?.codec]?.encoders?.map((encoder: string) => (
-								<option value={encoder}>{encoder}</option>
-							))}
+							{codecs[content?.codec]?.encoders?.map(
+								(encoder: string, index: number) => (
+									<option value={encoder} key={index}>
+										{encoder}
+									</option>
+								),
+							)}
 						</InputSelect>
 					</div>
 					<div className={styles.inputContainer}>
@@ -121,9 +125,13 @@ const ProfileModal = ({
 								setContent({ ...content, speed: e.target.value })
 							}
 						>
-							{encoders[content?.encoder]?.presets?.map((preset: any) => (
-								<option value={preset}>{preset}</option>
-							))}
+							{encoders[content?.encoder]?.presets?.map(
+								(preset: any, index: number) => (
+									<option value={preset} key={index}>
+										{preset}
+									</option>
+								),
+							)}
 						</InputSelect>
 					</div>
 					<div className={styles.inputContainer}>
@@ -138,9 +146,13 @@ const ProfileModal = ({
 								});
 							}}
 						>
-							{codecs[content?.codec]?.containers?.map((container: any) => (
-								<option value={container}>{container}</option>
-							))}
+							{codecs[content?.codec]?.containers?.map(
+								(container: any, index: number) => (
+									<option value={container} key={index}>
+										{container}
+									</option>
+								),
+							)}
 						</InputSelect>
 					</div>
 					<div className={styles.inputContainer}>
@@ -152,8 +164,10 @@ const ProfileModal = ({
 							}
 						>
 							{containers[content?.container]?.extensions?.map(
-								(extension: any) => (
-									<option value={extension}>{extension}</option>
+								(extension: any, index: number) => (
+									<option value={extension} key={index}>
+										{extension}
+									</option>
 								),
 							)}
 						</InputSelect>
