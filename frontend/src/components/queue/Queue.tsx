@@ -11,6 +11,7 @@ import { ReactComponent as QueueIcon } from "../svgs/queue.svg";
 import { ReactComponent as Pause } from "../svgs/pause_circle.svg";
 import { ReactComponent as Start } from "../svgs/play_circle.svg";
 import ToolBarItem from "../ToolBarItem/ToolBarItem";
+import Codec from "../codec/Codec";
 
 const Queue = () => {
 	const wsContext = useContext(WebSocketContext);
@@ -253,17 +254,19 @@ const Queue = () => {
 													: ""}
 											</td>
 											<td className={styles.codecRow}>
-												<div className={styles.codec}>{q.video_codec}</div>
+												<Codec codec={q.video_codec} />
 											</td>
 											<td className={styles.codecRow}>
-												<div className={styles.codec}>
-													{profiles &&
-													series &&
-													series[q?.series_id] &&
-													profiles[series[q?.series_id].profile_id]
-														? profiles[series[q?.series_id].profile_id].codec
-														: ""}
-												</div>
+												<Codec
+													codec={
+														profiles &&
+														series &&
+														series[q?.series_id] &&
+														profiles[series[q?.series_id].profile_id]
+															? profiles[series[q?.series_id].profile_id].codec
+															: ""
+													}
+												/>
 											</td>
 											<td>
 												{(q?.size / 1000000000).toFixed(2).toString() + " GB"}

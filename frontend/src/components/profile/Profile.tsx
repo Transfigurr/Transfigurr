@@ -1,5 +1,6 @@
 import styles from "./Profile.module.scss";
 import { ReactComponent as AddIcon } from "../svgs/add.svg";
+import Codec from "../codec/Codec";
 const Profile = ({ name, type = "", codecs, onClick, profile }: any) => {
 	return (
 		<div className={styles.profile} key={name} onClick={() => onClick(profile)}>
@@ -14,9 +15,7 @@ const Profile = ({ name, type = "", codecs, onClick, profile }: any) => {
 					<div className={styles.header}>{name}</div>
 					<div className={styles.codecs}>
 						{codecs.map((codec: any) => (
-							<div className={styles.codec} key={name + "-" + codec}>
-								{codec}
-							</div>
+							<Codec key={codec} codec={codec} />
 						))}
 					</div>
 				</div>
