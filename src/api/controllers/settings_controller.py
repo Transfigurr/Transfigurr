@@ -31,10 +31,7 @@ async def set_setting(request: Request):
             for key, value in setting.items():
                 if value is not None:
                     setattr(obj, key, value)
-        else:
-            obj = setting(**setting)
-            async_session.add(obj)
-        await async_session.commit()
+            await async_session.commit()
     return
 
 

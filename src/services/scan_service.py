@@ -29,6 +29,9 @@ class ScanService:
         series_folder = await get_series_folder()
         for series_name in os.listdir(series_folder):
             await self.enqueue(series_name)
+        series_db = await get_all_series()
+        for series_id in series_db:
+            await self.enqueue(series_id)
 
     async def process(self):
         while True:

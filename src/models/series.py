@@ -23,3 +23,4 @@ class Series(Base):
     seasons_count: int = Column(Integer)
     space_saved: int = Column(Integer)
     missing_episodes: int = Column(Integer)
+    runtime: int = Column(Integer)

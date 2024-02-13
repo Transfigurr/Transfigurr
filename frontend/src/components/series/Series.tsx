@@ -17,7 +17,6 @@ import { WebSocketContext } from "../../contexts/webSocketContext";
 import SeriesModals from "../seriesModals/SeriesModals";
 
 const Series = ({ series_name }: any) => {
-	series_name = series_name.replace(/-/g, " ");
 	const wsContext = useContext(WebSocketContext);
 	const profiles = wsContext?.data?.profiles;
 	const series: any =
@@ -202,8 +201,7 @@ const Series = ({ series_name }: any) => {
 							</div>
 							<div className={styles.seriesDetails}>
 								<span className={styles.runtime}>
-									{series?.episode_run_time ? series?.episode_run_time : "-"}{" "}
-									Minutes
+									{series?.runtime ? series?.runtime : "-"} Minutes
 								</span>
 								{genre ? <span className={styles.genre}>{genre}</span> : <></>}
 								{status ? (

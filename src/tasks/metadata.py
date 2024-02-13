@@ -55,8 +55,10 @@ async def parse_series(series_id, HEADER):
             series.genre = series_data.get("genres")[0]["name"]
             series.networks = series_data.get("networks")[0]["name"]
             series.status = series_data.get("status")
+            series.runtime = series_data['last_episode_to_air']['runtime']
             await set_series(asdict(series))
     except Exception as e:
+        print(e)
         logger.error(f"An error occurred while parsing the series: {e}", extra={'service': 'Metadata'})
     return series_data
 
