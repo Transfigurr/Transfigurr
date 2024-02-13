@@ -34,34 +34,46 @@ season_pattern = re.compile(r"\d+")
 episode_pattern = re.compile(r"(?:S(\d{2})E(\d{2})|E(\d{2}))")
 
 
-def parse_episode_number(file):
+def parse_episode_and_season_number(file, folder):
     match = episode_pattern.search(file)
+    if not match:
+        return None, None
     if match.group(1):
-        return int(match.group(2))
+        return int(match.group(1)), int(match.group(2))
     else:
-        return int(match.group(3))
+        parent = os.path.basename(folder)
+        season_number = season_pattern.search(parent)
+        if parent.lower() == "specials":
+            return 0, int(match.group(3))
+        if season_number:
+            return int(season_number.group()), int(match.group(3))
+        else:
+            return None, int(match.group(3))
 
 
 async def parse_episode(
-    file, series_id, season_id, season_path, season_number, season_name
+    file, series_id, folder
 ):
     try:
         logger.debug(f"Parsing episode: {file}", extra={'service': 'Scan'})
         episode_number = 0
-        episode_number = parse_episode_number(file)
-
+        season_number, episode_number = parse_episode_and_season_number(file, folder)
+        if season_number is None or episode_number is None:
+            return None
         episode_id = str(series_id) + str(season_number) + str(episode_number)
         episode: Episode = Episode(**await get_episode(episode_id))
-
-        episode_path = os.path.join(season_path, file)
+        episode_path = os.path.join(folder, file)
         analysis_data = await analyze_media_file(episode_path)
         episode.id = episode_id
         episode.series_id = series_id
         episode.episode_number = episode_number
         episode.filename = file
         episode.video_codec = analysis_data
-        episode.season_name = season_name
-        episode.season_id = season_id
+        if season_number == 0:
+            episode.season_name = 'Specials'
+        else:
+            episode.season_name = f"Season {season_number}"
+        episode.season_id = str(series_id) + str(season_number)
         episode.season_number = season_number
 
         episode_size = os.path.getsize(episode_path)
@@ -78,25 +90,17 @@ async def parse_episode(
     return episode
 
 
-async def parse_season(season_name, series_id):
+async def parse_season(episode, season):
     try:
-        logger.debug(f"Parsing season: {season_name}", extra={'service': 'Scan'})
-        digits = season_pattern.findall(season_name)
-        season_number = 0
-        if digits:
-            season_number = int("".join(digits))
-        season_id = str(series_id) + str(season_number)
-        season = Season()
-        season.id = season_id
-        season.season_number = season_number
-        season.name = season_name
-        season.series_id = series_id
-        season.missing_episodes = 0
-        season.size = 0
-        season.space_saved = 0
-        season.episode_count = 0
+        logger.debug(f"Parsing season: {episode.season_name}", extra={'service': 'Scan'})
+        if not season:
+            return Season(**{"id": episode.season_id, "name": episode.season_name, "season_number": episode.season_number, "episode_count": 1, "size": episode.size, "series_id": episode.series_id, "space_saved": episode.space_saved, "missing_episodes": 0})
+        else:
+            season.episode_count += 1
+            season.size += episode.size
+            season.space_saved += episode.space_saved
     except Exception as e:
-        logger.error(f"An error occurred parsing season {season_name}: {e}", extra={'service': 'Scan'})
+        logger.error(f"An error occurred parsing season {episode.season_name}: {e}", extra={'service': 'Scan'})
         return None
     return season
 
@@ -125,44 +129,32 @@ async def scan_series(series_id):
             missing_metadata = True
         profile = await get_profile(series.profile_id)
         series.seasons_count = 0
-        for season_name in os.listdir(series_path):
-            season_path = os.path.join(series_path, season_name)
-            season: Season = await parse_season(season_name, series.id)
-            if not season:
-                continue
-            if not os.path.isdir(season_path):
-                continue
-            files = [
-                f
-                for f in os.listdir(season_path)
-                if os.path.isfile(os.path.join(season_path, f))
-            ]
+
+        seasons = {}
+
+        for root, dirs, files in os.walk(series_path):
             for file in files:
                 episode: Episode = await parse_episode(
                     file,
                     series_id,
-                    season.id,
-                    season_path,
-                    season.season_number,
-                    season_name,
+                    root,
                 )
                 if not episode:
                     continue
+                seasons[episode.season_id] = await parse_season(episode, seasons.get(episode.season_id, {}))
                 if episode.video_codec != profile["codec"]:
-                    season.missing_episodes += 1
-                season.size += episode.size
-                season.space_saved += episode.space_saved
+                    seasons[episode.season_id].missing_episodes += 1
+                    series.missing_episodes += 1
+                series.size += episode.size
+                series.space_saved += episode.space_saved
                 if episode.episode_name is None:
                     missing_metadata = True
-                season.episode_count += 1
+                series.episode_count += 1
                 await set_episode(asdict(episode))
                 await scan_queue(asdict(episode), asdict(series), profile)
-            series.episode_count += season.episode_count
-            series.size += season.size
+        for season in seasons:
             series.seasons_count += 1
-            series.space_saved += season.space_saved
-            series.missing_episodes += season.missing_episodes
-            await set_season(asdict(season))
+            await set_season(asdict(seasons[season]))
         await set_series(asdict(series))
         if missing_metadata:
             await metadata_service.enqueue(series_id)

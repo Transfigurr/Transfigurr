@@ -16,35 +16,9 @@ const General = () => {
 	const [selected, setSelected] = useState<string | null>(null);
 	const [user, setUser] = useState<any>();
 	useEffect(() => {
-		const fetchUser = async () => {
-			const response = await fetch(
-				`http://${window.location.hostname}:7889/api/user`,
-				{
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${localStorage.getItem("token")}`,
-					},
-				},
-			);
-			if (response.ok) {
-				const user = await response.json();
-				setUser(user);
-			} else {
-				console.error("Failed to fetch user");
-			}
-		};
-		if (!user) {
-			fetchUser();
-		}
-		if (
-			user &&
-			initialSettings !== undefined &&
-			!hasSetCurrentSettings.current
-		) {
+		if (initialSettings !== undefined && !hasSetCurrentSettings.current) {
 			setCurrentSettings({
 				...initialSettings,
-				username: user,
 				password: "passwordplaceholder",
 			});
 			hasSetCurrentSettings.current = true;

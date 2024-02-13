@@ -21,15 +21,18 @@ async def validate_series(series_id):
         else:
             for season_number in series["seasons"]:
                 season = series["seasons"][season_number]
-                season_path = os.path.join(series_path, season["name"])
-                if not os.path.isdir(season_path):
+                for episode_number in season["episodes"]:
+                    episode = season["episodes"][episode_number]
+                    episode_path_in_series = os.path.join(series_path, episode["filename"])
+                    episode_path_in_season = os.path.join(series_path, episode['season_name'], episode["filename"])
+                    if not os.path.isfile(episode_path_in_series) and not os.path.isfile(episode_path_in_season):
+                        await remove_episode(episode["id"])
+
+            series = await get_full_series(series_id)
+            for season_number in series["seasons"]:
+                season = series["seasons"][season_number]
+                if not season["episodes"]:
                     await remove_season(season["id"])
-                else:
-                    for episode_number in season["episodes"]:
-                        episode = season["episodes"][episode_number]
-                        episode_path = os.path.join(season_path, episode["filename"])
-                        if not os.path.isfile(episode_path):
-                            await remove_episode(episode["id"])
     except Exception as e:
         logger.error(f"An error occurred while validating {series_id}: {e}", extra={'service': 'Scan'})
     return

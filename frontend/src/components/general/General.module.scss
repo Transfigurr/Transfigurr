@@ -1,6 +1,8 @@
 .general {
 	width: 100%;
 	background-color: var(--pageBackground);
+	overflow-y: scroll;
+	scrollbar-width: none;
 	.content {
 		display: flex;
 		flex: 1;
