@@ -1,5 +1,4 @@
-import InputCheckbox from "../inputCheckbox/InputCheckbox";
-import InputSelect from "../inputSelect/InputSelect";
+import InputContainer from "../inputContainer/InputContainer";
 import styles from "./MediaModal.module.scss";
 import { useEffect } from "react";
 
@@ -36,11 +35,14 @@ const MediaModal = ({
 	}, [setIsOpen]);
 
 	if (!isOpen) return null;
+	console.log(content);
 	return (
 		<div className={styles.modal}>
 			<div className={styles.header}>
 				<div className={styles.left}>
-					{type == "posters" ? <>Poster Options</> : <>Table Options</>}
+					{type == "posters" && <>Poster Options</>}
+					{type == "table" && <>Table Options</>}
+					{type == "overview" && <>Overview Options</>}
 				</div>
 				<div className={styles.right}>
 					<div className={styles.cross} onClick={onClose}>
@@ -51,339 +53,298 @@ const MediaModal = ({
 			</div>
 			<div className={styles.content}>
 				<div className={styles.left}>
-					{type === "posters" ? (
+					{type === "posters" && (
 						<>
-							<div className={styles.inputContainer}>
-								<label className={styles.settingName}>Poster Size</label>
-								<InputSelect
-									selected={content.media_poster_posterSize}
-									onChange={(e: any) => {
-										setContent({
-											...content,
-											media_poster_posterSize: e.target.value,
-										});
-									}}
-								>
-									<option value={"small"}>Small</option>
-									<option value={"medium"}>Medium</option>
-									<option value={"large"}>Large</option>
-								</InputSelect>
-							</div>
-							<div className={styles.inputContainer}>
-								<label className={styles.settingName}>
-									Detailed Progress Bar
-								</label>
-								<InputCheckbox
-									checked={Boolean(
-										Number(content?.media_poster_detailedProgressBar),
-									)}
-									onChange={(e: any) =>
-										setContent({
-											...content,
-											media_poster_detailedProgressBar: e.target.checked,
-										})
-									}
-								/>
-								<div className={styles.helpText}>Show text on progress bar</div>
-							</div>
-							<div className={styles.inputContainer}>
-								<label className={styles.settingName}>Show Title</label>
-								<InputCheckbox
-									checked={Boolean(Number(content?.media_poster_showTitle))}
-									onChange={(e: any) =>
-										setContent({
-											...content,
-											media_poster_showTitle: e.target.checked,
-										})
-									}
-								/>
-								<div className={styles.helpText}>
-									Show series title under poster
-								</div>
-							</div>
-							<div className={styles.inputContainer}>
-								<label className={styles.settingName}>Show Monitored</label>
-								<InputCheckbox
-									checked={Boolean(Number(content?.media_poster_showMonitored))}
-									onChange={(e: any) =>
-										setContent({
-											...content,
-											media_poster_showMonitored: e.target.checked,
-										})
-									}
-								/>
-								<div className={styles.helpText}>
-									Show monitored status under poster
-								</div>
-							</div>
-							<div className={styles.inputContainer}>
-								<label className={styles.settingName}>Show Profile</label>
-								<InputCheckbox
-									className={styles.checkbox}
-									checked={Boolean(Number(content?.media_poster_showProfile))}
-									onChange={(e: any) =>
-										setContent({
-											...content,
-											media_poster_showProfile: e.target.checked,
-										})
-									}
-								/>
-								<div className={styles.helpText}>
-									Show codec profile under poster
-								</div>
-							</div>
+							<InputContainer
+								label="Poster Size"
+								type="select"
+								selected={content.media_poster_posterSize}
+								onChange={(e: any) => {
+									setContent({
+										...content,
+										media_poster_posterSize: e.target.value,
+									});
+								}}
+							>
+								<option value={"small"}>Small</option>
+								<option value={"medium"}>Medium</option>
+								<option value={"large"}>Large</option>
+							</InputContainer>
+							<InputContainer
+								label="Detailed Progress Bar"
+								type="checkbox"
+								checked={Boolean(
+									Number(content?.media_poster_detailedProgressBar),
+								)}
+								helpText="Show text on progress bar"
+								onChange={(e: any) =>
+									setContent({
+										...content,
+										media_poster_detailedProgressBar: e.target.checked,
+									})
+								}
+							/>
+							<InputContainer
+								label="Show Title"
+								type="checkbox"
+								checked={Boolean(Number(content?.media_poster_showTitle))}
+								helpText="Show series title under poster"
+								onChange={(e: any) =>
+									setContent({
+										...content,
+										media_poster_showTitle: e.target.checked,
+									})
+								}
+							/>
+							<InputContainer
+								label="Show Monitored"
+								type="checkbox"
+								checked={Boolean(Number(content?.media_poster_showMonitored))}
+								helpText="Show monitored status under poster"
+								onChange={(e: any) =>
+									setContent({
+										...content,
+										media_poster_showMonitored: e.target.checked,
+									})
+								}
+							/>
+							<InputContainer
+								label="Show Profile"
+								type="checkbox"
+								checked={Boolean(Number(content?.media_poster_showProfile))}
+								helpText="Show codec profile under poster"
+								onChange={(e: any) =>
+									setContent({
+										...content,
+										media_poster_showProfile: e.target.checked,
+									})
+								}
+							/>
 						</>
-					) : (
-						<></>
 					)}
-					{type == "table" ? (
+					{type === "table" && (
 						<>
-							<div className={styles.inputContainer}>
-								<label className={styles.settingName}>Show Network</label>
-								<InputCheckbox
-									type="checkbox"
-									checked={Boolean(Number(content?.media_table_showNetwork))}
-									onChange={(e: any) =>
-										setContent({
-											...content,
-											media_table_showNetwork: e.target.checked,
-										})
-									}
-								/>
-							</div>
-							<div className={styles.inputContainer}>
-								<label className={styles.settingName}>Show Profile</label>
-								<InputCheckbox
-									type="checkbox"
-									checked={Boolean(Number(content?.media_table_showProfile))}
-									onChange={(e: any) =>
-										setContent({
-											...content,
-											media_table_showProfile: e.target.checked,
-										})
-									}
-								/>
-							</div>
-							<div className={styles.inputContainer}>
-								<label className={styles.settingName}>Show Seasons</label>
-								<InputCheckbox
-									type="checkbox"
-									checked={Boolean(Number(content?.media_table_showSeasons))}
-									onChange={(e: any) =>
-										setContent({
-											...content,
-											media_table_showSeasons: e.target.checked,
-										})
-									}
-								/>
-							</div>
-							<div className={styles.inputContainer}>
-								<label className={styles.settingName}>Show Episodes</label>
-								<InputCheckbox
-									type="checkbox"
-									checked={Boolean(Number(content?.media_table_showEpisodes))}
-									onChange={(e: any) =>
-										setContent({
-											...content,
-											media_table_showEpisodes: e.target.checked,
-										})
-									}
-								/>
-							</div>
-							<div className={styles.inputContainer}>
-								<label className={styles.settingName}>Show Episode Count</label>
-								<InputCheckbox
-									type="checkbox"
-									checked={Boolean(
-										Number(content?.media_table_showEpisodeCount),
-									)}
-									onChange={(e: any) =>
-										setContent({
-											...content,
-											media_table_showEpisodeCount: e.target.checked,
-										})
-									}
-								/>
-							</div>
-							<div className={styles.inputContainer}>
-								<label className={styles.settingName}>Show Year</label>
-								<InputCheckbox
-									type="checkbox"
-									checked={Boolean(Number(content?.media_table_showYear))}
-									onChange={(e: any) =>
-										setContent({
-											...content,
-											media_table_showYear: e.target.checked,
-										})
-									}
-								/>
-							</div>
-							<div className={styles.inputContainer}>
-								<label className={styles.settingName}>Show Size On Disk</label>
-								<InputCheckbox
-									type="checkbox"
-									checked={Boolean(Number(content?.media_table_showSizeOnDisk))}
-									onChange={(e: any) =>
-										setContent({
-											...content,
-											media_table_showSizeOnDisk: e.target.checked,
-										})
-									}
-								/>
-							</div>
-							<div className={styles.inputContainer}>
-								<label className={styles.settingName}>Show Space Saved</label>
-								<InputCheckbox
-									type="checkbox"
-									checked={Boolean(Number(content?.media_table_showSizeSaved))}
-									onChange={(e: any) =>
-										setContent({
-											...content,
-											media_table_showSizeSaved: e.target.checked,
-										})
-									}
-								/>
-							</div>
-							<div className={styles.inputContainer}>
-								<label className={styles.settingName}>Show Genre</label>
-								<InputCheckbox
-									type="checkbox"
-									checked={Boolean(Number(content?.media_table_showGenre))}
-									onChange={(e: any) =>
-										setContent({
-											...content,
-											media_table_showGenre: e.target.checked,
-										})
-									}
-								/>
-							</div>
+							<InputContainer
+								label="Show Network"
+								type="checkbox"
+								checked={Boolean(Number(content?.media_table_showNetwork))}
+								onChange={(e: any) =>
+									setContent({
+										...content,
+										media_table_showNetwork: e.target.checked,
+									})
+								}
+							/>
+							<InputContainer
+								label="Show Year"
+								type="checkbox"
+								checked={Boolean(Number(content?.media_table_showYear))}
+								onChange={(e: any) =>
+									setContent({
+										...content,
+										media_table_showYear: e.target.checked,
+									})
+								}
+							/>
+							<InputContainer
+								label="Show Profile"
+								type="checkbox"
+								checked={Boolean(Number(content?.media_table_showProfile))}
+								onChange={(e: any) =>
+									setContent({
+										...content,
+										media_table_showProfile: e.target.checked,
+									})
+								}
+							/>
+							<InputContainer
+								label="Show Seasons"
+								type="checkbox"
+								checked={Boolean(Number(content?.media_table_showSeasons))}
+								onChange={(e: any) =>
+									setContent({
+										...content,
+										media_table_showSeasons: e.target.checked,
+									})
+								}
+							/>
+							<InputContainer
+								label="Show Episodes"
+								type="checkbox"
+								checked={Boolean(Number(content?.media_table_showEpisodes))}
+								onChange={(e: any) =>
+									setContent({
+										...content,
+										media_table_showEpisodes: e.target.checked,
+									})
+								}
+							/>
+							<InputContainer
+								label="Show Episode Count"
+								type="checkbox"
+								checked={Boolean(Number(content?.media_table_showEpisodeCount))}
+								onChange={(e: any) =>
+									setContent({
+										...content,
+										media_table_showEpisodeCount: e.target.checked,
+									})
+								}
+							/>
+							<InputContainer
+								label="Show Year"
+								type="checkbox"
+								checked={Boolean(Number(content?.media_table_showYear))}
+								onChange={(e: any) =>
+									setContent({
+										...content,
+										media_table_showYear: e.target.checked,
+									})
+								}
+							/>
+							<InputContainer
+								label="Show Size On Disk"
+								type="checkbox"
+								checked={Boolean(Number(content?.media_table_showSizeOnDisk))}
+								onChange={(e: any) =>
+									setContent({
+										...content,
+										media_table_showSizeOnDisk: e.target.checked,
+									})
+								}
+							/>
+							<InputContainer
+								label="Show Space Saved"
+								type="checkbox"
+								checked={Boolean(Number(content?.media_table_showSizeSaved))}
+								onChange={(e: any) =>
+									setContent({
+										...content,
+										media_table_showSizeSaved: e.target.checked,
+									})
+								}
+							/>
+							<InputContainer
+								label="Show Genre"
+								type="checkbox"
+								checked={Boolean(Number(content?.media_table_showGenre))}
+								onChange={(e: any) =>
+									setContent({
+										...content,
+										media_table_showGenre: e.target.checked,
+									})
+								}
+							/>
 						</>
-					) : (
-						<></>
 					)}
-					{type == "overview" ? (
+					{type == "overview" && (
 						<>
-							<div className={styles.inputContainer}>
-								<label className={styles.settingName}>Poster Size</label>
-								<select
-									className={styles.select}
-									value={content.media_overview_posterSize}
-									onChange={(e) => {
-										setContent({
-											...content,
-											media_overview_posterSize: e.target.value,
-										});
-									}}
-								>
-									<option value={"small"}>Small</option>
-									<option value={"medium"}>Medium</option>
-									<option value={"large"}>Large</option>
-								</select>
-							</div>
-							<div className={styles.inputContainer}>
-								<label className={styles.settingName}>
-									Detailed Progress Bar
-								</label>
-								<input
-									type="checkbox"
-									checked={Boolean(
-										Number(content?.media_overview_detailedProgressBar),
-									)}
-									onChange={(e) =>
-										setContent({
-											...content,
-											media_overview_detailedProgressBar: e.target.checked,
-										})
-									}
-								/>
-							</div>
-							<div className={styles.inputContainer}>
-								<label className={styles.settingName}>Show Monitored</label>
-								<input
-									type="checkbox"
-									checked={Boolean(
-										Number(content?.media_overview_showMonitored),
-									)}
-									onChange={(e) =>
-										setContent({
-											...content,
-											media_overview_showMonitored: e.target.checked,
-										})
-									}
-								/>
-							</div>
-							<div className={styles.inputContainer}>
-								<label className={styles.settingName}>Show Network</label>
-								<input
-									type="checkbox"
-									checked={Boolean(Number(content?.media_overview_showNetwork))}
-									onChange={(e) =>
-										setContent({
-											...content,
-											media_overview_showNetwork: e.target.checked,
-										})
-									}
-								/>
-							</div>
-							<div className={styles.inputContainer}>
-								<label className={styles.settingName}>Show Profile</label>
-								<input
-									type="checkbox"
-									checked={Boolean(Number(content?.media_overview_showProfile))}
-									onChange={(e) =>
-										setContent({
-											...content,
-											media_overview_showProfile: e.target.checked,
-										})
-									}
-								/>
-							</div>
-							<div className={styles.inputContainer}>
-								<label className={styles.settingName}>Show Season Count</label>
-								<input
-									type="checkbox"
-									checked={Boolean(
-										Number(content?.media_overview_showSeasonCount),
-									)}
-									onChange={(e) =>
-										setContent({
-											...content,
-											media_overview_showSeasonCount: e.target.checked,
-										})
-									}
-								/>
-							</div>
-							<div className={styles.inputContainer}>
-								<label className={styles.settingName}>Show Path</label>
-								<input
-									type="checkbox"
-									checked={Boolean(Number(content?.media_overview_showPath))}
-									onChange={(e) =>
-										setContent({
-											...content,
-											media_overview_showPath: e.target.checked,
-										})
-									}
-								/>
-							</div>
-							<div className={styles.inputContainer}>
-								<label className={styles.settingName}>Show Size On Disk</label>
-								<input
-									type="checkbox"
-									checked={Boolean(
-										Number(content?.media_overview_showSizeOnDisk),
-									)}
-									onChange={(e) =>
-										setContent({
-											...content,
-											media_overview_showSizeOnDisk: e.target.checked,
-										})
-									}
-								/>
-							</div>
+							<InputContainer
+								label="Poster Size"
+								type="select"
+								selected={content?.media_overview_posterSize}
+								onChange={(e: any) =>
+									setContent({
+										...content,
+										media_overview_posterSize: e.target.value,
+									})
+								}
+							>
+								<option value={"small"}>Small</option>
+								<option value={"medium"}>Medium</option>
+								<option value={"large"}>Large</option>
+							</InputContainer>
+							<InputContainer
+								label="Detailed Progress Bar"
+								type="checkbox"
+								checked={Boolean(
+									Number(content?.media_overview_detailedProgressBar),
+								)}
+								helpText={"Show text on progress bar"}
+								onChange={(e: any) =>
+									setContent({
+										...content,
+										media_overview_detailedProgressBar: e.target.checked,
+									})
+								}
+							/>
+							<InputContainer
+								label="Show Monitored"
+								type="checkbox"
+								checked={Boolean(Number(content?.media_overview_showMonitored))}
+								helpText={"Show monitored in tags"}
+								onChange={(e: any) =>
+									setContent({
+										...content,
+										media_overview_showMonitored: e.target.checked,
+									})
+								}
+							/>
+							<InputContainer
+								label="Show Network"
+								type="checkbox"
+								checked={Boolean(Number(content?.media_overview_showNetwork))}
+								helpText={"Show network in tags"}
+								onChange={(e: any) =>
+									setContent({
+										...content,
+										media_overview_showNetwork: e.target.checked,
+									})
+								}
+							/>
+							<InputContainer
+								label="Show Profile"
+								type="checkbox"
+								checked={Boolean(Number(content?.media_overview_showProfile))}
+								helpText={"Show profile in tags"}
+								onChange={(e: any) =>
+									setContent({
+										...content,
+										media_overview_showProfile: e.target.checked,
+									})
+								}
+							/>
+
+							<InputContainer
+								label="Show Season Count"
+								type="checkbox"
+								checked={Boolean(
+									Number(content?.media_overview_showSeasonCount),
+								)}
+								helpText={"Show season count in tags"}
+								onChange={(e: any) =>
+									setContent({
+										...content,
+										media_overview_showSeasonCount: e.target.checked,
+									})
+								}
+							/>
+							<InputContainer
+								label="Show Path"
+								type="checkbox"
+								checked={Boolean(Number(content?.media_overview_showPath))}
+								helpText={"Show path in tags"}
+								onChange={(e: any) =>
+									setContent({
+										...content,
+										media_overview_showPath: e.target.checked,
+									})
+								}
+							/>
+							<InputContainer
+								label="Show Size On Disk"
+								type="checkbox"
+								checked={Boolean(
+									Number(content?.media_overview_showSizeOnDisk),
+								)}
+								helpText={"Show size on disk in tags"}
+								onChange={(e: any) =>
+									setContent({
+										...content,
+										media_overview_showSizeOnDisk: e.target.checked,
+									})
+								}
+							/>
 						</>
-					) : (
-						<></>
 					)}
 				</div>
 			</div>

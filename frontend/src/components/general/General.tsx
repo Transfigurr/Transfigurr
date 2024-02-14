@@ -144,14 +144,14 @@ const General = () => {
 					<InputContainer
 						type="text"
 						label="Username"
-						helpText="Requires restart to take effect"
+						warningText="Requires restart to take effect"
 						selected={currentSettings?.username}
 						onChange={(e: any) => handleChange("username", e.target.value)}
 					/>
 					<InputContainer
 						type="password"
 						label="Password"
-						helpText="Requires restart to take effect"
+						warningText="Requires restart to take effect"
 						selected={currentSettings?.password}
 						onChange={(e: any) => handleChange("password", e.target.value)}
 					/>
@@ -161,7 +161,7 @@ const General = () => {
 					<InputContainer
 						type="select"
 						label="Log Level"
-						helpText="Requires restart to take effect"
+						warningText="Requires restart to take effect"
 						selected={currentSettings?.log_level}
 						onChange={(e: any) => handleChange("log_level", e.target.value)}
 					>

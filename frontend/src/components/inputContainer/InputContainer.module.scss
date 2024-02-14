@@ -25,6 +25,14 @@
 .inputColumn {
 	display: flex;
 	flex-direction: column;
+	justify-content: center;
+	width: 100%;
+}
+
+.inputRow {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
 	width: 100%;
 }
 
@@ -41,6 +49,12 @@
 }
 
 .helpText {
+	color: var(--helpTextColor);
+	font-size: 14px;
+	padding-left: 10px;
+}
+
+.warningText {
 	display: flex;
 	align-items: flex-start;
 	font-size: 14px;

@@ -142,7 +142,7 @@ async def scan_series(series_id):
                 if not episode:
                     continue
                 seasons[episode.season_id] = await parse_season(episode, seasons.get(episode.season_id, {}))
-                if episode.video_codec != profile["codec"]:
+                if episode.video_codec != profile["codec"] and profile["codec"] != 'Any':
                     seasons[episode.season_id].missing_episodes += 1
                     series.missing_episodes += 1
                 series.size += episode.size
@@ -155,6 +155,7 @@ async def scan_series(series_id):
         for season in seasons:
             series.seasons_count += 1
             await set_season(asdict(seasons[season]))
+
         await set_series(asdict(series))
         if missing_metadata:
             await metadata_service.enqueue(series_id)

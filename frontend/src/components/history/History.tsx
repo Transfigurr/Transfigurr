@@ -87,7 +87,7 @@ const History = () => {
 										</td>
 										<td>{entry?.episode?.episode_name}</td>
 										<td className={styles.codecRow}>
-											<Codec codec={entry?.codec} />
+											<Codec codec={entry?.prev_codec} />
 										</td>
 										<td className={styles.codecRow}>
 											<Codec codec={entry?.new_codec} />

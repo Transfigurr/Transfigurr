@@ -1,4 +1,3 @@
-import styles from "./MediaToolbar.module.scss";
 import ToolBarItem from "../ToolBarItem/ToolBarItem";
 import { ReactComponent as Rss } from "../svgs/rss_feed.svg";
 import { ReactComponent as Sync } from "../svgs/cached.svg";
@@ -7,6 +6,7 @@ import { ReactComponent as ViewIcon } from "../svgs/visibility.svg";
 import { ReactComponent as SortIcon } from "../svgs/sort.svg";
 import { ReactComponent as FilterIcon } from "../svgs/filter.svg";
 import { ReactComponent as TableIcon } from "../svgs/table.svg";
+import { ReactComponent as OverviewIcon } from "../svgs/view_list.svg";
 import ToolBar from "../ToolBar/ToolBar";
 const MediaToolbar = ({
 	onUpdate,
@@ -60,21 +60,28 @@ const MediaToolbar = ({
 			key={2}
 			settings={settings}
 			icon={
-				view == "table" ? (
+				view === "table" ? (
 					<TableIcon
 						style={{
 							height: "100%",
 							width: "100%",
 						}}
 					/>
-				) : (
+				) : view === "posters" ? (
 					<AppsIcon
 						style={{
 							height: "100%",
 							width: "100%",
 						}}
 					/>
-				)
+				) : view === "overview" ? (
+					<OverviewIcon
+						style={{
+							height: "100%",
+							width: "100%",
+						}}
+					/>
+				) : null
 			}
 			onClick={handleOptionsClick}
 			selected={selected}
@@ -111,6 +118,13 @@ const MediaToolbar = ({
 					id: "posters",
 					key: "posters",
 					onClick: () => setSetting("media_view", "posters"),
+				},
+				{
+					text: "Overview",
+					setting_id: "media_view",
+					id: "overview",
+					key: "overview",
+					onClick: () => setSetting("media_view", "overview"),
 				},
 			]}
 		/>,

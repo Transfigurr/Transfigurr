@@ -163,7 +163,13 @@ const ExplorerComponent = () => {
 					{view === "posters" && (
 						<Posters settings={settings} sortedSeries={sortedSeries || []} />
 					)}
-					{view === "overview" && <Overviews />}
+					{view === "overview" && (
+						<Overviews
+							sortedSeries={sortedSeries}
+							settings={settings}
+							profiles={profiles}
+						/>
+					)}
 					<div className={styles.footerContent}>{series && <Footer />}</div>
 				</div>
 			</div>
