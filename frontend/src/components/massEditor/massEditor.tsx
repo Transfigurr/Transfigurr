@@ -1,5 +1,5 @@
 import styles from "./MassEditor.module.scss";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { WebSocketContext } from "../../contexts/webSocketContext";
 import { ReactComponent as BookmarkFilled } from "../svgs/bookmark_filled.svg";
 import { ReactComponent as BookmarkUnfilled } from "../svgs/bookmark_unfilled.svg";
@@ -18,6 +18,7 @@ const MassEditor = () => {
 	const [monitored, setMonitored] = useState<any>(false);
 	const [profile, setProfile] = useState<any>();
 	const applyChanges = () => {
+		console.log(monitored, profile);
 		for (const series of selectedSeries) {
 			series.monitored =
 				parseInt(monitored) !== -1 ? parseInt(monitored) : undefined;
@@ -47,6 +48,11 @@ const MassEditor = () => {
 		setSelectAll(!selectAll);
 		setSelectedSeries(!selectAll ? seriesArray : []);
 	};
+
+	useEffect(() => {
+		applyChanges();
+	}, [monitored, profile]);
+
 	return (
 		<div className={styles.massEditor}>
 			<ToolBar />
@@ -143,11 +149,6 @@ const MassEditor = () => {
 								),
 							)}
 						</InputSelect>
-					</div>
-					<div className={styles.buttonContainer}>
-						<button className={styles.apply} onClick={applyChanges}>
-							Apply
-						</button>
 					</div>
 				</div>
 			</div>

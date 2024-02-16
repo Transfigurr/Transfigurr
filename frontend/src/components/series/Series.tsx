@@ -3,7 +3,7 @@ import ToolBar from "../ToolBar/ToolBar";
 import styles from "./Series.module.scss";
 import ToolBarItem from "../ToolBarItem/ToolBarItem";
 import { ReactComponent as RssFeedIcon } from "../svgs/rss_feed.svg";
-import { ReactComponent as SyncIcon } from "../svgs/sync.svg";
+import { ReactComponent as SyncIcon } from "../svgs/cached.svg";
 import { ReactComponent as Folder } from "../svgs/folder.svg";
 import { ReactComponent as Drive } from "../svgs/hard_drive.svg";
 import { ReactComponent as Profile } from "../svgs/person.svg";
@@ -62,7 +62,14 @@ const Series = ({ series_name }: any) => {
 		<ToolBarItem
 			text="Scan"
 			key="scan"
-			icon={<SyncIcon />}
+			icon={
+				<SyncIcon
+					style={{
+						height: "100%",
+						width: "100%",
+					}}
+				/>
+			}
 			onClick={handleScanClick}
 			selected={selected}
 			setSelected={setSelected}
@@ -70,7 +77,14 @@ const Series = ({ series_name }: any) => {
 		<ToolBarItem
 			text="Refresh Metadata"
 			key="metadata"
-			icon={<RssFeedIcon />}
+			icon={
+				<RssFeedIcon
+					style={{
+						height: "100%",
+						width: "100%",
+					}}
+				/>
+			}
 			onClick={handleMetadataClick}
 			selected={selected}
 			setSelected={setSelected}
