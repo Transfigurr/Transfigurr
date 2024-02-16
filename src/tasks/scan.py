@@ -62,8 +62,8 @@ async def parse_episode(
             return None
         episode_id = str(series_id) + str(season_number) + str(episode_number)
         episode: Episode = Episode(**await get_episode(episode_id))
-        episode_path = os.path.join(folder, file)
-        analysis_data = await analyze_media_file(episode_path)
+        episode.path = os.path.join(folder, file)
+        analysis_data = await analyze_media_file(episode.path)
         episode.id = episode_id
         episode.series_id = series_id
         episode.episode_number = episode_number
@@ -76,7 +76,7 @@ async def parse_episode(
         episode.season_id = str(series_id) + str(season_number)
         episode.season_number = season_number
 
-        episode_size = os.path.getsize(episode_path)
+        episode_size = os.path.getsize(episode.path)
         if episode.original_size is None:
             episode.original_size = episode_size
 

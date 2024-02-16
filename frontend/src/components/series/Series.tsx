@@ -12,6 +12,7 @@ import { ReactComponent as Unmonitored } from "../svgs/bookmark_unfilled.svg";
 import { ReactComponent as Continuing } from "../svgs/play_arrow.svg";
 import { ReactComponent as Ended } from "../svgs/stop.svg";
 import { ReactComponent as Network } from "../svgs/tower.svg";
+import { ReactComponent as EditIcon } from "../svgs/edit.svg";
 import Season from "../season/Season";
 import { WebSocketContext } from "../../contexts/webSocketContext";
 import SeriesModals from "../seriesModals/SeriesModals";
@@ -67,7 +68,7 @@ const Series = ({ series_name }: any) => {
 			setSelected={setSelected}
 		/>,
 		<ToolBarItem
-			text="Metadata"
+			text="Refresh Metadata"
 			key="metadata"
 			icon={<RssFeedIcon />}
 			onClick={handleMetadataClick}
@@ -77,7 +78,7 @@ const Series = ({ series_name }: any) => {
 		<ToolBarItem
 			text="Edit"
 			key="edit"
-			icon={<RssFeedIcon />}
+			icon={<EditIcon />}
 			onClick={handleEditClick}
 			selected={selected}
 			setSelected={setSelected}
@@ -192,9 +193,9 @@ const Series = ({ series_name }: any) => {
 							<div className={styles.titleRow}>
 								<div className={styles.headerIcon}>
 									{series?.monitored ? (
-										<Monitored style={{ height: "50px", width: "50px" }} />
+										<Monitored style={{ height: "55px", width: "55px" }} />
 									) : (
-										<Unmonitored style={{ height: "50px", width: "50px" }} />
+										<Unmonitored style={{ height: "55px", width: "55px" }} />
 									)}
 								</div>
 								{series?.name ? series?.name : series?.id}
@@ -268,7 +269,13 @@ const Series = ({ series_name }: any) => {
 					{Object.values(series?.seasons || {})
 						.reverse()
 						.map((season: any) => {
-							return <Season season={season} key={season?.id} />;
+							return (
+								<Season
+									season={season}
+									monitored={series?.monitored}
+									key={season?.id}
+								/>
+							);
 						})}
 				</div>
 			</div>

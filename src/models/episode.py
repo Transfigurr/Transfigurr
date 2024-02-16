@@ -20,3 +20,4 @@ class Episode(Base):
     size: int = Column(Integer)
     space_saved: int = Column(Integer)
     original_size: int = Column(Integer)
+    path: str = Column(String)

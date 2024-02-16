@@ -1,5 +1,6 @@
 import styles from "./ToolBarItem.module.scss";
 import { ReactComponent as CheckmarkIcon } from "../svgs/check.svg";
+import { ReactComponent as ArrowDropdownIcon } from "../svgs/arrow_dropdown.svg";
 import { useEffect, useRef } from "react";
 const ToolBarOption = ({
 	icon,
@@ -10,6 +11,7 @@ const ToolBarOption = ({
 	dropdownItems,
 	selected,
 	setSelected,
+	sort = false,
 	onClick = () => {
 		undefined;
 	},
@@ -22,11 +24,11 @@ const ToolBarOption = ({
 			setSelected(index);
 		}
 	};
-	const dropdownRef: any = useRef(null);
+	const itemRef: any = useRef(null);
 
 	useEffect(() => {
 		function handleClickOutside(event: any) {
-			if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+			if (itemRef.current && !itemRef.current.contains(event.target)) {
 				setSelected(-1);
 			}
 		}
@@ -43,9 +45,8 @@ const ToolBarOption = ({
 	}, [selected, index, setSelected]);
 
 	return (
-		<>
+		<div className={styles.toolBarItem} ref={itemRef}>
 			<div
-				ref={dropdownRef}
 				className={styles.toolBarOption}
 				onClick={() => changeSelected(index)}
 				style={
@@ -54,28 +55,45 @@ const ToolBarOption = ({
 			>
 				<div className={styles.svg}>{icon}</div>
 				<div className={styles.text}>{text}</div>
-				{selected === index && (
-					<div className={styles.dropdown}>
-						{dropdownItems?.map((item: any, itemIndex: number) => (
-							<div key={itemIndex}>
-								<div className={styles.item} onClick={item?.onClick}>
-									<div className={styles.text}>{item?.text}</div>
-									{item?.id === settings[item?.setting_id] || "" ? (
-										<div className={styles.svg}>
+			</div>
+			{selected === index && (
+				<div className={styles.dropdown}>
+					{dropdownItems?.map((item: any, itemIndex: number) => (
+						<div key={itemIndex}>
+							<div
+								className={styles.item}
+								onClick={(e) => {
+									e.stopPropagation();
+									item.onClick();
+									setSelected(-1);
+								}}
+							>
+								<div className={styles.text}>{item?.text}</div>
+								{item?.id === settings[item?.setting_id] || "" ? (
+									<div className={styles.svg}>
+										{sort ? (
+											<ArrowDropdownIcon
+												style={
+													settings?.media_sort_direction === "descending"
+														? { transform: "rotate(180deg)" }
+														: {}
+												}
+											/>
+										) : (
 											<CheckmarkIcon
 												style={{ height: "20px", width: "20px" }}
 											/>
-										</div>
-									) : (
-										<></>
-									)}
-								</div>
+										)}
+									</div>
+								) : (
+									<></>
+								)}
 							</div>
-						))}
-					</div>
-				)}
-			</div>
-		</>
+						</div>
+					))}
+				</div>
+			)}
+		</div>
 	);
 };
 export default ToolBarOption;

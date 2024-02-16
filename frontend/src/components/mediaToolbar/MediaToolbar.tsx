@@ -20,7 +20,7 @@ const MediaToolbar = ({
 }: any) => {
 	const leftToolBarItems: any = [
 		<ToolBarItem
-			text="Scan"
+			text="Scan All"
 			index={0}
 			key={0}
 			icon={
@@ -36,7 +36,7 @@ const MediaToolbar = ({
 			setSelected={setSelected}
 		/>,
 		<ToolBarItem
-			text="Metadata"
+			text="Refresh Metadata"
 			index={1}
 			key={1}
 			icon={
@@ -133,6 +133,7 @@ const MediaToolbar = ({
 			index={4}
 			key={4}
 			settings={settings}
+			sort={true}
 			icon={
 				<SortIcon
 					style={{

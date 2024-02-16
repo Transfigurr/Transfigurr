@@ -79,6 +79,7 @@
 						margin-bottom: 5px;
 						display: flex;
 						padding-right: 25px;
+						align-items: center;
 
 						.headerIcon {
 							fill: var(--white);
@@ -130,6 +131,7 @@
 					.overview {
 						color: white;
 						line-height: 1.5;
+						font-size: 15px;
 					}
 				}
 			}

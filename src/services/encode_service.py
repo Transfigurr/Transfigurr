@@ -14,7 +14,7 @@ from src.api.controllers.history_controller import set_history
 from src.api.controllers.series_controller import get_series
 from src.api.controllers.settings_controller import get_all_settings
 from src.api.routes.profile_routes import get_all_profiles
-from src.utils.folders import get_series_folder, get_transcode_folder
+from src.utils.folders import get_transcode_folder
 from src.utils.ffmpeg import analyze_media_file
 
 logger = logging.getLogger('logger')
@@ -161,19 +161,14 @@ async def process_episode(e):
         series = await get_series(episode["series_id"])
         profiles = await get_all_profiles()
         profile = profiles[series["profile_id"]]
-        file_name = os.path.splitext(episode["filename"])[0]  # Remove existing extension
+        file_name = os.path.splitext(episode["filename"])[0]
 
         preset = profile["speed"]
         encoder = profile["encoder"]
         output_container = profile["container"]
         output_extension = profile["extension"]
 
-        input_file = os.path.join(
-            await get_series_folder(),
-            series["id"],
-            episode["season_name"],
-            episode["filename"],
-        )
+        input_file = episode['path']
         output_file = os.path.join(
             await get_transcode_folder(), f"{file_name}.{output_extension}"
         )

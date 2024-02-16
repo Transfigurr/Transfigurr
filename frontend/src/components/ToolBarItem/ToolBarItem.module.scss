@@ -8,6 +8,7 @@
 	width: 60px;
 	fill: white;
 	cursor: pointer;
+
 	.svg {
 		display: flex;
 		align-items: center;
@@ -15,17 +16,16 @@
 		min-height: 30px;
 		min-width: 30px;
 	}
-	.svg:hover {
-		fill: var(--themePurple);
-	}
 	.text {
+		text-align: center;
+		line-height: 11px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		font-size: 11px;
-		height: 20px;
+		height: 24px;
 		user-select: none;
-		color: var(--toolbarColor);
+		color: var(--toolbarLabelColor);
 	}
 }
 
@@ -34,6 +34,7 @@
 	width: 185px;
 	top: 100%;
 	right: 0px;
+	z-index: 1000;
 	background-color: var(--toolbarMenuItemBackgroundColor);
 	.item {
 		display: flex;
@@ -62,4 +63,8 @@
 
 .toolBarOption:hover {
 	fill: var(--themePurple);
+}
+
+.toolBarItem {
+	position: relative;
 }

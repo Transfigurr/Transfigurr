@@ -36,6 +36,10 @@ default_settings = [
         "value": "title"
     },
     {
+        "id": "media_sort_direction",
+        "value": "ascending"
+    },
+    {
         "id": "media_filter",
         "value": "all"
     },
@@ -109,19 +113,19 @@ default_settings = [
     },
     {
         "id": "media_overview_showMonitored",
-        "value": False
+        "value": True
     },
     {
         "id": "media_overview_showNetwork",
-        "value": False
+        "value": True
     },
     {
         "id": "media_overview_showProfile",
-        "value": False
+        "value": True
     },
     {
         "id": "media_overview_showSeasonCount",
-        "value": False
+        "value": True
     },
     {
         "id": "media_overview_showPath",
@@ -129,7 +133,7 @@ default_settings = [
     },
     {
         "id": "media_overview_showSizeOnDisk",
-        "value": False
+        "value": True
     },
 
 

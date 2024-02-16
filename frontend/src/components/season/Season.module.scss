@@ -4,13 +4,19 @@
 	border-radius: 4px;
 	display: flex;
 	flex-direction: column;
-	margin-bottom: 15px;
+	margin-bottom: 20px;
+	line-height: 1.5;
 	.seasonHeader {
 		display: flex;
 		align-items: center;
 		color: var(--textColor);
 		position: relative;
 		cursor: pointer;
+
+		.icon {
+			height: 35px;
+			width: 35px;
+		}
 
 		.left {
 			display: flex;
@@ -30,10 +36,15 @@
 				margin-left: 20px;
 			}
 			.profileRatio {
-				margin-left: 20px;
+				margin-left: 15px;
+				font-weight: bold;
+				font-size: 14px;
+				padding: 0px 5px;
+				color: var(--white);
 			}
 			.size {
-				margin-left: 20px;
+				margin-left: 10px;
+				color: var(--helpTextColor);
 			}
 		}
 		.center {

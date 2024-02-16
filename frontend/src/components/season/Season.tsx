@@ -2,17 +2,34 @@ import { useState } from "react";
 import styles from "./Season.module.scss";
 import { ReactComponent as Open } from "../svgs/expand_circle_up.svg";
 import { ReactComponent as Close } from "../svgs/expand_circle_down.svg";
-const Season = ({ season }: any) => {
+import { ReactComponent as MonitoredIcon } from "../svgs/bookmark_filled.svg";
+import { ReactComponent as UnmonitoredIcon } from "../svgs/bookmark_unfilled.svg";
+const Season = ({ season, monitored }: any) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const onSeasonClick = () => {
 		setIsOpen(!isOpen);
+	};
+	const backgroundColor = () => {
+		if (season?.missing_episodes != 0) {
+			return "var(--dangerColor)";
+		} else {
+			return "var(--successColor)";
+		}
 	};
 	return (
 		<div className={styles.season}>
 			<div className={styles.seasonHeader} onClick={onSeasonClick}>
 				<div className={styles.left}>
+					{monitored ? (
+						<MonitoredIcon className={styles.icon} />
+					) : (
+						<UnmonitoredIcon className={styles.icon} />
+					)}
 					<div className={styles.seasonNumber}>{season?.name}</div>
-					<div className={styles.profileRatio}>
+					<div
+						className={styles.profileRatio}
+						style={{ backgroundColor: backgroundColor() }}
+					>
 						{season?.episode_count - season?.missing_episodes} /{" "}
 						{season?.episode_count}
 					</div>
@@ -39,6 +56,7 @@ const Season = ({ season }: any) => {
 				<table>
 					<thead>
 						<tr>
+							<th></th>
 							<th>#</th>
 							<th>Title</th>
 							<th>Air Date</th>
@@ -51,6 +69,7 @@ const Season = ({ season }: any) => {
 							.reverse()
 							.map((episode: any, index: number) => (
 								<tr key={index}>
+									<td>{monitored ? <></> : <></>}</td>
 									<td>{episode?.episode_number}</td>
 									<td>
 										{episode?.episode_name

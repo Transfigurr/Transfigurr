@@ -70,6 +70,9 @@ const ExplorerComponent = () => {
 	} else if (sort == "size") {
 		sortedSeries = sortSeries(sortedSeries, "size");
 	}
+	if (settings?.media_sort_direction === "descending") {
+		sortedSeries = sortedSeries.reverse();
+	}
 	const onUpdate = async () => {
 		await fetch(`http://${window.location.hostname}:7889/api/scan/series`, {
 			method: "PUT",
@@ -100,6 +103,22 @@ const ExplorerComponent = () => {
 	};
 
 	const setSetting = async (key: string, value: any) => {
+		if (key == "media_sort" && value == settings.media_sort) {
+			await fetch(`http://${window.location.hostname}:7889/api/settings`, {
+				method: "PUT",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				body: JSON.stringify({
+					id: "media_sort_direction",
+					value:
+						settings?.media_sort_direction === "ascending"
+							? "descending"
+							: "ascending",
+				}),
+			});
+		}
 		await fetch(`http://${window.location.hostname}:7889/api/settings`, {
 			method: "PUT",
 			headers: {
