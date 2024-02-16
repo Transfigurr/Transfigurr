@@ -3,7 +3,26 @@ import { ReactComponent as BookmarkFilled } from "../svgs/bookmark_filled.svg";
 import { ReactComponent as BookmarkUnfilled } from "../svgs/bookmark_unfilled.svg";
 import { ReactComponent as ContinuingIcon } from "../svgs/play_arrow.svg";
 import { ReactComponent as StoppedIcon } from "../svgs/stop.svg";
+import { Link } from "react-router-dom";
 const Table = ({ settings, profiles, sortedSeries }: any) => {
+	const progress = (series: any) => {
+		return (
+			((series?.episode_count - series?.missing_episodes) /
+				series?.episode_count || 0) *
+				100 +
+			"%"
+		);
+	};
+
+	const backgroundColor = (series: any) => {
+		if (progress(series) === "100%") {
+			return series?.status === "Ended"
+				? "rgb(39, 194, 76)"
+				: "rgb(93, 156, 236)";
+		} else {
+			return series?.monitored ? "rgb(240, 80, 80)" : "rgb(255, 165, 0)";
+		}
+	};
 	return (
 		<div className={styles.tableContainer}>
 			<table className={styles.table}>
@@ -43,9 +62,9 @@ const Table = ({ settings, profiles, sortedSeries }: any) => {
 								)}
 							</td>
 							<td>
-								<a href={"/series/" + series?.id} className={styles.name}>
+								<Link to={"/series/" + series?.id} className={styles.name}>
 									{series?.id}
-								</a>
+								</Link>
 							</td>
 							{settings?.media_table_showProfile == "1" && (
 								<td>{profiles ? profiles[series.profile_id]?.name : ""}</td>
@@ -57,7 +76,22 @@ const Table = ({ settings, profiles, sortedSeries }: any) => {
 								<td>{series?.seasons_count}</td>
 							)}
 							{settings?.media_table_showEpisodes == "1" && (
-								<td>{series?.episode_count}</td>
+								<td>
+									<div className={styles.progressBar}>
+										<div
+											className={styles.progress}
+											style={{
+												backgroundColor: backgroundColor(series),
+												width: progress(series),
+											}}
+										></div>
+
+										<div className={styles.detailText}>
+											{series?.episode_count - series?.missing_episodes}/
+											{series?.episode_count}
+										</div>
+									</div>
+								</td>
 							)}
 							{settings?.media_table_showEpisodeCount == "1" && (
 								<td>{series?.episode_count}</td>
