@@ -14,7 +14,6 @@ const General = () => {
 	const hasSetCurrentSettings = useRef(false);
 	const [settingsChanged, setSettingsChanged] = useState(false);
 	const [selected, setSelected] = useState<string | null>(null);
-	const [user, setUser] = useState<any>();
 	useEffect(() => {
 		if (initialSettings !== undefined && !hasSetCurrentSettings.current) {
 			setCurrentSettings({
