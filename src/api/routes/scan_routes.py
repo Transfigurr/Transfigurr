@@ -11,7 +11,7 @@ async def get_all_series_metadata_route(user: str = Depends(login_with_token)):
     return
 
 
-@router.get("/api/scan/series/metadata/{series_id}")
+@router.put("/api/scan/series/metadata/{series_id}")
 async def get_series_metadata_route(series_id, user: str = Depends(login_with_token)):
     await metadata_service.enqueue(series_id)
     return

@@ -13,6 +13,7 @@ import { ReactComponent as Continuing } from "../svgs/play_arrow.svg";
 import { ReactComponent as Ended } from "../svgs/stop.svg";
 import { ReactComponent as Network } from "../svgs/tower.svg";
 import { ReactComponent as EditIcon } from "../svgs/edit.svg";
+import { ReactComponent as LoadingIcon } from "../svgs/loading.svg";
 import Season from "../season/Season";
 import { WebSocketContext } from "../../contexts/webSocketContext";
 import SeriesModals from "../seriesModals/SeriesModals";
@@ -24,6 +25,7 @@ const Series = ({ series_name }: any) => {
 		wsContext?.data?.series && profiles
 			? wsContext?.data?.series[series_name]
 			: {};
+	const system = wsContext?.data?.system;
 
 	const [content, setContent] = useState<any>({});
 	const handleEditClick = () => {
@@ -33,7 +35,6 @@ const Series = ({ series_name }: any) => {
 
 	const [selected, setSelected] = useState<string | null>(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
-
 	const handleScanClick = async () => {
 		await fetch(
 			`http://${window.location.hostname}:7889/api/scan/series/${series_name}`,
@@ -48,7 +49,7 @@ const Series = ({ series_name }: any) => {
 
 	const handleMetadataClick = async () => {
 		await fetch(
-			`http://${window.location.hostname}:7889/api/scan/series/metadata${series_name}`,
+			`http://${window.location.hostname}:7889/api/scan/series/metadata/${series_name}`,
 			{
 				method: "PUT",
 				headers: {
@@ -64,6 +65,11 @@ const Series = ({ series_name }: any) => {
 			key="scan"
 			icon={
 				<SyncIcon
+					className={
+						system?.scan_running && system?.scan_target == series?.id
+							? styles.spinning
+							: ""
+					}
 					style={{
 						height: "100%",
 						width: "100%",
@@ -78,12 +84,25 @@ const Series = ({ series_name }: any) => {
 			text="Refresh Metadata"
 			key="metadata"
 			icon={
-				<RssFeedIcon
-					style={{
-						height: "100%",
-						width: "100%",
-					}}
-				/>
+				system?.metadata_running == "1" &&
+				system?.metadata_target == series?.id ? (
+					<LoadingIcon
+						className={styles.loading}
+						style={{
+							fill: "white",
+							color: "white",
+							height: "30px",
+							width: "30px",
+						}}
+					/>
+				) : (
+					<RssFeedIcon
+						style={{
+							height: "100%",
+							width: "100%",
+						}}
+					/>
+				)
 			}
 			onClick={handleMetadataClick}
 			selected={selected}

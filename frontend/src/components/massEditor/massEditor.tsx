@@ -18,7 +18,6 @@ const MassEditor = () => {
 	const [monitored, setMonitored] = useState<any>(false);
 	const [profile, setProfile] = useState<any>();
 	const applyChanges = () => {
-		console.log(monitored, profile);
 		for (const series of selectedSeries) {
 			series.monitored =
 				parseInt(monitored) !== -1 ? parseInt(monitored) : undefined;

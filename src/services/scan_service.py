@@ -2,6 +2,7 @@ import asyncio
 import logging
 import os
 from src.api.controllers.series_controller import get_all_series
+from src.api.controllers.system_controller import set_system
 from src.utils.folders import get_series_folder
 from src.tasks.scan import scan_series, scan_system
 from src.tasks.validate import validate_series
@@ -37,10 +38,15 @@ class ScanService:
         while True:
             try:
                 series_id = await self.scan_queue.get()
+                await set_system({'id': 'scan_running', 'value': True})
+                await set_system({'id': 'scan_target', 'value': series_id})
                 await scan_series(series_id)
                 await validate_series(series_id)
                 await scan_system()
                 self.scan_set.remove(series_id)
+                if self.scan_queue.empty():
+                    await set_system({'id': 'scan_running', 'value': False})
+                    await set_system({'id': 'scan_target', 'value': ''})
                 await asyncio.sleep(1)
             except Exception as e:
                 logger.error("An error occurred while processing series %s", str(e), extra={'service': 'Scan'})

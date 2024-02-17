@@ -18,6 +18,7 @@ const ProfileModal = ({
 	const codecs: any = wsContext?.data?.codecs;
 	const containers: any = wsContext?.data?.containers;
 	const encoders: any = wsContext?.data?.encoders;
+	const settings = wsContext?.data?.settings;
 	const onClose = () => {
 		setIsOpen(false);
 	};
@@ -211,9 +212,11 @@ const ProfileModal = ({
 			</div>
 			<div className={styles.footer}>
 				<div className={styles.left}>
-					<div className={styles.delete} onClick={onDelete}>
-						Delete
-					</div>
+					{settings?.default_profile != content?.id && (
+						<div className={styles.delete} onClick={onDelete}>
+							Delete
+						</div>
+					)}
 				</div>
 				<div className={styles.right}>
 					<div className={styles.cancel} onClick={onClose}>

@@ -153,6 +153,7 @@ const ExplorerComponent = () => {
 				settings={settings}
 				setSetting={setSetting}
 				view={view}
+				system={wsContext?.data.system}
 				onRefresh={onRefresh}
 				handleOptionsClick={handleOptionsClick}
 			/>

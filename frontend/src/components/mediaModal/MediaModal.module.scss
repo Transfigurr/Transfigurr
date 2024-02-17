@@ -112,14 +112,14 @@
 		position: absolute;
 		transform: rotate(-45deg);
 		border-radius: 1px;
-		background-color: var(--black);
+		background-color: var(--textColor);
 		height: 15px;
 		width: 3px;
 	}
 	.horizontalCross {
 		border-radius: 1px;
 		position: absolute;
-		background-color: black;
+		background-color: var(--textColor);
 		height: 15px;
 		width: 3px;
 		transform: rotate(45deg);

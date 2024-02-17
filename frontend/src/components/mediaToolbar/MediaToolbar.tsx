@@ -1,3 +1,4 @@
+import styles from "./MediaToolbar.module.scss";
 import ToolBarItem from "../ToolBarItem/ToolBarItem";
 import { ReactComponent as Rss } from "../svgs/rss_feed.svg";
 import { ReactComponent as Sync } from "../svgs/cached.svg";
@@ -7,12 +8,14 @@ import { ReactComponent as SortIcon } from "../svgs/sort.svg";
 import { ReactComponent as FilterIcon } from "../svgs/filter.svg";
 import { ReactComponent as TableIcon } from "../svgs/table.svg";
 import { ReactComponent as OverviewIcon } from "../svgs/view_list.svg";
+import { ReactComponent as LoadingIcon } from "../svgs/loading.svg";
 import ToolBar from "../ToolBar/ToolBar";
 const MediaToolbar = ({
 	onUpdate,
 	selected,
 	setSelected,
 	settings,
+	system,
 	setSetting,
 	view,
 	onRefresh,
@@ -25,6 +28,7 @@ const MediaToolbar = ({
 			key={0}
 			icon={
 				<Sync
+					className={system?.scan_running === "1" ? styles.spinning : ""}
 					style={{
 						height: "100%",
 						width: "100%",
@@ -40,12 +44,24 @@ const MediaToolbar = ({
 			index={1}
 			key={1}
 			icon={
-				<Rss
-					style={{
-						height: "100%",
-						width: "100%",
-					}}
-				/>
+				system?.metadata_running == "1" ? (
+					<LoadingIcon
+						className={styles.loading}
+						style={{
+							fill: "white",
+							color: "white",
+							height: "30px",
+							width: "30px",
+						}}
+					/>
+				) : (
+					<Rss
+						style={{
+							height: "100%",
+							width: "100%",
+						}}
+					/>
+				)
 			}
 			onClick={onRefresh}
 			selected={selected}
