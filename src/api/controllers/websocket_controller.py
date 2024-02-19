@@ -44,7 +44,7 @@ async def websocket_controller(websocket: WebSocket):
         }
 
         for data_type, getter in task_dict.items():
-            task = asyncio.create_task(send_data(websocket, data_type, getter, 1))
+            task = asyncio.create_task(send_data(websocket, data_type, getter, .25))
             tasks.append(task)
 
         while True:
