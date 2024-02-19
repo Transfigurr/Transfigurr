@@ -4,8 +4,9 @@ from src.models.base import Base
 
 
 @dataclass
-class profile_codec(Base):
+class Profile_Codec(Base):
     __tablename__ = 'profile_codec'
+
     profile_id: int = Column(Integer, ForeignKey('profiles.id'), primary_key=True)
     codec_id: str = Column(String, primary_key=True)
 

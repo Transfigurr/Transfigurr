@@ -1,0 +1,47 @@
+.inputCheckboxContainer {
+	display: flex;
+	align-items: center;
+}
+
+.inputCheckbox {
+	position: absolute;
+	opacity: 0;
+	cursor: pointer;
+	z-index: 1;
+	margin: 0;
+	padding: 0;
+	border-radius: 3px;
+}
+
+.checkmark {
+	position: relative;
+	border-radius: 3px;
+}
+
+.inputCheckbox:checked ~ .checkmark {
+	background-color: var(--transfigurrPurple);
+}
+
+.inputCheckbox:not(:checked) ~ .checkmark {
+	border: 1px solid var(--defaultBorderColor);
+}
+
+.checkmark:after {
+	content: "";
+	position: absolute;
+	display: none;
+}
+
+.inputCheckbox:checked ~ .checkmark:after {
+	display: block;
+}
+
+.checkmark:after {
+	left: 6px;
+	top: 2px;
+	width: 5px;
+	height: 10px;
+	border: solid #fff;
+	border-width: 0 3px 3px 0;
+	transform: rotate(45deg);
+}

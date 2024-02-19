@@ -28,7 +28,7 @@ const Status = () => {
 									style={{
 										height: "20px",
 										width: "100%",
-										backgroundColor: "#f3f3f3",
+										backgroundColor: "var(--progressBarBackgroundColor)",
 										boxShadow: "inset 0 1px 2px rgba(0, 0, 0, 0.1)",
 										borderRadius: "4px",
 									}}
@@ -37,7 +37,8 @@ const Status = () => {
 										style={{
 											height: "100%",
 											width: `${
-												(system?.config_free_space /
+												((system?.config_total_space -
+													system?.config_free_space) /
 													system?.config_total_space) *
 												100
 											}%`,
@@ -57,7 +58,7 @@ const Status = () => {
 									style={{
 										height: "20px",
 										width: "100%",
-										backgroundColor: "#f3f3f3",
+										backgroundColor: "var(--progressBarBackgroundColor)",
 										boxShadow: "inset 0 1px 2px rgba(0, 0, 0, 0.1)",
 										borderRadius: "4px",
 									}}
@@ -66,7 +67,8 @@ const Status = () => {
 										style={{
 											height: "100%",
 											width: `${
-												(system?.movies_free_space /
+												((system?.movies_total_space -
+													system?.movies_free_space) /
 													system?.movies_total_space) *
 												100
 											}%`,
@@ -86,7 +88,7 @@ const Status = () => {
 									style={{
 										height: "20px",
 										width: "100%",
-										backgroundColor: "#f3f3f3",
+										backgroundColor: "var(--progressBarBackgroundColor)",
 										boxShadow: "inset 0 1px 2px rgba(0, 0, 0, 0.1)",
 										borderRadius: "4px",
 									}}
@@ -95,7 +97,8 @@ const Status = () => {
 										style={{
 											height: "100%",
 											width: `${
-												(system?.series_free_space /
+												((system?.series_total_space -
+													system?.series_free_space) /
 													system?.series_total_space) *
 												100
 											}%`,
@@ -119,7 +122,7 @@ const Status = () => {
 									style={{
 										height: "20px",
 										width: "100%",
-										backgroundColor: "#f3f3f3",
+										backgroundColor: "var(--progressBarBackgroundColor)",
 										boxShadow: "inset 0 1px 2px rgba(0, 0, 0, 0.1)",
 										borderRadius: "4px",
 									}}
@@ -128,7 +131,8 @@ const Status = () => {
 										style={{
 											height: "100%",
 											width: `${
-												(system?.transcode_free_space /
+												((system?.transcode_total_space -
+													system?.transcode_free_space) /
 													system?.transcode_total_space) *
 												100
 											}%`,

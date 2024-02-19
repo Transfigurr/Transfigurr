@@ -2,24 +2,30 @@
 	display: flex;
 	flex-direction: column;
 	width: 100%;
-	background-color: rgb(250, 251, 252);
+	background-color: var(--pageBackground);
+	overflow-y: scroll;
+	scrollbar-width: none;
 }
 .content {
 	overflow-y: scroll;
+	scrollbar-width: none;
 	margin: 20px;
+	color: var(--textColor);
 }
 
 .table {
-	color: #515253;
+	color: var(--textColor);
+	fill: var(--textColor);
 	border-collapse: collapse;
 	width: 100%;
 	border: none;
 	font-size: 14px;
+
 	.row {
-		border-top: 1px solid #eee;
+		border-top: 1px solid var(--borderColor);
 	}
 	.row:hover {
-		background-color: white;
+		background-color: var(--tableRowHoverBackgroundColor);
 	}
 	.headRow {
 		border: none;
@@ -33,13 +39,14 @@
 }
 
 .name:hover {
-	color: black;
+	color: var(--transfigurrAlternativePurple);
 	text-decoration: underline;
 }
 
 .iconCell {
 	padding: 0px;
 	margin: 0px;
+	fill: var(--textColor);
 }
 
 th,
@@ -60,8 +67,8 @@ tr {
 	justify-content: center;
 }
 .navigation {
-	color: #515253;
-	fill: #515253;
+	color: var(--textColor);
+	fill: var(--textColor);
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -102,7 +109,7 @@ tr {
 }
 
 .totalRecords {
-	color: #999;
+	color: var(--textColor);
 	font-size: 14px;
 	display: flex;
 	justify-content: flex-end;

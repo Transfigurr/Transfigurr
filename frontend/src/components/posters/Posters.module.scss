@@ -1,0 +1,12 @@
+.postersView {
+	background-color: var(--pageBackground);
+	display: flex;
+	flex-direction: column;
+	.content {
+		margin: 15px;
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		background-color: var(--pageBackground);
+	}
+}

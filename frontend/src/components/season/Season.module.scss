@@ -1,14 +1,23 @@
 .season {
-	background-color: white;
-	border: 1px solid #e5e5e5;
+	background-color: var(--cardBackgroundColor);
+	border: 1px solid var(--borderColor);
 	border-radius: 4px;
 	display: flex;
 	flex-direction: column;
-	margin-bottom: 15px;
+	margin-bottom: 20px;
+	line-height: 1.5;
 	.seasonHeader {
 		display: flex;
 		align-items: center;
-		color: #515253;
+		color: var(--textColor);
+		position: relative;
+		cursor: pointer;
+
+		.icon {
+			height: 35px;
+			width: 35px;
+		}
+
 		.left {
 			display: flex;
 			flex-direction: row;
@@ -27,40 +36,43 @@
 				margin-left: 20px;
 			}
 			.profileRatio {
-				margin-left: 20px;
+				margin-left: 15px;
+				font-weight: bold;
+				font-size: 14px;
+				padding: 0px 5px;
+				color: var(--white);
 			}
 			.size {
-				margin-left: 20px;
+				margin-left: 10px;
+				color: var(--helpTextColor);
 			}
 		}
 		.center {
+			position: absolute;
 			display: flex;
-			flex-direction: row;
 			align-items: center;
-			justify-content: flex-start;
-			padding: 10px;
-			width: 10%;
+			justify-content: center;
+			width: 100%;
+			cursor: pointer;
+			fill: var(--textColor);
 		}
 		.right {
 			width: 45%;
-
-			.open {
-			}
 		}
 	}
 	.seasonInfo {
 		table {
+			color: var(--textColor);
 			border-collapse: collapse;
 			width: 100%;
 
 			tr {
-				border-top: 1px solid #e5e5e5;
+				border-top: 1px solid var(--borderColor);
 			}
 		}
 
 		th,
 		td {
-			//border: 1px solid #dddddd;
 			text-align: left;
 			padding: 8px;
 			margin: 8px;
@@ -70,11 +82,13 @@
 		}
 		.seasonInfoFooter {
 			padding: 10px 15px;
-			background-color: #fafafa;
-			border-top: 1px solid #e5e5e5;
+			background-color: var(--pageFooterBackground);
 			display: flex;
 			justify-content: center;
 			align-items: center;
+			color: var(--textColor);
+			fill: var(--textColor);
+			cursor: pointer;
 		}
 	}
 }

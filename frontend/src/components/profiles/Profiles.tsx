@@ -7,9 +7,8 @@ import { WebSocketContext } from "../../contexts/webSocketContext";
 const Profiles = () => {
 	const wsContext = useContext(WebSocketContext);
 	const profiles = wsContext?.data?.profiles;
-	const [modalType, setModalType] = useState("");
-	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [selectedProfile, setSelectedProfile] = useState<any>({});
+	const [isModalOpen, setIsModalOpen] = useState(false);
 	const handleProfileClick = (profile: any) => {
 		setSelectedProfile(profile);
 		setContent({
@@ -22,25 +21,29 @@ const Profiles = () => {
 			encoder: profile?.encoder,
 			extension: profile?.extension,
 		});
-		setModalType("profile");
 		setIsModalOpen(true);
 	};
 
 	const onModalDelete = async () => {
-		await fetch(`http://localhost:8000/api/profiles/${selectedProfile?.id}`, {
-			method: "DELETE",
-			headers: {
-				"Content-Type": "application/json",
+		await fetch(
+			`http://${window.location.hostname}:7889/api/profiles/${selectedProfile?.id}`,
+			{
+				method: "DELETE",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
 			},
-		});
+		);
 		setIsModalOpen(false);
 	};
 
 	const onModalSave = async () => {
-		await fetch(`http://localhost:8000/api/profiles`, {
+		await fetch(`http://${window.location.hostname}:7889/api/profiles`, {
 			method: "PUT",
 			headers: {
 				"Content-Type": "application/json",
+				Authorization: `Bearer ${localStorage.getItem("token")}`,
 			},
 			body: JSON.stringify(content),
 		});
@@ -64,7 +67,7 @@ const Profiles = () => {
 
 	return (
 		<div className={styles.profiles}>
-			{isModalOpen && modalType === "profile" && (
+			{isModalOpen && (
 				<div className={styles.modalBackdrop}>
 					<div className={styles.modalContent}>
 						<ProfileModal
@@ -86,13 +89,22 @@ const Profiles = () => {
 					<div className={styles.header}>Profiles</div>
 					<div className={styles.profileContainer}>
 						{profilesArray?.map((profile: any) => (
-							<div onClick={() => handleProfileClick(profile)}>
-								<Profile name={profile?.name} codecs={profile?.codecs} />
-							</div>
+							<Profile
+								name={profile?.name}
+								key={profile?.name}
+								codecs={profile?.codecs}
+								onClick={handleProfileClick}
+								profile={profile}
+							/>
 						))}
-						<div onClick={() => handleProfileClick({})}>
-							<Profile type={"add"} name={""} codecs={[]} />
-						</div>
+						<Profile
+							type={"add"}
+							key={"add"}
+							name={""}
+							codecs={[]}
+							profile={{}}
+							onClick={handleProfileClick}
+						/>
 					</div>
 				</div>
 			</div>

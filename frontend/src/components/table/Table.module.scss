@@ -1,0 +1,76 @@
+.tableContainer {
+	padding: 20px;
+	.table {
+		color: var(--textColor);
+		border-collapse: collapse;
+		width: 100%;
+		border: none;
+		font-size: 14px;
+		.row {
+			border-top: 1px solid var(--borderColor);
+			padding: 15px;
+		}
+		.row:hover {
+			background-color: var(--tableRowHoverBackgroundColor);
+		}
+		.headRow {
+			border: none;
+			font-size: 14px;
+		}
+	}
+}
+
+.name {
+	color: var(--transfigurrPurple);
+	text-decoration: none;
+}
+
+.name:hover {
+	color: var(--transfigurrAlternativePurple);
+	text-decoration: underline;
+}
+
+.iconCell {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 50px;
+	margin: 1px;
+	fill: var(--textColor);
+}
+
+.episodeCount {
+	display: inline-block;
+	align-items: center;
+	justify-content: center;
+	fill: var(--textColor);
+	text-align: center;
+	width: 100%;
+	border-radius: 3px;
+	font-size: 12px;
+	color: white;
+}
+
+.progressBar {
+	position: relative;
+	transition: width 200ms ease;
+	display: flex;
+	flex-direction: row;
+	background-color: var(--posterProgressBarBackgroundColor);
+	color: var(--textColor);
+	font-size: 12px;
+	height: 15px;
+	border-radius: 3px;
+	.progress {
+		border-radius: 3px;
+	}
+	.detailText {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		color: white;
+	}
+}

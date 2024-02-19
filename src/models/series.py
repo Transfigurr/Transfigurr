@@ -20,5 +20,7 @@ class Series(Base):
     monitored: bool = Column(Integer)
     episode_count: int = Column(Integer)
     size: int = Column(Integer)
+    seasons_count: int = Column(Integer)
     space_saved: int = Column(Integer)
     missing_episodes: int = Column(Integer)
+    runtime: int = Column(Integer)

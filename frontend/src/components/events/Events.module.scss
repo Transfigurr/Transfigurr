@@ -1,0 +1,120 @@
+.logs {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	background-color: var(--pageBackground);
+}
+.content {
+	overflow-y: scroll;
+	scrollbar-width: none;
+	margin: 20px;
+	display: flex;
+	flex-direction: column;
+}
+
+.table {
+	color: var(--textColor);
+	border-collapse: collapse;
+	width: 100%;
+	border: none;
+	font-size: 14px;
+	float: left;
+	.row {
+		border-top: 1px solid var(--borderColor);
+	}
+	.row:hover {
+		background-color: var(--tableRowHoverBackgroundColor);
+	}
+	.headRow {
+		border: none;
+		font-size: 14px;
+	}
+}
+
+.name {
+	color: var(--transfigurrPurple);
+	text-decoration: none;
+}
+
+.name:hover {
+	color: var(--transfigurrAlternativePurple);
+	text-decoration: underline;
+}
+
+.iconCell {
+	padding: 0px;
+	margin: 0px;
+	height: 15px;
+}
+
+th,
+td {
+	text-align: left;
+	padding: 8px;
+	margin: 8px;
+}
+tr {
+	padding: 8px;
+}
+
+.pageInfo {
+	height: 100%;
+	min-width: 35px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.navigation {
+	color: var(--textColor);
+	fill: var(--textColor);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 30px;
+	font-size: 13px;
+}
+
+.button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	height: 100%;
+}
+
+.disabled {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	opacity: 0.25;
+	cursor: auto;
+}
+
+.codec {
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	background-color: #4f566f;
+	border-radius: 2px;
+	color: white;
+	font-size: 11px;
+	padding: 1px 3px;
+	margin: 2px;
+	border: 1px solid #4f566f;
+	line-height: 1;
+	cursor: default;
+}
+
+.totalRecords {
+	color: var(--textColor);
+	font-size: 14px;
+	display: flex;
+	justify-content: flex-end;
+	align-items: flex-start;
+}
+
+.codecRow {
+	padding: 0px;
+	margin: 0px;
+}

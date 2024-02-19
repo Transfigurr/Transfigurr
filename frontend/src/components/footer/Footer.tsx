@@ -1,8 +1,9 @@
-import useSystem from "../../hooks/useSystem";
+import { useContext } from "react";
 import styles from "./Footer.module.scss";
+import { WebSocketContext } from "../../contexts/webSocketContext";
 const Footer = () => {
-	const system: any = useSystem();
-
+	const wsContext = useContext(WebSocketContext);
+	const system = wsContext?.data?.system;
 	return (
 		<div className={styles.footer}>
 			<div className={styles.keyContainer}>

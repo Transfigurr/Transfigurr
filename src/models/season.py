@@ -9,8 +9,8 @@ class Season(Base):
 
     id: str = Column(String, primary_key=True)
     name: str = Column(String)
-    season_number: str = Column(Integer, default=0)
-    episode_count: str = Column(Integer, default=0)
+    season_number: int = Column(Integer, default=0)
+    episode_count: int = Column(Integer, default=0)
     size: int = Column(Integer, default=0)
     series_id: str = Column(String, ForeignKey("series.id"))
     space_saved: int = Column(Integer, default=0)

@@ -1,55 +1,48 @@
 
-from cProfile import Profile
+from sqlalchemy.future import select
 from src.api.controllers.episode_controller import get_episode
 from src.api.controllers.profile_controller import get_profile
-from src.global_state import GlobalState
 from sqlalchemy import delete
-
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from src.models.episode import Episode
+from sqlalchemy.ext.asyncio import AsyncSession
 from src.models.history import History
-engine = create_async_engine("sqlite+aiosqlite:///config/db/database.db")
-
-
-global_state = GlobalState()
+from src.utils.db import engine, instance_to_dict
 
 
 async def get_all_historys():
-    historys = await global_state.get_all_from_table(History)
-    res = {}
-    for h in historys:
-        res[h['id']] = h
-        episode = await get_episode(h['episode_id'])
-        profile = await get_profile(h['profile_id'])
-        res[h['id']]['episode'] = episode
-        res[h['id']]['profile'] = profile
-    return res
+    async with AsyncSession(engine) as async_session:
+        res = await async_session.execute(select(History))
+        history = {}
+        historys = [instance_to_dict(profile) for profile in res.scalars().all()]
+        for h in historys:
+            history[h['id']] = h
+            episode = await get_episode(h['episode_id'])
+            profile = await get_profile(h['profile_id'])
+            history[h['id']]['episode'] = episode
+            history[h['id']]['profile'] = profile
+        return history
 
 
 async def get_history(history_id):
-    historys = await global_state.get_object_from_table(History, history_id)
-    res = {}
-    for h in historys:
-        res[h['id']] = h
-        print('trying to get episode and profile')
-        episode = await global_state.get_object_from_table(Episode, h['episode_id'])
-        profile = await global_state.get_object_from_table(Profile, h['profile_id'])
-        print(episode, profile)
-        res[h['id']]['episode'] = episode
-        res[h['id']]['profile'] = profile
-    return res
+    async with AsyncSession(engine) as async_session:
+        res = await async_session.execute(select(History).where(History.id == history_id))
+        res = {}
+        for h in res.scalars().first():
+            res[h['id']] = h
+            episode = await get_episode(h['episode_id'])
+            profile = await get_profile(h['profile_id'])
+            res[h['id']]['episode'] = episode
+            res[h['id']]['profile'] = profile
+        return res
 
 
 async def set_history(episode, profile):
-
     async with AsyncSession(engine) as async_session:
-
-        history = {}
-        history['episode_id'] = episode['id']
-        history['profile_id'] = profile['id']
-        history['prev_codec'] = episode['video_codec']
-        history['new_codec'] = profile['codec']
-
+        history = {
+            'episode_id': episode['id'],
+            'profile_id': profile['id'],
+            'prev_codec': episode['video_codec'],
+            'new_codec': profile['codec']
+        }
         obj = History(**history)
         async_session.add(obj)
         await async_session.commit()

@@ -7,6 +7,7 @@ import { ReactComponent as NavigateNext } from "../svgs/navigate_next.svg";
 import { ReactComponent as NavigateBefore } from "../svgs/navigate_before.svg";
 import { ReactComponent as ResetWrench } from "../svgs/reset_wrench.svg";
 import ToolBar from "../ToolBar/ToolBar";
+import Codec from "../codec/Codec";
 
 const History = () => {
 	const wsContext: any = useContext(WebSocketContext);
@@ -67,10 +68,10 @@ const History = () => {
 								</tr>
 							</thead>
 							<tbody>
-								{currentRecords.reverse().map((entry: any) => (
-									<tr className={styles.row}>
-										<td className={styles.iconCell}>
-											<ResetWrench style={{ fill: "#515253" }} />
+								{currentRecords.reverse().map((entry: any, index: number) => (
+									<tr className={styles.row} key={index}>
+										<td>
+											<ResetWrench />
 										</td>
 										<td>
 											<a
@@ -86,13 +87,13 @@ const History = () => {
 										</td>
 										<td>{entry?.episode?.episode_name}</td>
 										<td className={styles.codecRow}>
-											<div className={styles.codec}>{entry?.prev_codec}</div>
+											<Codec codec={entry?.prev_codec} />
 										</td>
 										<td className={styles.codecRow}>
-											<div className={styles.codec}>{entry?.new_codec}</div>
+											<Codec codec={entry?.new_codec} />
 										</td>
 										<td>
-											{(entry?.episode?.size / 1000000000)
+											{(entry?.episode?.space_saved / 1000000000)
 												.toFixed(2)
 												.toString() + " GB"}
 										</td>

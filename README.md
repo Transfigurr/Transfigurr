@@ -97,12 +97,6 @@ cd frontend
 npm install
 ```
 
-5. Enter your API in `config.py`
-
-```JS
-API_KEY = 'ENTER YOUR API_KEY';
-```
-
 ## Usage
 
 1. Pull
@@ -125,9 +119,15 @@ docker run transfigurr
 
 3.
 
-Visit localhost:3000
+Visit {your-server-ip}:7889
 
 ## Roadmap
+
+- Advanced video and audio profile settings
+- Individual episode monitoring
+- Improved data presentation
+- Task Scheduling
+- Support for movies
 
 See the [open issues](https://github.com/Transfigurr/Transfigurr/issues) for a list of proposed features (and known issues).
 
@@ -138,7 +138,6 @@ Contributions are what make the open source community such an amazing place to b
 - If you have suggestions for adding or removing projects, feel free to [open an issue](https://github.com/Transfigurr/Transfigurr/issues/new) to discuss it, or directly create a pull request after you edit the _README.md_ file with necessary changes.
 - Please make sure you check your spelling and grammar.
 - Create individual PR for each suggestion.
-- Please also read through the [Code Of Conduct](https://github.com/Transfigurr/Transfigurr/blob/main/CODE_OF_CONDUCT.md) before posting your first idea as well.
 
 ### Creating A Pull Request
 

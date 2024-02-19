@@ -2,7 +2,8 @@
 	display: flex;
 	flex-direction: column;
 	width: 100%;
-	background-color: #fafbfc;
+	background-color: var(--pageBackground);
+	color: var(--textColor);
 	padding: 20px;
 	.health {
 		display: flex;
@@ -11,7 +12,7 @@
 			font-size: 21px;
 			margin-bottom: 21px;
 			width: 100%;
-			border-bottom: 1px solid #e5e5e5;
+			border-bottom: 1px solid var(--borderColor);
 			line-height: inherit;
 			padding: 0;
 		}
@@ -23,7 +24,7 @@
 			font-size: 21px;
 			margin-bottom: 21px;
 			width: 100%;
-			border-bottom: 1px solid #e5e5e5;
+			border-bottom: 1px solid var(--borderColor);
 			line-height: inherit;
 			padding: 0;
 		}
@@ -35,7 +36,7 @@
 			font-size: 21px;
 			margin-bottom: 21px;
 			width: 100%;
-			border-bottom: 1px solid #e5e5e5;
+			border-bottom: 1px solid var(--borderColor);
 			line-height: inherit;
 			padding: 0;
 		}
@@ -47,7 +48,7 @@
 			font-size: 21px;
 			margin-bottom: 21px;
 			width: 100%;
-			border-bottom: 1px solid #e5e5e5;
+			border-bottom: 1px solid var(--borderColor);
 			line-height: inherit;
 			padding: 0;
 		}
@@ -55,7 +56,7 @@
 }
 
 .table {
-	color: #515253;
+	color: var(--textColor);
 	border-collapse: collapse;
 	width: 100%;
 	border: none;
@@ -63,7 +64,7 @@
 
 	tbody {
 		.row {
-			border-top: 1px solid #eee;
+			border-top: 1px solid var(--borderColor);
 			th,
 			td {
 				text-align: left;
@@ -75,7 +76,7 @@
 		}
 
 		.row:hover {
-			background-color: white;
+			background-color: var(--tableRowHoverBackgroundColor);
 		}
 	}
 	.headRow {

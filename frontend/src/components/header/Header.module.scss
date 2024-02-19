@@ -1,9 +1,10 @@
 .header {
 	display: flex;
 	min-height: 60px;
-	background-color: #3a323b;
+	background-color: var(--pageHeaderBackgroundColor);
 	align-items: center;
-	z-index: 10;
+	z-index: 4;
+	position: relative;
 	.left {
 		display: flex;
 		flex-direction: row;
@@ -21,7 +22,7 @@
 			justify-content: center;
 			color: white;
 			font-size: 12px;
-			width: 60px;
+			width: 200px;
 			height: 60px;
 			.line {
 				display: flex;
@@ -61,7 +62,7 @@
 			padding-right: 15px;
 			color: white;
 			fill: white;
-			svg {
+			.svg {
 				display: flex;
 				align-items: center;
 				justify-content: center;
@@ -69,24 +70,13 @@
 				min-width: 30px;
 				fill: white;
 			}
-		}
-		.profile:hover {
-			fill: "var(--themePurple)";
-			color: "var(--themePurple)";
-			svg {
+			.svg:hover {
 				fill: var(--themePurple);
 			}
 		}
 	}
 }
 
-.svg {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	min-height: 30px;
-	min-width: 30px;
-}
 .text {
 	display: flex;
 	align-items: center;
@@ -95,6 +85,36 @@
 	height: 20px;
 }
 
-.toolBarOption:hover {
-	fill: #35c5f4;
+.dropdown {
+	position: absolute;
+	width: 185px;
+	top: 100%;
+	right: 0px;
+	background-color: var(--toolbarMenuItemBackgroundColor);
+	fill: white;
+	.item {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: flex-start;
+		height: 40px;
+		padding: 0px 20px;
+		fill: white;
+		.text {
+			color: white;
+			fill: white;
+			font-size: 14px;
+		}
+		.profilesvg {
+			padding-right: 5px;
+			height: 20px;
+			width: 20px;
+			fill: white;
+		}
+
+		cursor: pointer;
+		&:hover {
+			background-color: var(--toolbarMenuItemHoverBackgroundColor);
+		}
+	}
 }

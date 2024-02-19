@@ -1,25 +1,20 @@
+import { Link } from "react-router-dom";
 import styles from "./Settings.module.scss";
 const Settings = ({ setSelectedItem }: any) => {
 	return (
 		<div className={styles.settings}>
 			<div className={styles.setting}>
-				<div
-					className={styles.header}
-					onClick={() => (window.location.href = "/settings/profiles")}
-				>
+				<Link className={styles.header} to="/settings/profiles">
 					Profiles
-				</div>
+				</Link>
 				<div className={styles.body}>
 					Quality, Language, Delay and Release profiles
 				</div>
 			</div>
 			<div className={styles.setting}>
-				<div
-					className={styles.header}
-					onClick={() => (window.location.href = "/settings/general")}
-				>
+				<Link to="/settings/general" className={styles.header}>
 					General
-				</div>
+				</Link>
 				<div className={styles.body}>
 					Port, SSL, username/password, proxy, analytics and updates
 				</div>

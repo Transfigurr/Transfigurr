@@ -1,17 +1,18 @@
 import styles from "./MassEditor.module.scss";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { WebSocketContext } from "../../contexts/webSocketContext";
 import { ReactComponent as BookmarkFilled } from "../svgs/bookmark_filled.svg";
 import { ReactComponent as BookmarkUnfilled } from "../svgs/bookmark_unfilled.svg";
 import { ReactComponent as ContinuingIcon } from "../svgs/play_arrow.svg";
 import { ReactComponent as StoppedIcon } from "../svgs/stop.svg";
 import ToolBar from "../ToolBar/ToolBar";
+import InputCheckbox from "../inputCheckbox/InputCheckbox";
+import InputSelect from "../inputSelect/InputSelect";
 
 const MassEditor = () => {
 	const wsContext: any = useContext(WebSocketContext);
 	const series: any = wsContext?.data?.series;
 	const seriesArray = Array.from(Object.values(series || {}));
-
 	const profiles: any = wsContext?.data?.profiles;
 	const [selectedSeries, setSelectedSeries] = useState<any>([]);
 	const [monitored, setMonitored] = useState<any>(false);
@@ -22,11 +23,13 @@ const MassEditor = () => {
 				parseInt(monitored) !== -1 ? parseInt(monitored) : undefined;
 			series.profile_id =
 				parseInt(profile) !== 0 ? parseInt(profile) : undefined;
-			fetch(`http://localhost:8000/api/series/${series.id}`, {
+			fetch(`http://${window.location.hostname}:7889/api/series/${series.id}`, {
 				method: "PUT",
 				headers: {
 					"Content-Type": "application/json",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
+
 				body: JSON.stringify(series),
 			});
 		}
@@ -34,8 +37,8 @@ const MassEditor = () => {
 
 	const handleCheckboxChange = (series: any) => {
 		setSelectedSeries((prevSelected: any[]) =>
-			prevSelected.includes(series)
-				? prevSelected.filter((s) => s !== series)
+			prevSelected.some((s) => s.id === series.id)
+				? prevSelected.filter((s) => s.id !== series.id)
 				: [...prevSelected, series],
 		);
 	};
@@ -44,6 +47,11 @@ const MassEditor = () => {
 		setSelectAll(!selectAll);
 		setSelectedSeries(!selectAll ? seriesArray : []);
 	};
+
+	useEffect(() => {
+		applyChanges();
+	}, [monitored, profile]);
+
 	return (
 		<div className={styles.massEditor}>
 			<ToolBar />
@@ -54,9 +62,7 @@ const MassEditor = () => {
 							<thead>
 								<tr className={styles.headRow}>
 									<th>
-										<input
-											className={styles.checkbox}
-											type="checkbox"
+										<InputCheckbox
 											checked={selectAll}
 											onChange={handleSelectAllChange}
 										/>
@@ -71,11 +77,9 @@ const MassEditor = () => {
 							</thead>
 							<tbody>
 								{seriesArray?.map((s: any, index: any) => (
-									<tr className={styles.row}>
+									<tr className={styles.row} key={index}>
 										<td className={styles.inputCell}>
-											<input
-												className={styles.checkbox}
-												type="checkbox"
+											<InputCheckbox
 												checked={selectedSeries.some(
 													(series: any) => series.id === s.id,
 												)}
@@ -99,7 +103,7 @@ const MassEditor = () => {
 												{s?.id}
 											</a>
 										</td>
-										<td>{profiles[s.profile_id]?.name}</td>
+										<td>{profiles ? profiles[s.profile_id]?.name : ""}</td>
 										<td>/series/{s.id}</td>
 										<td>{(s.space_saved / 1000000000).toFixed(2)} GB</td>
 										<td>{(s.size / 1000000000).toFixed(2)} GB</td>
@@ -115,38 +119,35 @@ const MassEditor = () => {
 			<div className={styles.footer}>
 				<div className={styles.input}>
 					<div className={styles.inputContainer}>
-						<label>Monitored </label>
-						<select
-							className={styles.select}
-							value={monitored}
-							onChange={(e) => {
+						<label className={styles.label}>Monitored </label>
+						<InputSelect
+							selected={monitored}
+							onChange={(e: any) => {
 								setMonitored(e.target.value);
 							}}
 						>
 							<option value={-1}>{"No Change"}</option>
 							<option value={0}>{"Not Monitored"}</option>
 							<option value={1}>{"Monitored"}</option>
-						</select>
+						</InputSelect>
 					</div>
 					<div className={styles.inputContainer}>
-						<label>Profile </label>
-						<select
-							className={styles.select}
-							value={profile}
-							onChange={(e) => {
+						<label className={styles.label}>Profile </label>
+						<InputSelect
+							selected={profile}
+							onChange={(e: any) => {
 								setProfile(e.target.value);
 							}}
 						>
 							<option value={0}>{"No Change"}</option>
-							{Object.values(profiles || {}).map((profile: any) => (
-								<option value={profile.id}>{profile.name}</option>
-							))}
-						</select>
-					</div>
-					<div className={styles.buttonContainer}>
-						<button className={styles.apply} onClick={applyChanges}>
-							Apply
-						</button>
+							{Object.values(profiles || {}).map(
+								(profile: any, index: number) => (
+									<option value={profile.id} key={index}>
+										{profile.name}
+									</option>
+								),
+							)}
+						</InputSelect>
 					</div>
 				</div>
 			</div>

@@ -1,47 +1,42 @@
 import styles from "./SideBarItem.module.scss";
+import { Link } from "react-router-dom";
+
 const SideBarItem = ({
 	options,
 	selected,
 	selectedItem,
 	setSelectedItem,
 }: any) => {
-	const onItemClick = (index: number) => {
-		window.location.href = options.children[index].link;
-	};
-	const onParentClick = () => {
-		window.location.href = options.link;
-	};
-
 	return (
 		<div
 			className={styles.sideBarItem}
 			style={selected ? { borderLeft: "3px solid #9338b5" } : {}}
 		>
-			<div
+			<Link
+				to={options.link}
 				className={styles.mainItem}
 				style={
 					selected
 						? {
 								color: "var(--transfigurrPurple)",
-								backgroundColor: "#252833",
+								backgroundColor: "var(--sidebarActiveBackgroundColor)",
 								fill: "var(--transfigurrPurple)",
 							}
 						: {}
 				}
 				onClick={() => {
-					onParentClick();
 					setSelectedItem(-1);
 				}}
 			>
 				<div className={styles.svg}>{options.svg}</div>
 				{options.text}
-			</div>
+			</Link>
 			{selected ? (
 				options.children.map((child: any, index: any) => (
-					<div
+					<Link
+						to={child.link}
 						className={styles.childItem}
 						key={index}
-						onClick={() => onItemClick(index)}
 						style={
 							selectedItem === index
 								? {
@@ -52,7 +47,7 @@ const SideBarItem = ({
 						}
 					>
 						{child.text}
-					</div>
+					</Link>
 				))
 			) : (
 				<></>

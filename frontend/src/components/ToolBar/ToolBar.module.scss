@@ -3,9 +3,8 @@
 	flex-direction: row;
 	min-height: 60px;
 	width: 100%;
-	background-color: #4c4651;
-	opacity: 90%;
-	z-index: 10;
+	background-color: var(--toolbarBackgroundColor);
+	z-index: 3;
 	.left {
 		display: flex;
 		flex-direction: row;
@@ -23,7 +22,7 @@
 		width: 1px;
 		height: 40px;
 		margin: 10px 20px;
-		border-right: 1px solid #e5e5e5;
+		border-right: 1px solid var(--borderColor);
 		opacity: 0.35;
 	}
 }

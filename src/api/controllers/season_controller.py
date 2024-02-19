@@ -1,46 +1,45 @@
 from sqlalchemy.future import select
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy import MetaData
-import sqlalchemy
+from sqlalchemy.ext.asyncio import AsyncSession
 from src.models.season import Season
-from src.global_state import GlobalState
-global_state = GlobalState()
-metadata = MetaData()
-
-
-def instance_to_dict(instance):
-    if not instance:
-        return {}
-    return {c.key: getattr(instance, c.key)
-            for c in sqlalchemy.inspect(instance).mapper.column_attrs}
-
-
-engine = create_async_engine("sqlite+aiosqlite:///config/db/database.db")
+from src.utils.db import engine, instance_to_dict
 
 
 async def get_all_seasons():
-    return await global_state.get_all_from_table(Season)
+    async with AsyncSession(engine) as async_session:
+        res = await async_session.execute(select(Season))
+        return [instance_to_dict(obj) for obj in res.scalars().all()]
 
 
 async def get_seasons_by_id(series_id):
     async with AsyncSession(engine) as async_session:
         res = await async_session.execute(select(Season).where(Season.series_id == series_id))
-        objects = res.scalars().all()
-        return [instance_to_dict(obj) for obj in objects]
+        return [instance_to_dict(obj) for obj in res.scalars().all()]
 
 
 async def get_season(season_name):
-    return await global_state.get_object_from_table(Season, season_name)
+    async with AsyncSession(engine) as async_session:
+        res = await async_session.execute(select(Season).where(Season.id == season_name))
+        return instance_to_dict(res.scalars().first())
 
 
 async def set_season(season):
-    return await global_state.set_object_to_table(Season, season)
+    async with AsyncSession(engine) as async_session:
+        res = await async_session.execute(select(Season).where(Season.id == season['id']))
+        obj = res.scalars().first()
+        if obj:
+            for key, value in season.items():
+                if value is not None:
+                    setattr(obj, key, value)
+        else:
+            obj = Season(**season)
+            async_session.add(obj)
+        await async_session.commit()
 
 
 async def remove_season(season_id: str):
     async with AsyncSession(engine) as async_session:
-        result = await async_session.execute(select(Season).where(Season.id == season_id))
-        season = result.scalars().first()
+        res = await async_session.execute(select(Season).where(Season.id == season_id))
+        season = res.scalars().first()
         if season:
             await async_session.delete(season)
             await async_session.commit()

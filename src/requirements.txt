@@ -11,3 +11,7 @@ sqlalchemy
 greenlet
 watchdog
 unidecode
+python-jose
+bcrypt
+passlib
+pillow

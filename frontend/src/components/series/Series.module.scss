@@ -1,10 +1,9 @@
 .series {
 	width: 100%;
-	overflow: scroll;
-	height: 100%;
 	display: flex;
 	flex-direction: column;
-	z-index: 1;
+	overflow: hidden;
+	height: 100%;
 
 	.modalBackdrop {
 		position: fixed;
@@ -13,7 +12,7 @@
 		left: 0;
 		width: 100%;
 		height: 100%;
-		background: rgba(0, 0, 0, 0.5); // Semi-transparent black overlay
+		background: var(--modalBackdropBackgroundColor);
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -21,104 +20,147 @@
 
 	.modalContent {
 		z-index: 200;
-		background: white;
-		//padding: 20px;
-		box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		background: var(--modalBackgroundColor);
+		box-shadow: 0 0 10px var(--modalBorderBoxShadowColor);
 		width: 1080px;
+		color: var(--textColor);
 	}
 
-	.header {
-		width: 100%;
-		height: 425px;
-		display: flex;
-		align-items: center;
-		justify-content: flex-start;
-		position: relative;
-		.backdrop {
-			width: 100%; /* Make sure the image takes up 100% of the container's width */
-			height: 100%; /* Make sure the image takes up 100% of the container's height */
-			object-fit: cover; /* Prevent distortion by covering the ent*/
-			z-index: -3;
-			object-position: top left; /* Align the top left corner of the image content */
-			display: flex;
-			align-items: center;
-			justify-content: center;
-		}
-		.filter {
-			position: absolute;
-			height: 100%;
-			width: 100%;
-			background: black;
-			opacity: 0.7;
-		}
-		.content {
-			display: flex;
-			flex-direction: row;
-			align-items: flex-start;
-			justify-content: flex-start;
-			position: absolute;
-			padding: 30px;
-			.poster {
-				width: 250px;
-				height: 368px;
-				margin-right: 35px;
-			}
-			.details {
-				display: flex;
-				flex-direction: column;
-				flex-grow: 1;
-				.titleRow {
-					color: white;
-					font-size: 50px;
-					margin-bottom: 5px;
-				}
-				.tags {
-					color: white;
-					display: flex;
-					flex-direction: row;
-					flex-wrap: wrap;
-					.tag {
-						margin: 5px 10px 5px 0px;
-						padding: 3px 7px;
-						font-weight: bold;
-						font-size: 17px;
-						font-weight: 300;
-						background-color: #4f566f;
-						border-radius: 2px;
-						border: 1px solid #4f566f;
-					}
-					.icon {
-					}
-					.text {
-					}
-				}
-				.seriesDetails {
-					color: white;
-					font-size: 20px;
-					margin-bottom: 8px;
-					.runtime {
-						margin-right: 15px;
-					}
-					.genre {
-						margin-right: 15px;
-					}
-					.runYears {
-						margin-right: 15px;
-					}
-				}
-				.overview {
-					color: white;
-					line-height: 1.5;
-				}
-			}
-		}
-	}
-	.seasonsContainer {
-		z-index: 3;
-		padding: 20px;
-		background-color: #fafbfc;
+	.seriesContent {
+		overflow-y: scroll;
+		scrollbar-width: none;
+		flex: 1;
 		display: flex;
 		flex-direction: column;
-		height: 100%;
+		.header {
+			width: 100%;
+			height: 425px;
+			display: flex;
+			align-items: center;
+			justify-content: flex-start;
+			position: relative;
+
+			.backdrop {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				object-position: top left;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			.filter {
+				position: absolute;
+				height: 100%;
+				width: 100%;
+				background: black;
+				opacity: 0.7;
+			}
+			.content {
+				display: flex;
+				flex-direction: row;
+				align-items: flex-start;
+				justify-content: flex-start;
+				position: absolute;
+				padding: 30px;
+				.poster {
+					width: 250px;
+					height: 368px;
+					margin-right: 35px;
+				}
+				.details {
+					display: flex;
+					flex-direction: column;
+					flex-grow: 1;
+					.titleRow {
+						color: white;
+						height: 60px;
+						font-size: 50px;
+						margin-bottom: 5px;
+						display: flex;
+						padding-right: 25px;
+						align-items: center;
+
+						.headerIcon {
+							fill: var(--white);
+							display: flex;
+							align-items: center;
+							justify-content: center;
+						}
+					}
+					.tags {
+						color: white;
+						display: flex;
+						flex-direction: row;
+						flex-wrap: wrap;
+						.tag {
+							display: flex;
+							align-items: center;
+							justify-content: center;
+							margin: 5px 10px 5px 0px;
+							padding: 3px 7px;
+							font-weight: bold;
+							font-size: 17px;
+							font-weight: 300;
+							background-color: #4f566f;
+							border-radius: 2px;
+							border: 1px solid #4f566f;
+							.icon {
+								display: flex;
+								align-items: center;
+								justify-content: center;
+								fill: var(--white);
+								padding-right: 5px;
+							}
+						}
+					}
+					.seriesDetails {
+						color: white;
+						font-size: 20px;
+						margin-bottom: 8px;
+						.runtime {
+							margin-right: 15px;
+						}
+						.genre {
+							margin-right: 15px;
+						}
+						.runYears {
+							margin-right: 15px;
+						}
+					}
+					.overview {
+						color: white;
+						line-height: 1.5;
+						font-size: 15px;
+					}
+				}
+			}
+		}
+
+		.seasonsContainer {
+			z-index: 3;
+			padding: 20px;
+			flex: 1;
+			background-color: var(--pageBackground);
+			display: flex;
+			flex-direction: column;
+		}
 	}
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+.spinning {
+	animation: spin 2s linear infinite;
+}
+
+.loading {
+	animation: spin 2s linear infinite;
 }

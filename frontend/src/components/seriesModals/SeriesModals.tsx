@@ -1,33 +1,56 @@
-import { useContext } from "react";
 import useProfilesAPI from "../../hooks/useProfilesAPI";
 import styles from "./SeriesModals.module.scss";
-import { ModalContext } from "../../contexts/modalContext";
+import InputSelect from "../inputSelect/InputSelect";
+import InputCheckbox from "../inputCheckbox/InputCheckbox";
+import { useEffect } from "react";
 
-const SeriesModal = () => {
+const SeriesModal = ({ setIsModalOpen, content, setContent }: any) => {
 	const profiles: object = useProfilesAPI();
 
-	const modalContext = useContext(ModalContext);
 	const onClose = () => {
-		modalContext?.setShowModal(false);
+		setIsModalOpen(false);
 	};
-
-	const { setShowModal, modalData, setModalData }: any = modalContext || {};
 
 	const onSave = async () => {
-		await fetch(`http://localhost:8000/api/series/${modalData.name}`, {
-			method: "PUT",
-			headers: {
-				"Content-Type": "application/json",
+		await fetch(
+			`http://${window.location.hostname}:7889/api/series/${content.name}`,
+			{
+				method: "PUT",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				body: JSON.stringify(content),
 			},
-			body: JSON.stringify(modalData),
-		});
-		setShowModal(false);
+		);
+		setIsModalOpen(false);
 	};
+
+	useEffect(() => {
+		const modalBackdropClass = "modalBackdrop";
+
+		const handleKeyDown = (event: KeyboardEvent) => {
+			if (event.key === "Escape") {
+				setIsModalOpen(false);
+			}
+		};
+		const handleOutsideClick = (event: any) => {
+			if (event.target.classList.value.includes(modalBackdropClass)) {
+				setIsModalOpen(false);
+			}
+		};
+		window.addEventListener("click", handleOutsideClick);
+		window.addEventListener("keydown", handleKeyDown);
+		return () => {
+			window.removeEventListener("click", handleOutsideClick);
+			window.removeEventListener("keydown", handleKeyDown);
+		};
+	}, [setIsModalOpen]);
 
 	return (
 		<div className={styles.modal}>
 			<div className={styles.header}>
-				<div className={styles.left}>{modalData?.name}</div>
+				<div className={styles.left}>{content?.name}</div>
 				<div className={styles.right}>
 					<div className={styles.cross} onClick={onClose}>
 						<div className={styles.verticalCross}></div>
@@ -35,34 +58,34 @@ const SeriesModal = () => {
 					</div>
 				</div>
 			</div>
-
 			<div className={styles.content}>
 				<div className={styles.inputContainer}>
-					<label>Monitored </label>
-					<input
+					<label className={styles.label}>Monitored </label>
+					<InputCheckbox
 						type="checkbox"
-						checked={modalData?.monitored}
-						onChange={(e) =>
-							setModalData({
-								...modalData,
+						checked={content?.monitored}
+						onChange={(e: any) =>
+							setContent({
+								...content,
 								monitored: e.target.checked,
 							})
 						}
 					/>
 				</div>
 				<div className={styles.inputContainer}>
-					<label>Profile </label>
-					<select
-						className={styles.select}
-						value={modalData.profile_id}
-						onChange={(e) => {
-							setModalData({ ...modalData, profile_id: e.target.value });
+					<label className={styles.label}>Profile </label>
+					<InputSelect
+						selected={content.profile_id}
+						onChange={(e: any) => {
+							setContent({ ...content, profile_id: e.target.value });
 						}}
 					>
-						{Object.values(profiles)?.map((profile: any) => (
-							<option value={profile.id}>{profile.name}</option>
+						{Object.values(profiles)?.map((profile: any, index: number) => (
+							<option value={profile.id} key={index}>
+								{profile.name}
+							</option>
 						))}
-					</select>
+					</InputSelect>
 				</div>
 			</div>
 			<div className={styles.footer}>

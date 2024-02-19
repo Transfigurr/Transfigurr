@@ -80,4 +80,21 @@ default_system = [
         'id': 'transcode_total_space',
         'value': 0
     },
+    {
+        'id': 'scan_running',
+        'value': 0
+    },
+    {
+        'id': 'scan_target',
+        'value': ''
+    },
+    {
+        'id': 'metadata_running',
+        'value': 0
+    },
+    {
+        'id': 'metadata_target',
+        'value': ''
+    }
+
 ]

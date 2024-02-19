@@ -1,4 +1,5 @@
 .toolBarOption {
+	position: relative;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -7,6 +8,7 @@
 	width: 60px;
 	fill: white;
 	cursor: pointer;
+
 	.svg {
 		display: flex;
 		align-items: center;
@@ -15,14 +17,54 @@
 		min-width: 30px;
 	}
 	.text {
+		text-align: center;
+		line-height: 11px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		font-size: 11px;
-		height: 20px;
-		color: #8895aa;
+		height: 24px;
+		user-select: none;
+		color: var(--toolbarLabelColor);
 	}
 }
+
+.dropdown {
+	position: absolute;
+	width: 185px;
+	top: 100%;
+	right: 0px;
+	z-index: 1000;
+	background-color: var(--toolbarMenuItemBackgroundColor);
+	.item {
+		display: flex;
+		align-items: center;
+		justify-content: flex-start;
+		height: 40px;
+		padding: 0px 20px;
+		.text {
+			color: white;
+			font-size: 14px;
+		}
+		.svg {
+			display: flex;
+			align-items: flex-start;
+			justify-content: flex-end;
+			flex: 1;
+			fill: white;
+		}
+
+		cursor: pointer;
+		&:hover {
+			background-color: var(--toolbarMenuItemHoverBackgroundColor);
+		}
+	}
+}
+
 .toolBarOption:hover {
 	fill: var(--themePurple);
+}
+
+.toolBarItem {
+	position: relative;
 }
