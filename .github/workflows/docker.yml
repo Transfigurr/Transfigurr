@@ -75,6 +75,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-
 
+      - name: Convert IMAGE_NAME to lowercase
+        run: echo "IMAGE_NAME=$(echo ${{ env.IMAGE_NAME }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
+
       - name: Build and push Docker image
         run: |
           docker buildx build \
