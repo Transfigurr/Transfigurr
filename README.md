@@ -19,11 +19,10 @@
 
 [![GitHub Stars](https://img.shields.io/github/stars/transfigurr/transfigurr.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/transfigurr/transfigurr)
 [![GitHub Release](https://img.shields.io/github/release/transfigurr/transfigurr.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/transfigurr/transfigurr/releases)
-[![GitHub Package Repository](https://img.shields.io/static/v1.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=transfigurr.com&message=GitHub%20Package&logo=github)](https://github.com/transfigurr/transfigurr/packages)
+[![GitHub Package Repository](https://img.shields.io/static/v1.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=transfigurr&message=GitHub%20Package&logo=github)](https://github.com/transfigurr/transfigurr/packages)
 [![Docker Pulls](https://img.shields.io/docker/pulls/transfigurr/transfigurr.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=pulls&logo=docker)](https://hub.docker.com/r/transfigurr/transfigurr)
 [![Docker Stars](https://img.shields.io/docker/stars/transfigurr/transfigurr.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=stars&logo=docker)](https://hub.docker.com/r/transfigurr/transfigurr)
-[![GitHub Build Workflow Status](https://img.shields.io/jenkins/build?labelColor=555555&logoColor=ffffff&style=for-the-badge&jobUrl=https%3A%2F%2Fci.transfigurr.com%2Fjob%2FDocker-Pipeline-Builders%2Fjob%2Ftransfigurr%2Fjob%2Fmaster%2F&logo=jenkins)](https://ci.transfigurr.com/job/Docker-Pipeline-Builders/job/transfigurr/job/master/)
-[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/transfigurr/transfigurr/docker.yml?branch=main&style=for-the-badge&jobUrl=https%3A%2F%2Fci.transfigurr.com%2Fjob%2FDocker-Pipeline-Builders%2Fjob%2Ftransfigurr%2Fjob%2Fmaster%2F&logo=github)](https://ci.transfigurr.com/job/Docker-Pipeline-Builders/job/transfigurr/job/master/)
+[![GitHub Build Workflow Status](https://img.shields.io/github/actions/workflow/status/transfigurr/transfigurr/docker.yml?branch=main&style=for-the-badge&jobUrl=https%3A%2F%2Fci.transfigurr.com%2Fjob%2FDocker-Pipeline-Builders%2Fjob%2Ftransfigurr%2Fjob%2Fmaster%2F&logo=github)](https://ci.transfigurr.com/job/Docker-Pipeline-Builders/job/transfigurr/job/master/)
 
 [Transfigurr](https://transfigurr.com/) is a PVR for usenet and bittorrent users. It can monitor multiple RSS feeds for new episodes of your favorite shows and will grab, sort and rename them. It can also be configured to automatically upgrade the quality of files already downloaded when a better quality format becomes available.
 
