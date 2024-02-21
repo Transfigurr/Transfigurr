@@ -52,7 +52,7 @@ jobs:
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
           images: |
-            ${{ env.IMAGE_NAME }}/${{ env.IMAGE_NAME }}
+            ${{ env.IMAGE_NAME }}
             ghcr.io/${{ env.IMAGE_NAME }}/${{ env.IMAGE_NAME }}
           tags: |
             ${{ steps.set_tag.outputs.tag }}
@@ -67,4 +67,3 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          platforms: linux/amd64,linux/arm64
