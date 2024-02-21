@@ -76,13 +76,10 @@ jobs:
             ${{ runner.os }}-buildx-
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          push: true
-          provenance: false
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          platforms: ${{ matrix.platform }}
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
+        run: |
+          docker buildx build \
+            --platform ${{ matrix.platform }} \
+            --push \
+            --tag ${{ env.IMAGE_NAME }}:${{ steps.set_tag.outputs.tag }} \
+            --tag ${{ env.IMAGE_NAME }}:${{ env.ARCH }}-${{ steps.set_tag.outputs.tag }} \
+            .
