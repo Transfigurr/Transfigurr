@@ -45,8 +45,9 @@ jobs:
             echo "::set-output name=version::${{ github.event.pull_request.title }}"
             echo "BRANCH_NAME=latest" >> $GITHUB_ENV
           else
-            echo "::set-output name=tag::develop"
-            echo "BRANCH_NAME=develop" >> $GITHUB_ENV
+            BRANCH_NAME=$(echo "${{ github.ref }}" | sed -r 's/refs\/heads\///g')
+            echo "::set-output name=tag::${BRANCH_NAME}"
+            echo "BRANCH_NAME=${BRANCH_NAME}" >> $GITHUB_ENV
             fi
 
       - name: Convert IMAGE_NAME to lowercase
