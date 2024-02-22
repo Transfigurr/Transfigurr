@@ -66,7 +66,7 @@ jobs:
           docker buildx build \
             --platform linux/amd64 \
             --push \
-            --tag ${{ env.IMAGE_NAME }}:amd64-${{ steps.set_tag.outputs.tag }} \
+            --tag transfigurr/transfigurr:amd64-${{ steps.set_tag.outputs.tag }} \
             .
           docker buildx build \
             --platform linux/arm64 \
