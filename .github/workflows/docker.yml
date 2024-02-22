@@ -88,7 +88,6 @@ jobs:
             --tag docker.io/${{ env.IMAGE_NAME }}:arm64-${{ env.BRANCH_NAME }} \
             --tag ghcr.io/${{ env.IMAGE_NAME }}:arm64-${{ steps.set_tag.outputs.tag }} \
             --tag ghcr.io/${{ env.IMAGE_NAME }}:arm64-${{ env.BRANCH_NAME }} \
-
             .
       - name: Create and push Docker manifest
         run: |
