@@ -75,9 +75,11 @@ jobs:
             --tag docker.io/${{ env.IMAGE_NAME }}:arm64-${{ steps.set_tag.outputs.tag }} \
             --tag ghcr.io/${{ env.IMAGE_NAME }}:arm64-${{ steps.set_tag.outputs.tag }} \
             .
-          docker buildx build \
-            --platform linux/amd64,linux/arm64 \
-            --push \
-            --tag docker.io/${{ env.IMAGE_NAME }}:${{ steps.set_tag.outputs.tag }} \
-            --tag ghcr.io/${{ env.IMAGE_NAME }}:${{ steps.set_tag.outputs.tag }} \
-            .
+          docker manifest create docker.io/${{ env.IMAGE_NAME }}:${{ steps.set_tag.outputs.tag }} \
+            docker.io/${{ env.IMAGE_NAME }}:amd64-${{ steps.set_tag.outputs.tag }} \
+            docker.io/${{ env.IMAGE_NAME }}:arm64-${{ steps.set_tag.outputs.tag }}
+          docker manifest push docker.io/${{ env.IMAGE_NAME }}:${{ steps.set_tag.outputs.tag }}
+          docker manifest create ghcr.io/${{ env.IMAGE_NAME }}:${{ steps.set_tag.outputs.tag }} \
+            ghcr.io/${{ env.IMAGE_NAME }}:amd64-${{ steps.set_tag.outputs.tag }} \
+            ghcr.io/${{ env.IMAGE_NAME }}:arm64-${{ steps.set_tag.outputs.tag }}
+          docker manifest push ghcr.io/${{ env.IMAGE_NAME }}:${{ steps.set_tag.outputs.tag }}
