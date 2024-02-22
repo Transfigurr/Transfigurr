@@ -3,12 +3,12 @@ name: Build Image
 on: 
   push:
       branches:
-          - develop
+          - develop*
   pull_request:
     types: [closed]
     branches:
       - main
-      - develop
+      - develop*
 
 env:
   IMAGE_NAME: ${{ github.repository }}
@@ -37,15 +37,17 @@ jobs:
             username: ${{ github.actor }}
             password: ${{ secrets.GITHUB_TOKEN }}
       
-      - name: Set Docker tag based on branch
+      - name: Set variables based on branch
         id: set_tag
         run: |
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             echo "::set-output name=tag::latest"
             echo "::set-output name=version::${{ github.event.pull_request.title }}"
-          elif [[ "${{ github.ref }}" == "refs/heads/develop" ]]; then
+            echo "BRANCH_NAME=latest" >> $GITHUB_ENV
+          else
             echo "::set-output name=tag::develop"
-          fi
+            echo "BRANCH_NAME=develop" >> $GITHUB_ENV
+            fi
 
       - name: Convert IMAGE_NAME to lowercase
         run: echo "IMAGE_NAME=$(echo ${{ env.IMAGE_NAME }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
@@ -60,16 +62,6 @@ jobs:
           key: ${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-buildx-
-
-
-      - name: Extract branch name
-        shell: bash
-        run: |
-          BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})
-          if [[ "$BRANCH_NAME" == "main" ]]; then
-            BRANCH_NAME="latest"
-          fi
-          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
 
       - name: Build and push Docker image
         run: |
@@ -103,7 +95,6 @@ jobs:
             docker.io/${{ env.IMAGE_NAME }}:amd64-${{ env.BRANCH_NAME }} \
             docker.io/${{ env.IMAGE_NAME }}:arm64-${{ env.BRANCH_NAME }}
           docker buildx imagetools push docker.io/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }}
-
 
           docker buildx imagetools create \
             --tag ghcr.io/${{ env.IMAGE_NAME }}:${{ steps.set_tag.outputs.tag }} \
