@@ -66,15 +66,18 @@ jobs:
           docker buildx build \
             --platform linux/amd64 \
             --push \
-            --tag transfigurr/transfigurr:amd64-${{ steps.set_tag.outputs.tag }} \
+            --tag docker.io/${{ env.IMAGE_NAME }}:amd64-${{ steps.set_tag.outputs.tag }} \
+            --tag ghcr.io/${{ env.IMAGE_NAME }}:amd64-${{ steps.set_tag.outputs.tag }} \
             .
           docker buildx build \
             --platform linux/arm64 \
             --push \
-            --tag ${{ env.IMAGE_NAME }}:arm64-${{ steps.set_tag.outputs.tag }} \
+            --tag docker.io/${{ env.IMAGE_NAME }}:arm64-${{ steps.set_tag.outputs.tag }} \
+            --tag ghcr.io/${{ env.IMAGE_NAME }}:arm64-${{ steps.set_tag.outputs.tag }} \
             .
           docker buildx build \
             --platform linux/amd64,linux/arm64 \
             --push \
-            --tag ${{ env.IMAGE_NAME }}:${{ steps.set_tag.outputs.tag }} \
+            --tag docker.io/${{ env.IMAGE_NAME }}:${{ steps.set_tag.outputs.tag }} \
+            --tag ghcr.io/${{ env.IMAGE_NAME }}:${{ steps.set_tag.outputs.tag }} \
             .
