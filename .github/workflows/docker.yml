@@ -46,7 +46,7 @@ jobs:
             echo "BRANCH_NAME=latest" >> $GITHUB_ENV
           else
             BRANCH_NAME=$(echo "${{ github.ref }}" | sed -r 's/refs\/heads\///g')
-            echo "::set-output name=tag::${BRANCH_NAME}"
+            echo "::set-output name=tag::develop"
             echo "BRANCH_NAME=${BRANCH_NAME}" >> $GITHUB_ENV
             fi
 
