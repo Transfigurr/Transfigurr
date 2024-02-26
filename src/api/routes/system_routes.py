@@ -11,10 +11,10 @@ async def get_all_system_route(user: str = Depends(login_with_token)):
 
 
 @router.get("/api/system/{system_id}", tags=["System"])
-async def get_system_route(system_id, user: str = Depends(login_with_token)):
+async def get_system_route(system_id: str, user: str = Depends(login_with_token)):
     return await get_system(system_id)
 
 
 @router.put('/api/system/{system_id}', tags=["System"])
-async def set_system_route(request: Request, user: str = Depends(login_with_token)):
+async def set_system_route(system_id: str, request: Request, user: str = Depends(login_with_token)):
     return await set_system(await request.json())
