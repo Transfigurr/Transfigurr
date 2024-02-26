@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/Transfigurr/Transfigurr">
-    <img src="frontend/public/android-chrome-96x96.png" alt="Logo" width="150" height="150">
+    <img src="frontend/public/transfigurr.png" alt="Logo" width="150" height="150">
   </a>
 
   <h3 align="center"><a href="https://github.com/transfigurr/transfigurr">Transfigurr</a></h3>
@@ -9,7 +9,7 @@
     A modern codec management and automation tool
     <br/>
     <br/>
-    <a href="https://github.com/Transfigurr/Transfigurr">View Demo</a>
+    <a href="https://www.transfigurr.com">View Demo</a>
     .
     <a href="https://github.com/Transfigurr/Transfigurr/issues">Report Bug</a>
     .
@@ -17,16 +17,18 @@
   </p>
 </p>
 
-[![GitHub Stars](https://img.shields.io/github/stars/transfigurr/transfigurr.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/transfigurr/transfigurr)
-[![GitHub Release](https://img.shields.io/github/release/transfigurr/transfigurr.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/transfigurr/transfigurr/releases)
-[![GitHub Package Repository](https://img.shields.io/static/v1.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=transfigurr&message=GitHub%20Package&logo=github)](https://github.com/transfigurr/transfigurr/packages)
-[![Docker Pulls](https://img.shields.io/docker/pulls/transfigurr/transfigurr.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=pulls&logo=docker)](https://hub.docker.com/r/transfigurr/transfigurr)
-[![Docker Stars](https://img.shields.io/docker/stars/transfigurr/transfigurr.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=stars&logo=docker)](https://hub.docker.com/r/transfigurr/transfigurr)
+[![GitHub Stars](https://img.shields.io/github/stars/transfigurr/transfigurr.svg?color=9C27B0&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/transfigurr/transfigurr)
+[![GitHub Release](https://img.shields.io/github/release/transfigurr/transfigurr.svg?color=9C27B0&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/transfigurr/transfigurr/releases)
+[![GitHub Package Repository](https://img.shields.io/static/v1.svg?color=9C27B0&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=transfigurr&message=GitHub%20Package&logo=github)](https://github.com/transfigurr/transfigurr/packages)
+[![Docker Pulls](https://img.shields.io/docker/pulls/transfigurr/transfigurr.svg?color=9C27B0&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=pulls&logo=docker)](https://hub.docker.com/r/transfigurr/transfigurr)
+[![Docker Stars](https://img.shields.io/docker/stars/transfigurr/transfigurr.svg?color=9C27B0&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=stars&logo=docker)](https://hub.docker.com/r/transfigurr/transfigurr)
 [![GitHub Build Workflow Status](https://img.shields.io/github/actions/workflow/status/transfigurr/transfigurr/docker.yml?branch=main&style=for-the-badge&jobUrl=https%3A%2F%2Fci.transfigurr.com%2Fjob%2FDocker-Pipeline-Builders%2Fjob%2Ftransfigurr%2Fjob%2Fmaster%2F&logo=github)](https://ci.transfigurr.com/job/Docker-Pipeline-Builders/job/transfigurr/job/master/)
 
-[Transfigurr](https://transfigurr.com/) is a PVR for usenet and bittorrent users. It can monitor multiple RSS feeds for new episodes of your favorite shows and will grab, sort and rename them. It can also be configured to automatically upgrade the quality of files already downloaded when a better quality format becomes available.
+[Transfigurr](https://transfigurr.com/) Transfigurr is a modern media management tool specifically designed for automating codec encodings using FFmpeg. It streamlines the process of video file conversion according to custom ffmpeg profiles, making it an essential tool for media enthusiasts and professionals alike.
 
 ## Supported Architectures
+
+Docker manifest is utilized for multi-platform awareness. More information is available from docker [here](https://distribution.github.io/distribution/spec/manifest-v2-2/#manifest-list) and our announcement [here](https://blog.linuxserver.io/2019/02/21/the-lsio-pipeline-project/).
 
 Simply pulling `transfigurr/transfigurr:latest` should retrieve the correct image for your arch, but you can also pull specific arch images via tags.
 
@@ -53,7 +55,7 @@ Access the webui at `<your-ip>:7889`, for more information check out [Transfigur
 
 ### Media folders
 
-We have set `/series`, `/movies` and `/transcode` as **_optional paths_**, this is because it is the easiest way to get started. While easy to use, it has some drawbacks. Mainly losing the ability to hardlink (TL;DR a way for a file to exist in multiple places on the same file system while only consuming one file worth of space), or atomic move (TL;DR instant file moves, rather than copy+delete) files while processing content.
+The `/series`, `/movies` and `/transcode` have been set as **_optional paths_**, this is because it is the easiest way to get started. While easy to use, it has some drawbacks. Mainly losing the ability to hardlink (TL;DR a way for a file to exist in multiple places on the same file system while only consuming one file worth of space), or atomic move (TL;DR instant file moves, rather than copy+delete) files while processing content.
 
 Use the optional paths if you dont understand, or dont want hardlinks/atomic moves.
 
@@ -95,9 +97,9 @@ docker run -d \
   -e TZ=Etc/UTC \
   -p 7889:7889 \
   -v /path/to/data:/config \
-  -v /path/to/series:/series `#optional` \
-  -v /path/to/movies:/movies `#optional` \
-  -v /path/to/transcode:/transcode `#optional` \
+  -v /path/to/series:/series #optional \
+  -v /path/to/movies:/movies #optional \
+  -v /path/to/transcode:/transcode #optional \
   --restart unless-stopped \
   transfigurr/transfigurr:latest
 ```
@@ -174,8 +176,6 @@ uid=1000(your_user) gid=1000(your_user) groups=1000(your_user)
   ```
 
 ## Updating Info
-
-Most of our images are static, versioned, and require an image update and container recreation to update the app inside. With some exceptions (noted in the relevant readme.md), we do not recommend or support updating apps inside the container. Please consult the [Application Setup](#application-setup) section above to see if it is recommended for the image.
 
 Below are the instructions for updating containers:
 
@@ -254,11 +254,3 @@ docker build \
   --pull \
   -t transfigurr/transfigurr:latest .
 ```
-
-The ARM variants can be built on x86_64 hardware using `multiarch/qemu-user-static`
-
-```bash
-docker run --rm --privileged multiarch/qemu-user-static:register --reset
-```
-
-Once registered you can define the dockerfile to use with `-f Dockerfile.aarch64`.

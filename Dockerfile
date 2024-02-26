@@ -27,5 +27,8 @@ RUN apk add --no-cache --update \
 WORKDIR /
 COPY init /init
 RUN chmod +x /init
+ENV PUID=1000
+ENV PGID=1000
+ENV TZ=America/New_York
 EXPOSE 7889
 CMD ["/init"]

@@ -1,7 +1,23 @@
 #!/bin/ash
+PUID=${PUID:-1000}
+PGID=${PGID:-1000}
 
 mkdir -p /config/db
 mkdir -p /config/artwork
-python src/init_db.py
+mkdir -p /series
+mkdir -p /movies
+mkdir -p /transcode
 
-uvicorn src.main:app --host 0.0.0.0 --port 7889
+if id -u $PUID > /dev/null 2>&1 && id -g $PGID > /dev/null 2>&1; then
+    chown $PUID:$PGID /config
+    chown $PUID:$PGID /movies
+    chown $PUID:$PGID /series
+    chown $PUID:$PGID /transcode
+    su -m $PUID <<EOF
+    python src/init_db.py
+    uvicorn src.main:app --host 0.0.0.0 --port 7889
+EOF
+else
+    python src/init_db.py
+    uvicorn src.main:app --host 0.0.0.0 --port 7889
+fi
