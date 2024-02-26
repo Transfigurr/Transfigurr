@@ -99,7 +99,7 @@ async def startup_event():
 app.add_event_handler("startup", startup_event)
 
 
-@app.get("/{full_path:path}", include_in_schema=False)
+@app.get("/{full_path:path}", tags=["StaticResource"])
 async def read_item(full_path: str, request: Request):
     file_path = Path(f"frontend/build/{full_path}")
     if not file_path.exists() or file_path.is_dir():
