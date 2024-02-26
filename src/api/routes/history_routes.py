@@ -4,17 +4,17 @@ from src.api.controllers.history_controller import get_all_historys, get_history
 router = APIRouter()
 
 
-@router.get("/api/history")
+@router.get("/api/history", tags=["History"])
 async def get_all_history_route(user: str = Depends(login_with_token)):
     return await get_all_historys()
 
 
-@router.get("/api/history/{history_id}")
+@router.get("/api/history/{history_id}", tags=["History"])
 async def get_setting(history_id, user: str = Depends(login_with_token)):
     return await get_history(history_id)
 
 
-@router.put('/api/history')
+@router.put('/api/history', tags=["History"])
 async def set_settings(request: Request, user: str = Depends(login_with_token)):
     history = await request.json()
     return await set_history(history)
