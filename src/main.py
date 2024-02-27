@@ -1,9 +1,11 @@
 import asyncio
+import json
 import os
 from fastapi import FastAPI, Request
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
+from fastapi.openapi.utils import get_openapi
 from fastapi.middleware.cors import CORSMiddleware
 from src.api.controllers.settings_controller import get_all_settings
 from src.utils.folders import get_root_folder, verify_folders
@@ -63,10 +65,32 @@ os.makedirs("../config", exist_ok=True)
 app.mount("/static", StaticFiles(directory="frontend/build/static"), name="static")
 
 
+def custom_openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+    openapi_schema = get_openapi(
+        title="Transfigurr API",
+        version="V1",
+        routes=app.routes,
+    )
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+
+async def write_api():
+    openapi_schema = custom_openapi()
+    openapi_path = 'src/Transfigurr.API.V1'
+    if not os.path.exists(openapi_path):
+        os.makedirs(openapi_path)
+    with open(openapi_path + '/openapi.json', 'w') as file:
+        json.dump(openapi_schema, file)
+
+
 async def startup_event():
     await verify_folders()
     log_level = (await get_all_settings()).get('log_level', '')
     start_logger(log_level)
+    asyncio.create_task(write_api())
     asyncio.create_task(scan_service.enqueue_all())
     asyncio.create_task(scan_service.process())
     asyncio.create_task(metadata_service.process())
@@ -75,7 +99,7 @@ async def startup_event():
 app.add_event_handler("startup", startup_event)
 
 
-@app.get("/{full_path:path}")
+@app.get("/{full_path:path}", tags=["StaticResource"])
 async def read_item(full_path: str, request: Request):
     file_path = Path(f"frontend/build/{full_path}")
     if not file_path.exists() or file_path.is_dir():

@@ -39,7 +39,7 @@ def init_db():
         settings = True
     if 'system' not in tables:
         system = True
-    if 'profile_codecs' not in tables:
+    if 'profile_codec' not in tables:
         profile_codecs = True
 
     Base.metadata.create_all(engine)

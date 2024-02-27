@@ -1,16 +1,15 @@
-<br/>
 <p align="center">
   <a href="https://github.com/Transfigurr/Transfigurr">
-    <img src="frontend/public/android-chrome-96x96.png" alt="Logo" width="80" height="80">
+    <img src="frontend/public/transfigurr.png" alt="Logo" width="150" height="150">
   </a>
 
-  <h3 align="center">Transfigurr</h3>
+  <h3 align="center"><a href="https://github.com/transfigurr/transfigurr">Transfigurr</a></h3>
 
   <p align="center">
     A modern codec management and automation tool
     <br/>
     <br/>
-    <a href="https://github.com/Transfigurr/Transfigurr">View Demo</a>
+    <a href="https://www.transfigurr.media">View Demo</a>
     .
     <a href="https://github.com/Transfigurr/Transfigurr/issues">Report Bug</a>
     .
@@ -18,139 +17,240 @@
   </p>
 </p>
 
-![Docker Pulls](https://img.shields.io/docker/pulls/transfigurr/transfigurr) ![Contributors](https://img.shields.io/github/contributors/Transfigurr/Transfigurr?color=dark-green) ![Issues](https://img.shields.io/github/issues/Transfigurr/Transfigurr)![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/transfigurr/transfigurr?include_prereleases)![License](https://img.shields.io/github/license/Transfigurr/Transfigurr)![Frontend](https://github.com/transfigurr/transfigurr/actions/workflows/frontend.yml/badge.svg)![Backend](https://github.com/transfigurr/transfigurr/actions/workflows/backend.yml/badge.svg)![Docker](https://github.com/transfigurr/transfigurr/actions/workflows/docker.yml/badge.svg)
+[![GitHub Stars](https://img.shields.io/github/stars/transfigurr/transfigurr.svg?color=9C27B0&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/transfigurr/transfigurr)
+[![GitHub Release](https://img.shields.io/github/release/transfigurr/transfigurr.svg?color=9C27B0&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/transfigurr/transfigurr/releases)
+[![GitHub Package Repository](https://img.shields.io/static/v1.svg?color=9C27B0&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=transfigurr&message=GitHub%20Package&logo=github)](https://github.com/transfigurr/transfigurr/packages)
+[![Docker Pulls](https://img.shields.io/docker/pulls/transfigurr/transfigurr.svg?color=9C27B0&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=pulls&logo=docker)](https://hub.docker.com/r/transfigurr/transfigurr)
+[![Docker Stars](https://img.shields.io/docker/stars/transfigurr/transfigurr.svg?color=9C27B0&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=stars&logo=docker)](https://hub.docker.com/r/transfigurr/transfigurr)
+[![GitHub Build Workflow Status](https://img.shields.io/github/actions/workflow/status/transfigurr/transfigurr/docker.yml?branch=main&style=for-the-badge&jobUrl=https%3A%2F%2Fci.transfigurr.com%2Fjob%2FDocker-Pipeline-Builders%2Fjob%2Ftransfigurr%2Fjob%2Fmaster%2F&logo=github)](https://ci.transfigurr.com/job/Docker-Pipeline-Builders/job/transfigurr/job/master/)
 
-## Table Of Contents
+[Transfigurr](https://transfigurr.media/) Transfigurr is a modern media management tool specifically designed for automating codec encodings using FFmpeg. It streamlines the process of video file conversion according to custom ffmpeg profiles, making it an essential tool for media enthusiasts and professionals alike.
 
-- [About Transfigurr](#about-transfigurr)
-- [Built With](#built-with)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-- [Usage](#usage)
-- [Roadmap](#roadmap)
-- [Contributing](#contributing)
-- [License](#license)
-- [Authors](#authors)
+## Supported Architectures
 
-## About Transfigurr
+Docker manifest is utilized for multi-platform awareness. More information is available from docker [here](https://distribution.github.io/distribution/spec/manifest-v2-2/#manifest-list) and our announcement [here](https://blog.linuxserver.io/2019/02/21/the-lsio-pipeline-project/).
 
-![Screen Shot](images/media.png)
+Simply pulling `transfigurr/transfigurr:latest` should retrieve the correct image for your arch, but you can also pull specific arch images via tags.
 
-There are many great media management and re-encooding tools available, however, I didn't find one that fully met my requirements for a self-hosted re-encoding application. This led me to create Transfigurr. Transfigurr is a comprehensive media managament and re-encoding application designed to be user friendly and highly configurable. It aims to be the last re-encoding solution you'll ever need.
+The architectures supported by this image are:
 
-Here's why:
+| Architecture | Available | Tag                     |
+| :----------: | :-------: | ----------------------- |
+|    x86-64    |    ✅     | amd64-\<version tag\>   |
+|    arm64     |    ✅     | arm64v8-\<version tag\> |
+|    armhf     |    ❌     |                         |
 
-- Beautiful modern UI
-- Series specific profiles
-- Containerized to easily integrate with your other media applications and manage resources
+## Version Tags
 
-Of course, no one service will serve all use cases since your needs may be different. So I'll be adding more in the near future. You may also suggest changes by forking this repo and creating a pull request or opening an issue.
+This image provides various versions that are available via tags. Please read the descriptions carefully and exercise caution when using unstable or development tags.
 
-## Built With
+|   Tag   | Available | Description                           |
+| :-----: | :-------: | ------------------------------------- |
+| latest  |    ✅     | Stable releases from Transfigurr      |
+| develop |    ✅     | Development releases from Transfigurr |
 
-### Frontend
+## Application Setup
 
-- TypeScript
-- React
-- Sass
+Access the webui at `<your-ip>:7889`, for more information check out [Transfigurr](https://transfigurr.media/).
 
-### Backend
+### Media folders
 
-- Python
-- FastAPI
+The `/series`, `/movies` and `/transcode` have been set as **_optional paths_**, this is because it is the easiest way to get started. While easy to use, it has some drawbacks. Mainly losing the ability to hardlink (TL;DR a way for a file to exist in multiple places on the same file system while only consuming one file worth of space), or atomic move (TL;DR instant file moves, rather than copy+delete) files while processing content.
 
-## Getting Started
+Use the optional paths if you dont understand, or dont want hardlinks/atomic moves.
 
-Steps to run the project locally for development or testing purposes.
-
-Please follow the Usage guide to simply install and use the containerized application
-
-### Prerequisites
-
-- pip
-
-- npm
-
-- FFmpeg
-
-### Installation
-
-1. Get a free API Key at [https://www.themoviedb.org/settings/api](https://www.themoviedb.org/settings/api)
-
-2. Clone the repo
-
-```sh
-git clone https://github.com/Transfigurr/Transfigurr.git
-```
-
-3. Install PIP packages
-
-```sh
-pip install -r requirements.txt
-```
-
-4. Install NPM packages
-
-```sh
-cd frontend
-npm install
-```
+The folks over at servarr.com wrote a good [write-up](https://wiki.servarr.com/Docker_Guide#Consistent_and_well_planned_paths) on how to get started with this.
 
 ## Usage
 
-1. Pull
+To help you get started creating a container from this image you can either use docker-compose or the docker cli.
 
-```docker
-docker pull transfigurr/transfigurr
+### docker-compose (recommended)
+
+```yaml
+---
+services:
+  transfigurr:
+    image: transfigurr/transfigurr:latest
+    container_name: transfigurr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - /path/to/data:/config
+      - /path/to/series:/series #optional
+      - /path/to/movies:/movies #optional
+      - /path/to/transcode/transcode #optional
+    ports:
+      - 7889:7889
+    restart: unless-stopped
 ```
 
-or
+### docker cli
 
-```docker
-docker pull ghcr.io/transfigurr/transfigurr
+```bash
+docker run -d \
+  --name=transfigurr \
+  -e PUID=1000 \
+  -e PGID=1000 \
+  -e TZ=Etc/UTC \
+  -p 7889:7889 \
+  -v /path/to/data:/config \
+  -v /path/to/series:/series #optional \
+  -v /path/to/movies:/movies #optional \
+  -v /path/to/transcode:/transcode #optional \
+  --restart unless-stopped \
+  transfigurr/transfigurr:latest
 ```
 
-2. Run
+## Parameters
 
-```docker
-docker run transfigurr
+Containers are configured using parameters passed at runtime (such as those above). These parameters are separated by a colon and indicate `<external>:<internal>` respectively. For example, `-p 8080:80` would expose port `80` from inside the container to be accessible from the host's IP on port `8080` outside the container.
+
+|    Parameter    | Function                                                                                                       |
+| :-------------: | -------------------------------------------------------------------------------------------------------------- |
+|    `-p 7889`    | The port for the Transfigurr webinterface                                                                      |
+| `-e PUID=1000`  | for UserID - see below for explanation                                                                         |
+| `-e PGID=1000`  | for GroupID - see below for explanation                                                                        |
+| `-e TZ=Etc/UTC` | specify a timezone to use, see this [list](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List). |
+|  `-v /config`   | Database and transfigurr configs                                                                               |
+|  `-v /series`   | Location of series library on disk (See note in Application setup)                                             |
+|  `-v /movies`   | Location of movies library on disk (See note in Application setup)                                             |
+| `-v /transcode` | Location of transcode library on disk (See note in Application setup)                                          |
+
+## Environment variables from files (Docker secrets)
+
+You can set any environment variable from a file by using a special prepend `FILE__`.
+
+As an example:
+
+```bash
+-e FILE__MYVAR=/run/secrets/mysecretvariable
 ```
 
-3.
+Will set the environment variable `MYVAR` based on the contents of the `/run/secrets/mysecretvariable` file.
 
-Visit {your-server-ip}:7889
+## User / Group Identifiers
 
-## Roadmap
+When using volumes (`-v` flags), permissions issues can arise between the host OS and the container, we avoid this issue by allowing you to specify the user `PUID` and group `PGID`.
 
-- Advanced video and audio profile settings
-- Individual episode monitoring
-- Improved data presentation
-- Task Scheduling
-- Support for movies
+Ensure any volume directories on the host are owned by the same user you specify and any permissions issues will vanish like magic.
 
-See the [open issues](https://github.com/Transfigurr/Transfigurr/issues) for a list of proposed features (and known issues).
+In this instance `PUID=1000` and `PGID=1000`, to find yours use `id your_user` as below:
 
-## Contributing
+```bash
+id your_user
+```
 
-Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+Example output:
 
-- If you have suggestions for adding or removing projects, feel free to [open an issue](https://github.com/Transfigurr/Transfigurr/issues/new) to discuss it, or directly create a pull request after you edit the _README.md_ file with necessary changes.
-- Please make sure you check your spelling and grammar.
-- Create individual PR for each suggestion.
+```text
+uid=1000(your_user) gid=1000(your_user) groups=1000(your_user)
+```
 
-### Creating A Pull Request
+## Support Info
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+- Shell access whilst the container is running:
 
-## License
+  ```bash
+  docker exec -it transfigurr /bin/bash
+  ```
 
-Distributed under the GPL-3 License. See [LICENSE](https://github.com/Transfigurr/Transfigurr/blob/main/LICENSE.md) for more information.
+- To monitor the logs of the container in realtime:
 
-## Authors
+  ```bash
+  docker logs -f transfigurr
+  ```
 
-- **[Alex Keith](https://github.com/alexmichaelkeith)** - _Computer Science Student_ - _Built Transfigurr_
+- Container version number:
+
+  ```bash
+  docker inspect -f '{{ index .Config.Labels "build_version" }}' transfigurr
+  ```
+
+- Image version number:
+
+  ```bash
+  docker inspect -f '{{ index .Config.Labels "build_version" }}' transfigurr/transfigurr:latest
+  ```
+
+## Updating Info
+
+Below are the instructions for updating containers:
+
+### Via Docker Compose
+
+- Update images:
+
+  - All images:
+
+    ```bash
+    docker-compose pull
+    ```
+
+  - Single image:
+
+    ```bash
+    docker-compose pull transfigurr
+    ```
+
+- Update containers:
+
+  - All containers:
+
+    ```bash
+    docker-compose up -d
+    ```
+
+  - Single container:
+
+    ```bash
+    docker-compose up -d transfigurr
+    ```
+
+- You can also remove the old dangling images:
+
+  ```bash
+  docker image prune
+  ```
+
+### Via Docker Run
+
+- Update the image:
+
+  ```bash
+  docker pull transfigurr/transfigurr:latest
+  ```
+
+- Stop the running container:
+
+  ```bash
+  docker stop transfigurr
+  ```
+
+- Delete the container:
+
+  ```bash
+  docker rm transfigurr
+  ```
+
+- Recreate a new container with the same docker run parameters as instructed above (if mapped correctly to a host folder, your `/config` folder and settings will be preserved)
+- You can also remove the old dangling images:
+
+  ```bash
+  docker image prune
+  ```
+
+## Building locally
+
+If you want to make local modifications to these images for development purposes or just to customize the logic:
+
+```bash
+git clone https://github.com/transfigurr/transfigurr.git
+cd transfigurr
+docker build \
+  --no-cache \
+  --pull \
+  -t transfigurr/transfigurr:latest .
+```

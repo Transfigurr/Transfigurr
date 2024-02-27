@@ -3,13 +3,15 @@ name: Build Image
 on: 
   push:
       branches:
-          - main
-          - develop
+          - develop*
   pull_request:
     types: [closed]
     branches:
       - main
-      - develop
+      - develop*
+
+env:
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   push_to_registries:
@@ -31,39 +33,78 @@ jobs:
       - name: Log in to the Container registry
         uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+            registry: ghcr.io
+            username: ${{ github.actor }}
+            password: ${{ secrets.GITHUB_TOKEN }}
       
-      - name: Set Docker tag based on branch
+      - name: Set variables based on branch
         id: set_tag
         run: |
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             echo "::set-output name=tag::latest"
-          elif [[ "${{ github.ref }}" == "refs/heads/develop" ]]; then
+            echo "::set-output name=version::${{ github.event.pull_request.title }}"
+            echo "BRANCH_NAME=latest" >> $GITHUB_ENV
+          else
+            BRANCH_NAME=$(echo "${{ github.ref }}" | sed -r 's/refs\/heads\///g')
             echo "::set-output name=tag::develop"
-          fi
+            echo "BRANCH_NAME=${BRANCH_NAME}" >> $GITHUB_ENV
+            fi
 
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
-        with:
-          images: |
-            transfigurr/transfigurr
-            ghcr.io/${{ github.repository }}
-          tags: |
-            ${{ steps.set_tag.outputs.tag }}
+      - name: Convert IMAGE_NAME to lowercase
+        run: echo "IMAGE_NAME=$(echo ${{ env.IMAGE_NAME }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
-      - name: Set up Docker Buildx
+      - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build and push Docker images
-        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+      - name: Cache Docker layers
+        uses: actions/cache@v4
         with:
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          platforms: linux/amd64,linux/arm64
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Build and push Docker image
+        run: |
+          docker buildx build \
+            --platform linux/amd64 \
+            --push \
+            --tag docker.io/${{ env.IMAGE_NAME }}:amd64-${{ steps.set_tag.outputs.tag }} \
+            --tag docker.io/${{ env.IMAGE_NAME }}:amd64-${{ env.BRANCH_NAME }} \
+            --tag ghcr.io/${{ env.IMAGE_NAME }}:amd64-${{ steps.set_tag.outputs.tag }} \
+            --tag ghcr.io/${{ env.IMAGE_NAME }}:amd64-${{ env.BRANCH_NAME }} \
+            .
+          docker buildx build \
+            --platform linux/arm64 \
+            --push \
+            --tag docker.io/${{ env.IMAGE_NAME }}:arm64-${{ steps.set_tag.outputs.tag }} \
+            --tag docker.io/${{ env.IMAGE_NAME }}:arm64-${{ env.BRANCH_NAME }} \
+            --tag ghcr.io/${{ env.IMAGE_NAME }}:arm64-${{ steps.set_tag.outputs.tag }} \
+            --tag ghcr.io/${{ env.IMAGE_NAME }}:arm64-${{ env.BRANCH_NAME }} \
+            .
+      - name: Create and push Docker manifest
+        run: |
+
+          docker buildx imagetools create \
+            --tag docker.io/${{ env.IMAGE_NAME }}:${{ steps.set_tag.outputs.tag }} \
+            docker.io/${{ env.IMAGE_NAME }}:amd64-${{ steps.set_tag.outputs.tag }} \
+            docker.io/${{ env.IMAGE_NAME }}:arm64-${{ steps.set_tag.outputs.tag }}
+          docker buildx imagetools push docker.io/${{ env.IMAGE_NAME }}:${{ steps.set_tag.outputs.tag }}
+
+          docker buildx imagetools create \
+            --tag docker.io/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }} \
+            docker.io/${{ env.IMAGE_NAME }}:amd64-${{ env.BRANCH_NAME }} \
+            docker.io/${{ env.IMAGE_NAME }}:arm64-${{ env.BRANCH_NAME }}
+          docker buildx imagetools push docker.io/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }}
+
+          docker buildx imagetools create \
+            --tag ghcr.io/${{ env.IMAGE_NAME }}:${{ steps.set_tag.outputs.tag }} \
+            ghcr.io/${{ env.IMAGE_NAME }}:amd64-${{ steps.set_tag.outputs.tag }} \
+            ghcr.io/${{ env.IMAGE_NAME }}:arm64-${{ steps.set_tag.outputs.tag }}
+          docker buildx imagetools push ghcr.io/${{ env.IMAGE_NAME }}:${{ steps.set_tag.outputs.tag }}
+
+          docker buildx imagetools create \
+            --tag ghcr.io/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }} \
+            ghcr.io/${{ env.IMAGE_NAME }}:amd64-${{ env.BRANCH_NAME }} \
+            ghcr.io/${{ env.IMAGE_NAME }}:arm64-${{ env.BRANCH_NAME }}
+          docker buildx imagetools push ghcr.io/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }}
