@@ -5,6 +5,7 @@ from src.models.profile import Profile
 def seed_profiles(conn):
     for profile in default_profiles:
         conn.execute(insert(Profile).values(profile))
+    conn.commit()
 
 
 default_profiles = [

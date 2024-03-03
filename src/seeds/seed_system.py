@@ -5,6 +5,7 @@ from src.models.system import System
 def seed_system(conn):
     for system in default_system:
         conn.execute(insert(System).values(system))
+    conn.commit()
 
 
 default_system = [

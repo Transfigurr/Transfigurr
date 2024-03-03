@@ -5,6 +5,7 @@ from src.models.setting import Setting
 def seed_settings(conn):
     for setting in default_settings:
         conn.execute(insert(Setting).values(setting))
+    conn.commit()
 
 
 default_settings = [

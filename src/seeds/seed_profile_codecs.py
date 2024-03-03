@@ -5,6 +5,7 @@ from src.models.profile import Profile_Codec
 def seed_profile_codecs(conn):
     for profile_codec in default_profile_codecs:
         conn.execute(insert(Profile_Codec).values(profile_codec))
+    conn.commit()
 
 
 default_profile_codecs = [
