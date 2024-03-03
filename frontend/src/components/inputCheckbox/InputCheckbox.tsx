@@ -4,6 +4,7 @@ const InputCheckbox = ({
 	onChange,
 	height = "20px",
 	width = "20px",
+	disabled,
 }: any) => {
 	return (
 		<div
@@ -12,6 +13,7 @@ const InputCheckbox = ({
 		>
 			<input
 				type="checkbox"
+				disabled={disabled}
 				className={styles.inputCheckbox}
 				style={{ height: height, width: width }}
 				checked={checked}
@@ -20,7 +22,7 @@ const InputCheckbox = ({
 			<span
 				className={styles.checkmark}
 				style={{ height: height, width: width }}
-			></span>
+			/>
 		</div>
 	);
 };

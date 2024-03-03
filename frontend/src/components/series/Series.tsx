@@ -26,7 +26,6 @@ const Series = ({ series_name }: any) => {
 			? wsContext?.data?.series[series_name]
 			: {};
 	const system = wsContext?.data?.system;
-
 	const [content, setContent] = useState<any>({});
 	const handleEditClick = () => {
 		setIsModalOpen(true);

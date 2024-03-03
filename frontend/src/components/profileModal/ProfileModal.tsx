@@ -1,9 +1,7 @@
 import styles from "./ProfileModal.module.scss";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { WebSocketContext } from "../../contexts/webSocketContext";
-import InputCheckbox from "../inputCheckbox/InputCheckbox";
-import InputSelect from "../inputSelect/InputSelect";
-import InputText from "../inputText/InputText";
+import ProfileEditor from "../profileEditor/ProfileEditor";
 
 const ProfileModal = ({
 	isOpen,
@@ -19,6 +17,7 @@ const ProfileModal = ({
 	const containers: any = wsContext?.data?.containers;
 	const encoders: any = wsContext?.data?.encoders;
 	const settings = wsContext?.data?.settings;
+	const [tabSelected, setTabSelected] = useState("summary");
 	const onClose = () => {
 		setIsOpen(false);
 	};
@@ -47,169 +46,25 @@ const ProfileModal = ({
 	return (
 		<div className={styles.modal}>
 			<div className={styles.header}>
-				<div className={styles.left}>{header}</div>
+				<div className={styles.left}>
+					{header} {content?.name}
+				</div>
 				<div className={styles.right}>
 					<div className={styles.cross} onClick={onClose}>
-						<div className={styles.verticalCross}></div>
-						<div className={styles.horizontalCross}></div>
+						<div className={styles.verticalCross} />
+						<div className={styles.horizontalCross} />
 					</div>
 				</div>
 			</div>
-			<div className={styles.content}>
-				<div className={styles.left}>
-					<div className={styles.inputContainer}>
-						<label className={styles.label}>Name</label>
-						<InputText
-							type="input"
-							selected={content.name}
-							onChange={(e: any) =>
-								setContent({ ...content, name: e.target.value })
-							}
-						/>
-					</div>
-					<div className={styles.inputContainer}>
-						<label className={styles.label}>Wanted Codec </label>
-						<InputSelect
-							selected={content.codec}
-							onChange={(e: any) => {
-								setContent({
-									...content,
-									codec: e.target.value,
-									encoder: codecs[e.target.value]?.encoders[0],
-									speed:
-										encoders[codecs[e.target.value]?.encoders[0]]?.presets[0] ||
-										"",
-									container: codecs[e.target.value]?.containers[0],
-									extension:
-										containers[codecs[e.target.value].containers[0]]
-											?.extensions[0],
-								});
-							}}
-						>
-							{Object.entries(codecs)?.map(([key, value]: any) => (
-								<option value={key} key={key}>
-									{key}
-								</option>
-							))}
-						</InputSelect>
-					</div>
-					<div className={styles.inputContainer}>
-						<label className={styles.label}>Encoder </label>
-						<InputSelect
-							selected={content.encoder}
-							onChange={(e: any) =>
-								setContent({
-									...content,
-									encoder: e.target.value,
-									speed: encoders[e.target.value]?.presets[0] || "",
-									container: codecs[content?.codec]?.containers[0],
-									extension:
-										containers[codecs[content?.codec]?.containers[0]]
-											?.extensions[0],
-								})
-							}
-						>
-							{codecs[content?.codec]?.encoders?.map(
-								(encoder: string, index: number) => (
-									<option value={encoder} key={index}>
-										{encoder}
-									</option>
-								),
-							)}
-						</InputSelect>
-					</div>
-					<div className={styles.inputContainer}>
-						<label className={styles.label}>Encode Speed </label>
-						<InputSelect
-							selected={content.speed}
-							onChange={(e: any) =>
-								setContent({ ...content, speed: e.target.value })
-							}
-						>
-							{encoders[content?.encoder]?.presets?.map(
-								(preset: any, index: number) => (
-									<option value={preset} key={index}>
-										{preset}
-									</option>
-								),
-							)}
-						</InputSelect>
-					</div>
-					<div className={styles.inputContainer}>
-						<label className={styles.label}>Output Container </label>
-						<InputSelect
-							selected={content.container}
-							onChange={(e: any) => {
-								setContent({
-									...content,
-									container: e.target.value,
-									extension: containers[e.target.value].extensions[0],
-								});
-							}}
-						>
-							{codecs[content?.codec]?.containers?.map(
-								(container: any, index: number) => (
-									<option value={container} key={index}>
-										{container}
-									</option>
-								),
-							)}
-						</InputSelect>
-					</div>
-					<div className={styles.inputContainer}>
-						<label className={styles.label}>Output Extension </label>
-						<InputSelect
-							selected={content.extension}
-							onChange={(e: any) =>
-								setContent({ ...content, extension: e.target.value })
-							}
-						>
-							{containers[content?.container]?.extensions?.map(
-								(extension: any, index: number) => (
-									<option value={extension} key={index}>
-										{extension}
-									</option>
-								),
-							)}
-						</InputSelect>
-					</div>
-				</div>
-				<div className={styles.right}>
-					<label>Targets </label>
-					<div className={styles.targets}>
-						{Object.entries(codecs)?.map(([key, value]: any) => (
-							<div
-								key={key}
-								className={styles.target}
-								style={
-									!content?.codecs?.includes(key) ? { opacity: "50%" } : {}
-								}
-								onClick={() => {
-									const selectedValues = [...content.codecs];
-									if (selectedValues.includes(key)) {
-										const index = selectedValues.indexOf(key);
-										if (index > -1) {
-											selectedValues.splice(index, 1);
-										}
-									} else {
-										selectedValues.push(key);
-									}
-									setContent({ ...content, codecs: selectedValues });
-								}}
-							>
-								<InputCheckbox
-									type="checkbox"
-									checked={content?.codecs?.includes(key)}
-									onChange={() => {
-										undefined;
-									}}
-								/>
-								<span className={styles.key}>{key}</span>
-							</div>
-						))}
-					</div>
-				</div>
-			</div>
+			<ProfileEditor
+				content={content}
+				setContent={setContent}
+				tabSelected={tabSelected}
+				setTabSelected={setTabSelected}
+				containers={containers}
+				encoders={encoders}
+				codecs={codecs}
+			/>
 			<div className={styles.footer}>
 				<div className={styles.left}>
 					{settings?.default_profile != content?.id && (

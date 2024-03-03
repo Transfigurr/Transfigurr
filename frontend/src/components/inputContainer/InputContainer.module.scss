@@ -1,6 +1,8 @@
 .inputContainer {
 	display: flex;
 	flex-direction: column;
+	max-width: 650px;
+	width: 100%;
 }
 
 .inputLine {
@@ -9,8 +11,8 @@
 	justify-content: flex-start;
 	align-items: stretch;
 	padding: 10px 0px;
-	width: 650px;
 	height: 100%;
+	position: relative;
 }
 
 .inputLabel {

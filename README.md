@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/Transfigurr/Transfigurr">
-    <img src="frontend/public/transfigurr.png" alt="Logo" width="150" height="150">
+    <img src="https://raw.githubusercontent.com/Transfigurr/Transfigurr/main/frontend/public/transfigurr.png" alt="Logo" width="150" height="150">
   </a>
 
   <h3 align="center"><a href="https://github.com/transfigurr/transfigurr">Transfigurr</a></h3>

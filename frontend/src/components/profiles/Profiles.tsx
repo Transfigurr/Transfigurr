@@ -11,16 +11,7 @@ const Profiles = () => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const handleProfileClick = (profile: any) => {
 		setSelectedProfile(profile);
-		setContent({
-			id: profile?.id,
-			name: profile?.name,
-			codec: profile?.codec,
-			codecs: profile?.codecs || [],
-			speed: profile?.speed,
-			container: profile?.container,
-			encoder: profile?.encoder,
-			extension: profile?.extension,
-		});
+		setContent(profile);
 		setIsModalOpen(true);
 	};
 
@@ -49,16 +40,7 @@ const Profiles = () => {
 		});
 		setIsModalOpen(false);
 	};
-	const [content, setContent] = useState({
-		id: String,
-		name: selectedProfile?.name,
-		codec: selectedProfile?.codec,
-		codecs: selectedProfile.codecs || [],
-		speed: selectedProfile?.speed,
-		container: selectedProfile?.container,
-		extension: selectedProfile?.extension,
-		encoder: selectedProfile?.encoder,
-	});
+	const [content, setContent] = useState(selectedProfile);
 	const profilesArray: any = [];
 
 	for (const i in profiles) {
@@ -71,7 +53,7 @@ const Profiles = () => {
 				<div className={styles.modalBackdrop}>
 					<div className={styles.modalContent}>
 						<ProfileModal
-							header={"Edit - Codec Profile"}
+							header={"Edit - Profile"}
 							type={"profile"}
 							isOpen={isModalOpen}
 							setIsOpen={setIsModalOpen}
