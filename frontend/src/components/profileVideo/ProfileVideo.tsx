@@ -8,6 +8,7 @@ const ProfileVideo = ({
 	containers,
 	encoders,
 }: any) => {
+	console.log(content);
 	return (
 		<div className={styles.section}>
 			<div className={styles.top}>
@@ -131,18 +132,6 @@ const ProfileVideo = ({
 							})
 						}
 					/>
-					<InputContainer
-						type="checkbox"
-						label="Multi Pass Encoding"
-						disabled={content?.quality_type != "average bitrate"}
-						selected={content?.bitrate_mode}
-						onChange={(e: any) =>
-							setContent({
-								...content,
-								bitrate_mode: e.target.checked,
-							})
-						}
-					/>
 				</div>
 			</div>
 			<div className={styles.line}>Encoder Options</div>
@@ -172,9 +161,13 @@ const ProfileVideo = ({
 							setContent({ ...content, tune: e.target.value });
 						}}
 					>
-						<option value="none">none</option>
-						<option value="psnr">psnr</option>
-						<option value="ssim">ssim</option>
+						{encoders[content?.encoder]?.tune?.map(
+							(tune: any, index: number) => (
+								<option value={tune} key={index}>
+									{tune}
+								</option>
+							),
+						)}
 					</InputContainer>
 					<InputContainer
 						type="select"
@@ -184,8 +177,13 @@ const ProfileVideo = ({
 							setContent({ ...content, profile: e.target.value })
 						}
 					>
-						<option value="main">main</option>
-						<option value="auto">auto</option>
+						{encoders[content?.encoder]?.profile?.map(
+							(profile: any, index: number) => (
+								<option value={profile} key={index}>
+									{profile}
+								</option>
+							),
+						)}
 					</InputContainer>
 					<InputContainer
 						type="select"
@@ -195,41 +193,29 @@ const ProfileVideo = ({
 							setContent({ ...content, level: e.target.value })
 						}
 					>
-						<option value="auto">auto</option>
-						<option value="2.0">2.0</option>
-						<option value="2.1">2.1</option>
-						<option value="2.2">2.2</option>
-						<option value="2.3">2.3</option>
-						<option value="3.0">3.0</option>
-						<option value="3.1">3.1</option>
-						<option value="3.2">3.2</option>
-						<option value="3.3">3.3</option>
-						<option value="4.0">4.0</option>
-						<option value="4.1">4.1</option>
-						<option value="4.2">4.2</option>
-						<option value="4.3">4.3</option>
-						<option value="5.0">5.0</option>
-						<option value="5.1">5.1</option>
-						<option value="5.2">5.2</option>
-						<option value="5.3">5.3</option>
-						<option value="6.0">6.0</option>
-						<option value="6.1">6.1</option>
-						<option value="6.2">6.2</option>
-						<option value="6.3">6.3</option>
+						{encoders[content?.encoder]?.level?.map(
+							(level: any, index: number) => (
+								<option value={level} key={index}>
+									{level}
+								</option>
+							),
+						)}
 					</InputContainer>
 				</div>
 				<div className={styles.right}>
-					<InputContainer
-						type="checkbox"
-						label="Fast Decode"
-						checked={content.fast_decode}
-						onChange={(e: any) =>
-							setContent({
-								...content,
-								fast_decode: e.target.checked,
-							})
-						}
-					/>
+					{(content?.codec == "h264" || content?.codec == "av1") && (
+						<InputContainer
+							type="checkbox"
+							label="Fast Decode"
+							checked={content.fast_decode}
+							onChange={(e: any) =>
+								setContent({
+									...content,
+									fast_decode: e.target.checked,
+								})
+							}
+						/>
+					)}
 				</div>
 			</div>
 		</div>

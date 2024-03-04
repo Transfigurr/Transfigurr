@@ -87,7 +87,10 @@ async def run_ffmpeg(input_file, output_file, container, pass_thru_common_metada
             command += ["-vcodec", encoder]
 
         if preset:
-            command += ["-preset", preset]
+            if codec == 'av1':
+                command += ["-cpu-used", int(preset)]
+            else:
+                command += ["-preset", preset]
 
         if pass_thru_common_metadata:
             command += ["-map_metadata", "0"]
@@ -229,7 +232,7 @@ async def run_ffmpeg(input_file, output_file, container, pass_thru_common_metada
                 filters.append("unsharp=11:11:1.1:11:11:1.1")
             elif sharpen_preset == 'very strong':
                 filters.append("unsharp=13:13:1.3:13:13:1.3")
-            else:  # default
+            else:
                 filters.append("unsharp")
         elif sharpen == 'lapsharp':
             if sharpen_preset == 'ultralight':
@@ -261,6 +264,9 @@ async def run_ffmpeg(input_file, output_file, container, pass_thru_common_metada
         if grayscale:
             filters.append("format=gray")
 
+        if limit != 'none':
+            filters.append(f"scale={limit}:{-1}")
+
         if filters:
             command += ["-vf", ",".join(filters)]
 
@@ -274,7 +280,10 @@ async def run_ffmpeg(input_file, output_file, container, pass_thru_common_metada
 
         if quality_type:
             if quality_type == 'constant quality':
-                command += ["-crf", str(constant_quality)]
+                if codec == 'mpeg4':
+                    command += ["-q:v", str(constant_quality)]
+                else:
+                    command += ["-crf", str(constant_quality)]
             elif quality_type == 'average bitrate':
                 command += ["-b:v", str(average_bitrate)]
 
@@ -287,7 +296,7 @@ async def run_ffmpeg(input_file, output_file, container, pass_thru_common_metada
         if level and level != 'auto':
             command += ["-level:v", level]
 
-        if fast_decode:
+        if fast_decode and (codec == 'h264' or 'av1'):
             command += ["-fastdecode"]
 
         command += ["-f", container, output_file]

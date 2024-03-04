@@ -290,7 +290,7 @@ default_profiles = [
         "constant_quality": 22,
         "average_bitrate": 15000,
         "multipass_encoding": False,
-        "preset": "medium",
+        "preset": 7,
         "tune": "none",
         "profile": "auto",
         "level": "auto",
