@@ -8,13 +8,30 @@ import { ReactComponent as NavigateBefore } from "../svgs/navigate_before.svg";
 import { ReactComponent as Info } from "../svgs/info.svg";
 import { ReactComponent as Warning } from "../svgs/warning.svg";
 import { ReactComponent as Error } from "../svgs/error.svg";
-import ToolBar from "../ToolBar/ToolBar";
+import EventsModal from "../modals/eventsModal/EventsModal";
+import EventsToolbar from "../toolbars/eventsToolbar/EventsToolbar";
 
 const Events = () => {
 	const wsContext: any = useContext(WebSocketContext);
+	const settings = wsContext?.data?.settings;
 	const logs = wsContext?.data?.logs || [];
-	const sortedLogs = [...logs].sort((a, b) => b.id - a.id);
-	const recordsPerPage = 12;
+	let sortedLogs = [...logs].sort((a, b) => b.id - a.id);
+
+	if (settings?.events_filter == "info") {
+		sortedLogs = sortedLogs.filter((log: any) => {
+			return log.level == "INFO";
+		});
+	} else if (settings?.events_filter == "warn") {
+		sortedLogs = sortedLogs.filter((log: any) => {
+			return log.level == "WARN";
+		});
+	} else if (settings?.events_filter == "error") {
+		sortedLogs = sortedLogs.filter((log: any) => {
+			return log.level == "Error";
+		});
+	}
+
+	const recordsPerPage = settings?.events_page_size || 0;
 	const [currentPage, setCurrentPage] = useState(1);
 	const indexOfLastRecord = currentPage * recordsPerPage;
 	const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
@@ -44,12 +61,72 @@ const Events = () => {
 		}
 	};
 
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [content, setContent] = useState<any>({});
+
+	const handleOptionsClick = () => {
+		setContent(settings);
+		setIsModalOpen(true);
+	};
+
+	const [selected, setSelected] = useState<string | null>(null);
+
+	const onModalSave = async () => {
+		for (const key in content) {
+			fetch(`http://${window.location.hostname}:7889/api/settings`, {
+				method: "PUT",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				body: JSON.stringify({ id: key, value: content[key] }),
+			});
+		}
+		setIsModalOpen(false);
+	};
+
+	const setSetting = async (key: string, value: any) => {
+		if (key == "media_sort" && value == settings.media_sort) {
+			await fetch(`http://${window.location.hostname}:7889/api/settings`, {
+				method: "PUT",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				body: JSON.stringify({
+					id: "media_sort_direction",
+					value:
+						settings?.media_sort_direction === "ascending"
+							? "descending"
+							: "ascending",
+				}),
+			});
+		}
+		await fetch(`http://${window.location.hostname}:7889/api/settings`, {
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${localStorage.getItem("token")}`,
+			},
+			body: JSON.stringify({ id: key, value: value }),
+		});
+	};
+
 	return (
 		<div className={styles.logs}>
-			<ToolBar
-				leftToolBarItems={[]}
-				middleToolBarItems={[]}
-				rightToolBarItems={[]}
+			<EventsToolbar
+				selected={selected}
+				setSelected={setSelected}
+				handleOptionsClick={handleOptionsClick}
+				setSetting={setSetting}
+				settings={settings}
+			/>
+			<EventsModal
+				isOpen={isModalOpen}
+				setIsOpen={setIsModalOpen}
+				onSave={onModalSave}
+				content={content}
+				setContent={setContent}
 			/>
 			<div className={styles.content}>
 				{currentRecords && currentRecords.length !== 0 ? (

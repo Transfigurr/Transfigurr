@@ -1,7 +1,7 @@
 import styles from "./Profiles.module.scss";
 import Profile from "../profile/Profile";
 import { useContext, useState } from "react";
-import ProfileModal from "../profileModal/ProfileModal";
+import ProfileModal from "../modals/profileModal/ProfileModal";
 import { WebSocketContext } from "../../contexts/webSocketContext";
 
 const Profiles = () => {
@@ -49,23 +49,17 @@ const Profiles = () => {
 
 	return (
 		<div className={styles.profiles}>
-			{isModalOpen && (
-				<div className={styles.modalBackdrop}>
-					<div className={styles.modalContent}>
-						<ProfileModal
-							header={"Edit - Profile"}
-							type={"profile"}
-							isOpen={isModalOpen}
-							setIsOpen={setIsModalOpen}
-							onSave={onModalSave}
-							onDelete={onModalDelete}
-							data={selectedProfile}
-							content={content}
-							setContent={setContent}
-						/>
-					</div>
-				</div>
-			)}
+			<ProfileModal
+				header={"Edit - Profile"}
+				type={"profile"}
+				isOpen={isModalOpen}
+				setIsOpen={setIsModalOpen}
+				onSave={onModalSave}
+				onDelete={onModalDelete}
+				data={selectedProfile}
+				content={content}
+				setContent={setContent}
+			/>
 			<div className={styles.content}>
 				<div className={styles.codecProfiles}>
 					<div className={styles.header}>Profiles</div>

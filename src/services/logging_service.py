@@ -45,7 +45,7 @@ class SQLiteHandler(logging.Handler):
 
 
 def start_logger(log_level):
-    log_queue = queue.Queue(-1)  # Infinite size
+    log_queue = queue.Queue(-1)
     queue_handler = logging.handlers.QueueHandler(log_queue)
     sqlite_handler = SQLiteHandler()
     formatter = logging.Formatter("%(asctime)s [%(levelname)s] [%(service)s] %(message)s")

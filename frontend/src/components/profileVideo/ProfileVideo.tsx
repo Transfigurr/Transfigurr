@@ -1,5 +1,5 @@
 import styles from "./ProfileVideo.module.scss";
-import InputContainer from "../inputContainer/InputContainer";
+import InputContainer from "../inputs/inputContainer/InputContainer";
 
 const ProfileVideo = ({
 	content,
@@ -8,7 +8,6 @@ const ProfileVideo = ({
 	containers,
 	encoders,
 }: any) => {
-	console.log(content);
 	return (
 		<div className={styles.section}>
 			<div className={styles.top}>

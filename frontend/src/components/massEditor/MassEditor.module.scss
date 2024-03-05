@@ -3,6 +3,7 @@
 	flex-direction: column;
 	width: 100%;
 	background-color: var(--pageBackground);
+	color: var(--textColor);
 }
 .content {
 	padding: 20px;
@@ -26,7 +27,7 @@
 			width: 25%;
 			padding-right: 40px;
 			.label {
-				color: var(--dimColor);
+				color: var(--textColor);
 				padding-right: 10px;
 				display: flex;
 				font-weight: bold;

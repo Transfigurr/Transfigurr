@@ -1,5 +1,4 @@
 import styles from "./Queue.module.scss";
-import ToolBar from "../ToolBar/ToolBar";
 import { useContext, useState } from "react";
 import { WebSocketContext } from "../../contexts/webSocketContext";
 import { ReactComponent as SkipNext } from "../svgs/skip_next.svg";
@@ -8,17 +7,17 @@ import { ReactComponent as NavigateNext } from "../svgs/navigate_next.svg";
 import { ReactComponent as NavigateBefore } from "../svgs/navigate_before.svg";
 import { ReactComponent as ResetWrench } from "../svgs/reset_wrench.svg";
 import { ReactComponent as QueueIcon } from "../svgs/queue.svg";
-import { ReactComponent as Pause } from "../svgs/pause_circle.svg";
-import { ReactComponent as Start } from "../svgs/play_circle.svg";
-import ToolBarItem from "../ToolBarItem/ToolBarItem";
 import Codec from "../codec/Codec";
+import QueueToolbar from "../toolbars/queueToolbar/QueueToolbar";
+import QueueModal from "../modals/queueModal/QueueModal";
 
 const Queue = () => {
 	const wsContext = useContext(WebSocketContext);
 	const profiles = wsContext?.data?.profiles;
 	const series = wsContext?.data?.series;
 	const queue = wsContext?.data?.queue;
-	const recordsPerPage = 8;
+	const settings = wsContext?.data?.settings;
+	const recordsPerPage = settings?.queue_page_size || 0;
 	const [currentPage, setCurrentPage] = useState(1);
 	const queueArray = Array.from(Object.values(queue?.queue || []));
 	const indexOfLastRecord = currentPage * recordsPerPage;
@@ -50,7 +49,6 @@ const Queue = () => {
 	};
 
 	const [selected, setSelected] = useState<string | null>(null);
-	const settings = wsContext?.data?.settings;
 
 	const setSetting = async (key: string, value: any) => {
 		await fetch(`http://${window.location.hostname}:7889/api/settings`, {
@@ -63,56 +61,43 @@ const Queue = () => {
 		});
 	};
 
-	const middleToolBarItems: any = [
-		<ToolBarItem
-			text="Status"
-			index={4}
-			key={4}
-			settings={settings}
-			icon={
-				settings?.queue_status === "inactive" ? (
-					<Pause
-						style={{
-							height: "100%",
-							width: "100%",
-						}}
-					/>
-				) : (
-					<Start
-						style={{
-							height: "100%",
-							width: "100%",
-						}}
-					/>
-				)
-			}
-			selected={selected}
-			setSelected={setSelected}
-			dropdownItems={[
-				{
-					text: "Active",
-					id: "active",
-					key: "active",
-					setting_id: "queue_status",
-					onClick: () => setSetting("queue_status", "active"),
+	const onModalSave = async () => {
+		for (const key in content) {
+			fetch(`http://${window.location.hostname}:7889/api/settings`, {
+				method: "PUT",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
-				{
-					text: "Inactive",
-					id: "inactive",
-					key: "inactive",
-					setting_id: "queue_status",
-					onClick: () => setSetting("queue_status", "inactive"),
-				},
-			]}
-		/>,
-	];
+				body: JSON.stringify({ id: key, value: content[key] }),
+			});
+		}
+		setIsModalOpen(false);
+	};
+
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [content, setContent] = useState<any>({});
+
+	const handleOptionsClick = () => {
+		setContent(settings);
+		setIsModalOpen(true);
+	};
 
 	return (
 		<div className={styles.queue}>
-			<ToolBar
-				leftToolBarItems={[]}
-				middleToolBarItems={middleToolBarItems}
-				rightToolBarItems={[]}
+			<QueueToolbar
+				settings={settings}
+				setSetting={setSetting}
+				selected={selected}
+				setSelected={setSelected}
+				handleOptionsClick={handleOptionsClick}
+			/>
+			<QueueModal
+				isOpen={isModalOpen}
+				setIsOpen={setIsModalOpen}
+				onSave={onModalSave}
+				content={content}
+				setContent={setContent}
 			/>
 			<div className={styles.content}>
 				<>

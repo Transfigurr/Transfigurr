@@ -1,6 +1,7 @@
 
 from src.api.controllers.settings_controller import get_all_settings
-from src.models.profile import Profile, Profile_Codec
+from src.models.profile import Profile
+from src.models.profile_codec import Profile_Codec
 from sqlalchemy import delete, insert
 from sqlalchemy.future import select
 from sqlalchemy.ext.asyncio import AsyncSession

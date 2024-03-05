@@ -1,6 +1,6 @@
 import styles from "./ProfileSummary.module.scss";
-import InputContainer from "../inputContainer/InputContainer";
-import InputCheckbox from "../inputCheckbox/InputCheckbox";
+import InputContainer from "../inputs/inputContainer/InputContainer";
+import InputCheckbox from "../inputs/inputCheckbox/InputCheckbox";
 
 const ProfileSummary = ({ content, setContent, containers, codecs }: any) => {
 	return (

@@ -146,6 +146,31 @@ const Status = () => {
 					</tbody>
 				</table>
 			</div>
+			<div className={styles.moreInfo}>
+				<div className={styles.header}>More Info</div>
+				<div className={styles.row}>
+					<div className={styles.left}>Homepage</div>
+					<div className={styles.right}>
+						<a href={"https://transfigurr.media"}>transfigurr.media</a>
+					</div>
+				</div>
+				<div className={styles.row}>
+					<div className={styles.left}>Source</div>
+					<div className={styles.right}>
+						<a href={"https://github.com/Transfigurr/Transfigurr"}>
+							github.com/Transfigurr/Transfigurr
+						</a>
+					</div>
+				</div>
+				<div className={styles.row}>
+					<div className={styles.left}>Feature Requests</div>
+					<div className={styles.right}>
+						<a href={"https://github.com/Transfigurr/Transfigurr/issues"}>
+							github.com/Transfigurr/Transfigurr/issues
+						</a>
+					</div>
+				</div>
+			</div>
 		</div>
 	);
 };

@@ -12,6 +12,7 @@ const ToolBarOption = ({
 	selected,
 	setSelected,
 	sort = false,
+	sortDirection,
 	onClick = () => {
 		undefined;
 	},
@@ -74,7 +75,7 @@ const ToolBarOption = ({
 										{sort ? (
 											<ArrowDropdownIcon
 												style={
-													settings?.media_sort_direction === "descending"
+													sortDirection === "descending"
 														? { transform: "rotate(180deg)" }
 														: {}
 												}

@@ -1,4 +1,4 @@
-import InputContainer from "../inputContainer/InputContainer";
+import InputContainer from "../inputs/inputContainer/InputContainer";
 import styles from "./ProfileDimensions.module.scss";
 const ProfileDimensions = ({ content, setContent }: any) => {
 	return (

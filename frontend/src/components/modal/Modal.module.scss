@@ -1,33 +1,3 @@
-.content {
-	display: flex;
-	flex-direction: column;
-	padding: 20px;
-	min-width: 400px;
-	background-color: var(--modalBackgroundColor);
-
-	.inputContainer {
-		display: flex;
-		flex-direction: row;
-		justify-content: flex-start;
-		align-items: center;
-		padding: 10px 0px;
-		width: 650px;
-		height: 100%;
-
-		.label {
-			margin-right: 20px;
-			line-height: 35px;
-			font-size: 14px;
-			font-weight: bold;
-			color: var(--textColor);
-			width: 40%;
-			display: flex;
-			align-items: flex-end;
-			justify-content: flex-end;
-		}
-	}
-}
-
 .modal {
 	.header {
 		display: flex;
@@ -35,6 +5,7 @@
 		padding: 15px 50px 15px 30px;
 		border-bottom: 1px solid var(--borderColor);
 		font-size: 18px;
+		color: var(--textColor);
 		.left {
 			width: 50%;
 		}
@@ -55,6 +26,15 @@
 		display: flex;
 		flex-direction: row;
 		width: 50%;
+		.delete {
+			padding: 6px 16px;
+			font-size: 14px;
+			background-color: var(--dangerBackgroundColor);
+			border: 1px solid var(--dangerBackgroundColor);
+			color: var(--white);
+			border-radius: 4px;
+			cursor: pointer;
+		}
 	}
 	.right {
 		display: flex;
@@ -66,8 +46,8 @@
 			padding: 6px 16px;
 			font-size: 14px;
 			background-color: var(--defaultBackgroundColor);
-			border: 1px solid var(--borderColor);
-			color: var(--defaultButtonTextColoe);
+			border: 1px solid var(--defaultBorderColor);
+			color: var(--textColor);
 			border-radius: 4px;
 			cursor: pointer;
 		}
@@ -76,8 +56,8 @@
 			padding: 6px 16px;
 			font-size: 14px;
 			background-color: var(--defaultBackgroundColor);
-			border: 1px solid var(--borderColor);
-			color: var(--defaultButtonTextColoe);
+			border: 1px solid var(--defaultBorderColor);
+			color: var(--textColor);
 			border-radius: 4px;
 			margin-left: 10px;
 			cursor: pointer;
@@ -109,4 +89,24 @@
 		width: 3px;
 		transform: rotate(45deg);
 	}
+}
+
+.modalBackdrop {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: var(--modalBackdropBackgroundColor);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 100;
+}
+
+.modalContent {
+	background: var(--modalBackgroundColor);
+	box-shadow: 0 0 10px var(--modalBackdropBackgroundColor);
+	width: 1080px;
+	z-index: 101;
 }

@@ -5,18 +5,81 @@ import { ReactComponent as BookmarkFilled } from "../svgs/bookmark_filled.svg";
 import { ReactComponent as BookmarkUnfilled } from "../svgs/bookmark_unfilled.svg";
 import { ReactComponent as ContinuingIcon } from "../svgs/play_arrow.svg";
 import { ReactComponent as StoppedIcon } from "../svgs/stop.svg";
-import ToolBar from "../ToolBar/ToolBar";
-import InputCheckbox from "../inputCheckbox/InputCheckbox";
-import InputSelect from "../inputSelect/InputSelect";
+import InputCheckbox from "../inputs/inputCheckbox/InputCheckbox";
+import InputSelect from "../inputs/inputSelect/InputSelect";
+import MassEditorToolbar from "../toolbars/massEditorToolbar/MassEditorToolbar";
 
 const MassEditor = () => {
 	const wsContext: any = useContext(WebSocketContext);
 	const series: any = wsContext?.data?.series;
+	const settings: any = wsContext?.data?.settings;
 	const seriesArray = Array.from(Object.values(series || {}));
 	const profiles: any = wsContext?.data?.profiles;
 	const [selectedSeries, setSelectedSeries] = useState<any>([]);
 	const [monitored, setMonitored] = useState<any>(false);
 	const [profile, setProfile] = useState<any>();
+
+	const sort = settings?.massEditor_sort;
+	const filter = settings?.massEditor_filter;
+
+	let filteredSeries: any[] = Object.values(series || {});
+	if (filter == "monitored") {
+		filteredSeries = filteredSeries.filter((series: any) => series.monitored);
+	} else if (filter == "unmonitored") {
+		filteredSeries = filteredSeries.filter((series: any) => !series.monitored);
+	} else if (filter == "continuing") {
+		filteredSeries = filteredSeries.filter(
+			(series: any) => series.status != "Ended",
+		);
+	} else if (filter == "ended") {
+		filteredSeries = filteredSeries.filter(
+			(series: any) => series.status == "Ended",
+		);
+	} else if (filter == "missing") {
+		filteredSeries = filteredSeries.filter(
+			(series: any) => series.missing_episodes != 0,
+		);
+	}
+
+	let sortedSeries: any[] = filteredSeries;
+	const sortSeries = (seriesArray: any[], column: string) => {
+		return seriesArray.sort((a: any, b: any) => {
+			if (typeof a[column] === "string" && typeof b[column] === "string") {
+				return a[column].localeCompare(b[column]);
+			} else if (
+				typeof a[column] === "number" &&
+				typeof b[column] === "number"
+			) {
+				return a[column] - b[column];
+			} else {
+				return 0;
+			}
+		});
+	};
+	if (sort == "title") {
+		sortedSeries = sortSeries(sortedSeries, "id");
+	} else if (sort == "monitored/status") {
+		sortedSeries = sortSeries(sortedSeries, "monitored");
+	} else if (sort == "network") {
+		sortedSeries = sortSeries(sortedSeries, "networks");
+	} else if (sort == "profile") {
+		sortedSeries = sortedSeries.map((series: any) => {
+			const profile = profiles[series.profile_id];
+			return {
+				...series,
+				profile_id: profile?.name,
+			};
+		});
+		sortedSeries = sortSeries(sortedSeries, "profile_id");
+	} else if (sort == "episodes") {
+		sortedSeries = sortSeries(sortedSeries, "episode_count");
+	} else if (sort == "size") {
+		sortedSeries = sortSeries(sortedSeries, "size");
+	}
+	if (settings?.massEditor_sort_direction === "descending") {
+		sortedSeries = sortedSeries.reverse();
+	}
+
 	const applyChanges = () => {
 		for (const series of selectedSeries) {
 			series.monitored =
@@ -52,11 +115,44 @@ const MassEditor = () => {
 		applyChanges();
 	}, [monitored, profile]);
 
+	const [selected, setSelected] = useState<string | null>(null);
+
+	const setSetting = async (key: string, value: any) => {
+		if (key == "massEditor_sort" && value == settings.massEditor_sort) {
+			await fetch(`http://${window.location.hostname}:7889/api/settings`, {
+				method: "PUT",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				body: JSON.stringify({
+					id: "massEditor_sort_direction",
+					value:
+						settings?.massEditor_sort_direction === "ascending"
+							? "descending"
+							: "ascending",
+				}),
+			});
+		}
+		await fetch(`http://${window.location.hostname}:7889/api/settings`, {
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${localStorage.getItem("token")}`,
+			},
+			body: JSON.stringify({ id: key, value: value }),
+		});
+	};
 	return (
 		<div className={styles.massEditor}>
-			<ToolBar />
+			<MassEditorToolbar
+				selected={selected}
+				setSelected={setSelected}
+				settings={settings}
+				setSetting={setSetting}
+			/>
 			<div className={styles.content}>
-				{series && series.length !== 0 ? (
+				{sortedSeries && sortedSeries.length !== 0 ? (
 					<>
 						<table className={styles.table}>
 							<thead>
@@ -76,7 +172,7 @@ const MassEditor = () => {
 								</tr>
 							</thead>
 							<tbody>
-								{seriesArray?.map((s: any, index: any) => (
+								{sortedSeries?.map((s: any, index: any) => (
 									<tr className={styles.row} key={index}>
 										<td className={styles.inputCell}>
 											<InputCheckbox

@@ -1,11 +1,10 @@
-from sqlalchemy import insert
 from src.models.setting import Setting
 
 
-def seed_settings(conn):
+def seed_settings(session):
     for setting in default_settings:
-        conn.execute(insert(Setting).values(setting))
-    conn.commit()
+        session.add(Setting(**setting))
+    session.commit()
 
 
 default_settings = [
@@ -35,6 +34,18 @@ default_settings = [
     }, {
         "id": "media_sort",
         "value": "title"
+    },
+    {
+        "id": "massEditor_sort",
+        "value": "title"
+    },
+    {
+        "id": "massEditor_sort_direction",
+        "value": "ascending"
+    },
+    {
+        "id": "massEditor_filter",
+        "value": "all"
     },
     {
         "id": "media_sort_direction",
@@ -136,6 +147,28 @@ default_settings = [
         "id": "media_overview_showSizeOnDisk",
         "value": True
     },
-
-
+    {
+        "id": "queue_filter",
+        "value": "all"
+    },
+    {
+        "id": "queue_page_size",
+        "value": 20
+    },
+    {
+        "id": "history_filter",
+        "value": "all"
+    },
+    {
+        "id": "history_page_size",
+        "value": 20
+    },
+    {
+        "id": "events_filter",
+        "value": "all"
+    },
+    {
+        "id": "events_page_size",
+        "value": 20
+    },
 ]

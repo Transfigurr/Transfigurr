@@ -6,13 +6,15 @@ import { ReactComponent as SkipPrevious } from "../svgs/skip_previous.svg";
 import { ReactComponent as NavigateNext } from "../svgs/navigate_next.svg";
 import { ReactComponent as NavigateBefore } from "../svgs/navigate_before.svg";
 import { ReactComponent as ResetWrench } from "../svgs/reset_wrench.svg";
-import ToolBar from "../ToolBar/ToolBar";
 import Codec from "../codec/Codec";
+import HistoryToolbar from "../toolbars/historyToolbar/HistoryToolbar";
+import HistoryModal from "../modals/historyModal/HistoryModal";
 
 const History = () => {
 	const wsContext: any = useContext(WebSocketContext);
+	const settings: any = wsContext?.data?.settings;
 	const history = wsContext?.data?.history;
-	const recordsPerPage = 10;
+	const recordsPerPage = settings?.history_page_size || 0;
 	const [currentPage, setCurrentPage] = useState(1);
 	const historyArray = Array.from(Object.values(history || {}));
 
@@ -44,12 +46,43 @@ const History = () => {
 		}
 	};
 
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [content, setContent] = useState<any>({});
+
+	const handleOptionsClick = () => {
+		setContent(settings);
+		setIsModalOpen(true);
+	};
+	const [selected, setSelected] = useState<string | null>(null);
+
+	const onModalSave = async () => {
+		for (const key in content) {
+			fetch(`http://${window.location.hostname}:7889/api/settings`, {
+				method: "PUT",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				body: JSON.stringify({ id: key, value: content[key] }),
+			});
+		}
+		setIsModalOpen(false);
+	};
+
 	return (
 		<div className={styles.history}>
-			<ToolBar
-				leftToolBarItems={[]}
-				middleToolBarItems={[]}
-				rightToolBarItems={[]}
+			<HistoryToolbar
+				settings={settings}
+				selected={selected}
+				setSelected={setSelected}
+				handleOptionsClick={handleOptionsClick}
+			/>
+			<HistoryModal
+				isOpen={isModalOpen}
+				setIsOpen={setIsModalOpen}
+				onSave={onModalSave}
+				content={content}
+				setContent={setContent}
 			/>
 			<div className={styles.content}>
 				{currentRecords && currentRecords.length !== 0 ? (

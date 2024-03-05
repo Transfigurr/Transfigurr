@@ -1,5 +1,5 @@
 import styles from "./ProfileFilters.module.scss";
-import InputContainer from "../inputContainer/InputContainer";
+import InputContainer from "../inputs/inputContainer/InputContainer";
 
 const ProfileFilters = ({ content, setContent }: any) => {
 	return (
@@ -23,7 +23,7 @@ const ProfileFilters = ({ content, setContent }: any) => {
 				<div className={styles.item}>
 					<InputContainer
 						type="select"
-						label="Interlace Detection"
+						label="Interlace"
 						selected={content?.interlace_detection}
 						onChange={(e: any) => {
 							setContent({
@@ -54,7 +54,7 @@ const ProfileFilters = ({ content, setContent }: any) => {
 						<option value="bwdif">Bwdif</option>
 					</InputContainer>
 				</div>
-				{content?.interlace_detection != "off" && (
+				{content?.deinterlace != "off" && (
 					<div className={styles.item}>
 						<InputContainer
 							type="select"
@@ -183,7 +183,7 @@ const ProfileFilters = ({ content, setContent }: any) => {
 				<div className={styles.item}>
 					<InputContainer
 						type="select"
-						label="Chroma Smooth"
+						label="Smooth"
 						selected={content?.chroma_smooth}
 						onChange={(e: any) => {
 							setContent({ ...content, chroma_smooth: e.target.value });

@@ -2,9 +2,8 @@ import { useContext, useEffect, useRef, useState } from "react";
 import styles from "./General.module.scss";
 import { WebSocketContext } from "../../contexts/webSocketContext";
 import ToolBar from "../ToolBar/ToolBar";
-import ToolBarItem from "../ToolBarItem/ToolBarItem";
-import { ReactComponent as SaveIcon } from "../svgs/save.svg";
-import InputContainer from "../inputContainer/InputContainer";
+import InputContainer from "../inputs/inputContainer/InputContainer";
+import GeneralToolbar from "../toolbars/generalToolbar/GeneralToolbar";
 
 const General = () => {
 	const wsContext = useContext(WebSocketContext);
@@ -70,20 +69,15 @@ const General = () => {
 		}
 		setSettingsChanged(false);
 	};
-	const leftToolBarItems: any = [
-		<ToolBarItem
-			text={!settingsChanged ? "No Changes" : "Save"}
-			key="save"
-			icon={<SaveIcon fontSize="medium" />}
-			onClick={handleSave}
-			disabled={!settingsChanged}
-			selected={selected}
-			setSelected={setSelected}
-		/>,
-	];
+
 	return (
 		<div className={styles.general}>
-			<ToolBar leftToolBarItems={leftToolBarItems} />
+			<GeneralToolbar
+				selected={selected}
+				setSelected={setSelected}
+				handleSave={handleSave}
+				settingsChanged={settingsChanged}
+			/>
 			<div className={styles.content}>
 				<div className={styles.section}>
 					<label className={styles.header}>Default Behavior</label>

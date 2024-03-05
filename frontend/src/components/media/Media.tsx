@@ -3,10 +3,10 @@ import Footer from "../footer/Footer";
 import { useContext, useState } from "react";
 import { WebSocketContext } from "../../contexts/webSocketContext";
 import Table from "../table/Table";
-import MediaModel from "../mediaModal/MediaModal";
+import MediaModel from "../modals/mediaModal/MediaModal";
 import Posters from "../posters/Posters";
 import Overviews from "../overviews/Overviews";
-import MediaToolbar from "../mediaToolbar/MediaToolbar";
+import MediaToolbar from "../toolbars/mediaToolbar/MediaToolbar";
 
 const ExplorerComponent = () => {
 	const wsContext = useContext(WebSocketContext);
@@ -157,20 +157,14 @@ const ExplorerComponent = () => {
 				onRefresh={onRefresh}
 				handleOptionsClick={handleOptionsClick}
 			/>
-			{isModalOpen && (
-				<div className={styles.modalBackdrop}>
-					<div className={styles.modalContent}>
-						<MediaModel
-							type={view}
-							isOpen={isModalOpen}
-							setIsOpen={setIsModalOpen}
-							onSave={onModalSave}
-							content={content}
-							setContent={setContent}
-						/>
-					</div>
-				</div>
-			)}
+			<MediaModel
+				type={view}
+				isOpen={isModalOpen}
+				setIsOpen={setIsModalOpen}
+				onSave={onModalSave}
+				content={content}
+				setContent={setContent}
+			/>
 			<div className={styles.mediaContent}>
 				<div className={styles.contentContainer}>
 					{view === "table" && (

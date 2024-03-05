@@ -8,7 +8,8 @@ from src.models.episode import Episode  # noqa
 from src.models.season import Season  # noqa
 from src.models.series import Series  # noqa
 from src.models.setting import Setting  # noqa
-from src.models.profile import Profile, Profile_Codec  # noqa
+from src.models.profile import Profile  # noqa
+from src.models.profile_codec import Profile_Codec  # noqa
 from src.models.user import User  # noqa
 from src.seeds.seed_system import seed_system  # noqa
 from src.seeds.seed_settings import seed_settings  # noqa
@@ -16,6 +17,7 @@ from src.seeds.seed_profiles import seed_profiles  # noqa
 from src.seeds.seed_profile_codecs import seed_profile_codecs  # noqa
 from sqlalchemy import create_engine, inspect  # noqa
 from src.models.base import Base  # noqa
+from sqlalchemy.orm import sessionmaker  # noqa
 
 
 def init_db():
@@ -43,15 +45,17 @@ def init_db():
         profile_codecs = True
 
     Base.metadata.create_all(engine)
-    conn = engine.connect()
+    Session = sessionmaker(bind=engine)
+    session = Session()
     if profiles:
-        seed_profiles(conn)
+        seed_profiles(session)
     if settings:
-        seed_settings(conn)
+        seed_settings(session)
     if system:
-        seed_system(conn)
+        seed_system(session)
     if profile_codecs:
-        seed_profile_codecs(conn)
+        seed_profile_codecs(session)
+    session.commit()
 
 
 init_db()

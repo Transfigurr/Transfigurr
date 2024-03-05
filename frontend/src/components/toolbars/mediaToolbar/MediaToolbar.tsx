@@ -1,15 +1,15 @@
 import styles from "./MediaToolbar.module.scss";
-import ToolBarItem from "../ToolBarItem/ToolBarItem";
-import { ReactComponent as Rss } from "../svgs/rss_feed.svg";
-import { ReactComponent as Sync } from "../svgs/cached.svg";
-import { ReactComponent as AppsIcon } from "../svgs/apps.svg";
-import { ReactComponent as ViewIcon } from "../svgs/visibility.svg";
-import { ReactComponent as SortIcon } from "../svgs/sort.svg";
-import { ReactComponent as FilterIcon } from "../svgs/filter.svg";
-import { ReactComponent as TableIcon } from "../svgs/table.svg";
-import { ReactComponent as OverviewIcon } from "../svgs/view_list.svg";
-import { ReactComponent as LoadingIcon } from "../svgs/loading.svg";
-import ToolBar from "../ToolBar/ToolBar";
+import ToolBarItem from "../../ToolBarItem/ToolBarItem";
+import { ReactComponent as Rss } from "../../svgs/rss_feed.svg";
+import { ReactComponent as Sync } from "../../svgs/cached.svg";
+import { ReactComponent as AppsIcon } from "../../svgs/apps.svg";
+import { ReactComponent as ViewIcon } from "../../svgs/visibility.svg";
+import { ReactComponent as SortIcon } from "../../svgs/sort.svg";
+import { ReactComponent as FilterIcon } from "../../svgs/filter.svg";
+import { ReactComponent as TableIcon } from "../../svgs/table.svg";
+import { ReactComponent as OverviewIcon } from "../../svgs/view_list.svg";
+import { ReactComponent as LoadingIcon } from "../../svgs/loading.svg";
+import ToolBar from "../../ToolBar/ToolBar";
 const MediaToolbar = ({
 	onUpdate,
 	selected,
@@ -149,6 +149,7 @@ const MediaToolbar = ({
 			index={4}
 			key={4}
 			settings={settings}
+			sortDirection={settings?.media_sort_direction}
 			sort={true}
 			icon={
 				<SortIcon

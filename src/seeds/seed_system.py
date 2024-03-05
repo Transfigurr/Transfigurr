@@ -1,11 +1,10 @@
-from sqlalchemy import insert
 from src.models.system import System
 
 
-def seed_system(conn):
+def seed_system(session):
     for system in default_system:
-        conn.execute(insert(System).values(system))
-    conn.commit()
+        session.add(System(**system))
+    session.commit()
 
 
 default_system = [

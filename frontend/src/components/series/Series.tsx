@@ -1,9 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import ToolBar from "../ToolBar/ToolBar";
 import styles from "./Series.module.scss";
-import ToolBarItem from "../ToolBarItem/ToolBarItem";
-import { ReactComponent as RssFeedIcon } from "../svgs/rss_feed.svg";
-import { ReactComponent as SyncIcon } from "../svgs/cached.svg";
 import { ReactComponent as Folder } from "../svgs/folder.svg";
 import { ReactComponent as Drive } from "../svgs/hard_drive.svg";
 import { ReactComponent as Profile } from "../svgs/person.svg";
@@ -12,11 +8,10 @@ import { ReactComponent as Unmonitored } from "../svgs/bookmark_unfilled.svg";
 import { ReactComponent as Continuing } from "../svgs/play_arrow.svg";
 import { ReactComponent as Ended } from "../svgs/stop.svg";
 import { ReactComponent as Network } from "../svgs/tower.svg";
-import { ReactComponent as EditIcon } from "../svgs/edit.svg";
-import { ReactComponent as LoadingIcon } from "../svgs/loading.svg";
 import Season from "../season/Season";
 import { WebSocketContext } from "../../contexts/webSocketContext";
-import SeriesModals from "../seriesModals/SeriesModals";
+import SeriesModal from "../modals/seriesModal/SeriesModal";
+import SeriesToolbar from "../toolbars/seriesToolbar/SeriesToolbar";
 
 const Series = ({ series_name }: any) => {
 	const wsContext = useContext(WebSocketContext);
@@ -58,67 +53,6 @@ const Series = ({ series_name }: any) => {
 		);
 	};
 
-	const leftToolBarItems: any = [
-		<ToolBarItem
-			text="Scan"
-			key="scan"
-			icon={
-				<SyncIcon
-					className={
-						system?.scan_running && system?.scan_target == series?.id
-							? styles.spinning
-							: ""
-					}
-					style={{
-						height: "100%",
-						width: "100%",
-					}}
-				/>
-			}
-			onClick={handleScanClick}
-			selected={selected}
-			setSelected={setSelected}
-		/>,
-		<ToolBarItem
-			text="Refresh Metadata"
-			key="metadata"
-			icon={
-				system?.metadata_running == "1" &&
-				system?.metadata_target == series?.id ? (
-					<LoadingIcon
-						className={styles.loading}
-						style={{
-							fill: "white",
-							color: "white",
-							height: "30px",
-							width: "30px",
-						}}
-					/>
-				) : (
-					<RssFeedIcon
-						style={{
-							height: "100%",
-							width: "100%",
-						}}
-					/>
-				)
-			}
-			onClick={handleMetadataClick}
-			selected={selected}
-			setSelected={setSelected}
-		/>,
-		<ToolBarItem
-			text="Edit"
-			key="edit"
-			icon={<EditIcon />}
-			onClick={handleEditClick}
-			selected={selected}
-			setSelected={setSelected}
-		/>,
-	];
-
-	const middleToolBarItems: any = [];
-	const rightToolBarItems: any = [];
 	const status = series?.status;
 	const network = series?.networks;
 	const genre = series?.genre;
@@ -189,23 +123,20 @@ const Series = ({ series_name }: any) => {
 	}, [series?.id]);
 	return (
 		<div className={styles.series}>
-			{isModalOpen ? (
-				<div className={styles.modalBackdrop}>
-					<div className={styles.modalContent}>
-						<SeriesModals
-							setIsModalOpen={setIsModalOpen}
-							content={content}
-							setContent={setContent}
-						/>
-					</div>
-				</div>
-			) : (
-				<></>
-			)}
-			<ToolBar
-				leftToolBarItems={leftToolBarItems}
-				middleToolBarItems={middleToolBarItems}
-				rightToolBarItems={rightToolBarItems}
+			<SeriesToolbar
+				series={series}
+				system={system}
+				selected={selected}
+				setSelected={setSelected}
+				handleEditClick={handleEditClick}
+				handleScanClick={handleScanClick}
+				handleMetadataClick={handleMetadataClick}
+			/>
+			<SeriesModal
+				isOpen={isModalOpen}
+				setIsOpen={setIsModalOpen}
+				content={content}
+				setContent={setContent}
 			/>
 			<div className={styles.seriesContent}>
 				<div className={styles.header}>

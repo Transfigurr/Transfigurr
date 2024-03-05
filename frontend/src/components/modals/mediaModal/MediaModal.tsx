@@ -1,6 +1,6 @@
-import InputContainer from "../inputContainer/InputContainer";
 import styles from "./MediaModal.module.scss";
-import { useEffect } from "react";
+import Modal from "../../modal/Modal";
+import InputContainer from "../../inputs/inputContainer/InputContainer";
 
 const MediaModal = ({
 	isOpen,
@@ -13,43 +13,19 @@ const MediaModal = ({
 	const onClose = () => {
 		setIsOpen(false);
 	};
-	useEffect(() => {
-		const modalBackdropClass = "modalBackdrop";
-
-		const handleKeyDown = (event: KeyboardEvent) => {
-			if (event.key === "Escape") {
-				setIsOpen(false);
-			}
-		};
-		const handleOutsideClick = (event: any) => {
-			if (event.target.classList.value.includes(modalBackdropClass)) {
-				setIsOpen(false);
-			}
-		};
-		window.addEventListener("click", handleOutsideClick);
-		window.addEventListener("keydown", handleKeyDown);
-		return () => {
-			window.removeEventListener("click", handleOutsideClick);
-			window.removeEventListener("keydown", handleKeyDown);
-		};
-	}, [setIsOpen]);
-
+	let title = "";
+	if (type == "posters") title = "Poster Options";
+	if (type == "table") title = "Table Options";
+	if (type == "overview") title = "Overview Options";
 	if (!isOpen) return null;
 	return (
-		<div className={styles.modal}>
-			<div className={styles.header}>
-				<div className={styles.left}>
-					{type == "posters" && <>Poster Options</>}
-					{type == "table" && <>Table Options</>}
-					{type == "overview" && <>Overview Options</>}
-				</div>
-				<div className={styles.right}>
-					<div className={styles.cross} onClick={onClose}>
-						<div className={styles.verticalCross}></div>
-						<div className={styles.horizontalCross}></div>
-					</div>
-				</div>
-			</div>
+		<Modal
+			isOpen={isOpen}
+			setIsOpen={setIsOpen}
+			onSave={onSave}
+			title={title}
+			onClose={onClose}
+		>
 			<div className={styles.content}>
 				<div className={styles.left}>
 					{type === "posters" && (
@@ -347,18 +323,7 @@ const MediaModal = ({
 					)}
 				</div>
 			</div>
-			<div className={styles.footer}>
-				<div className={styles.left}></div>
-				<div className={styles.right}>
-					<div className={styles.cancel} onClick={onClose}>
-						Cancel
-					</div>
-					<div className={styles.save} onClick={() => onSave()}>
-						Save
-					</div>
-				</div>
-			</div>
-		</div>
+		</Modal>
 	);
 };
 export default MediaModal;
