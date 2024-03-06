@@ -200,7 +200,7 @@ default_profiles = [
         "colorspace": "off",
         "grayscale": False,
         "codec": "vp8",
-        "encoder": "libvpx-vp8",
+        "encoder": "libvpx",
         "framerate": "same as source",
         "framerate_type": "peak framerate",
         "quality_type": "constant quality",

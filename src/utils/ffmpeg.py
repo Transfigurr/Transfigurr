@@ -321,7 +321,6 @@ def create_ffmpeg_command(input_file, output_file, codec_profile):
     if level and level != 'auto':
         command += ["-level:v", level]
     command += ["-f", container, output_file]
-    print(command)
     return command
 
 
