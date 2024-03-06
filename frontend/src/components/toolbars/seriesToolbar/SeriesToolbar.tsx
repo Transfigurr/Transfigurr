@@ -1,5 +1,5 @@
-import ToolBarItem from "../../ToolBarItem/ToolBarItem";
-import ToolBar from "../../ToolBar/ToolBar";
+import ToolBarItem from "../../toolBarItem/ToolBarItem";
+import ToolBar from "../../toolBar/ToolBar";
 import { ReactComponent as SyncIcon } from "../../svgs/cached.svg";
 import styles from "./SeriesToolbar.module.scss";
 import { ReactComponent as EditIcon } from "../../svgs/edit.svg";

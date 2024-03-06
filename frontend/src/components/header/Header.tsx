@@ -9,6 +9,7 @@ import { ReactComponent as Pending } from "../svgs/pending.svg";
 import { ReactComponent as RestartIcon } from "../svgs/restart.svg";
 import { ReactComponent as ShutdownIcon } from "../svgs/shutdown.svg";
 import { Link } from "react-router-dom";
+import { formatETA } from "../../utils/format";
 
 const HeaderComponent = () => {
 	const wsContext = useContext(WebSocketContext);
@@ -86,12 +87,7 @@ const HeaderComponent = () => {
 							<Pending />
 						</div>
 						<div className={styles.text}>
-							{queue && queue.stage !== "idle"
-								? Math.floor(parseInt(queue?.eta || 0) / 60) +
-									"m " +
-									(parseInt(queue?.eta || 0) % 60).toString() +
-									"s"
-								: "-m -s"}
+							{queue && queue.stage !== "idle" && formatETA(queue?.eta)}
 						</div>
 					</div>
 					<div className={styles.line}>

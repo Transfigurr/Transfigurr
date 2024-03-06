@@ -44,3 +44,18 @@ export const formatSize = (size: number) => {
 
 	return isNegative ? `-${sizeString}` : sizeString;
 };
+
+export const formatETA = (eta: number): string => {
+	const seconds = Math.floor(eta % 60);
+	const minutes = Math.floor(eta / 60) % 60;
+	const hours = Math.floor(eta / 3600) % 24;
+	const days = Math.floor(eta / 86400);
+
+	if (days > 0) {
+		return `${days}d ${hours}h`;
+	} else if (hours > 0) {
+		return `${hours}h:${minutes}m`;
+	} else {
+		return `${minutes}m:${seconds}s`;
+	}
+};

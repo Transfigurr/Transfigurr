@@ -153,7 +153,7 @@ default_settings = [
     },
     {
         "id": "queue_page_size",
-        "value": 20
+        "value": 12
     },
     {
         "id": "history_filter",
@@ -161,7 +161,7 @@ default_settings = [
     },
     {
         "id": "history_page_size",
-        "value": 20
+        "value": 15
     },
     {
         "id": "events_filter",
@@ -169,6 +169,6 @@ default_settings = [
     },
     {
         "id": "events_page_size",
-        "value": 20
+        "value": 15
     },
 ]

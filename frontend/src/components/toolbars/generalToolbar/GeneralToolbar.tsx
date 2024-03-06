@@ -1,5 +1,5 @@
-import ToolBar from "../../ToolBar/ToolBar";
-import ToolBarItem from "../../ToolBarItem/ToolBarItem";
+import ToolBar from "../../toolBar/ToolBar";
+import ToolBarItem from "../../toolBarItem/ToolBarItem";
 import { ReactComponent as SaveIcon } from "../../svgs/save.svg";
 
 const GeneralToolbar = ({

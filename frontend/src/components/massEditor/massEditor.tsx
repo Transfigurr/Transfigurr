@@ -1,15 +1,10 @@
 import styles from "./MassEditor.module.scss";
 import { useContext, useEffect, useState } from "react";
 import { WebSocketContext } from "../../contexts/webSocketContext";
-import { ReactComponent as BookmarkFilled } from "../svgs/bookmark_filled.svg";
-import { ReactComponent as BookmarkUnfilled } from "../svgs/bookmark_unfilled.svg";
-import { ReactComponent as ContinuingIcon } from "../svgs/play_arrow.svg";
-import { ReactComponent as StoppedIcon } from "../svgs/stop.svg";
-import InputCheckbox from "../inputs/inputCheckbox/InputCheckbox";
 import InputSelect from "../inputs/inputSelect/InputSelect";
 import MassEditorToolbar from "../toolbars/massEditorToolbar/MassEditorToolbar";
 import sortAndFilter from "../../utils/sortAndFilter";
-import { formatSize } from "../../utils/format";
+import MassEditorTable from "../tables/massEditorTable/MassEditorTable";
 
 const MassEditor = () => {
 	const wsContext: any = useContext(WebSocketContext);
@@ -77,61 +72,14 @@ const MassEditor = () => {
 			/>
 			<div className={styles.content}>
 				{sortedSeries && sortedSeries.length !== 0 ? (
-					<>
-						<table className={styles.table}>
-							<thead>
-								<tr className={styles.headRow}>
-									<th>
-										<InputCheckbox
-											checked={selectAll}
-											onChange={handleSelectAllChange}
-										/>
-									</th>
-									<th></th>
-									<th>Series</th>
-									<th>Profile</th>
-									<th>Path</th>
-									<th>Space Saved</th>
-									<th>Size on Disk</th>
-								</tr>
-							</thead>
-							<tbody>
-								{sortedSeries?.map((s: any, index: any) => (
-									<tr className={styles.row} key={index}>
-										<td className={styles.inputCell}>
-											<InputCheckbox
-												checked={selectedSeries.some(
-													(series: any) => series.id === s.id,
-												)}
-												onChange={() => handleCheckboxChange(s)}
-											/>
-										</td>
-										<td className={styles.iconCell}>
-											{s?.monitored ? (
-												<BookmarkFilled className={styles.monitored} />
-											) : (
-												<BookmarkUnfilled className={styles.monitored} />
-											)}
-											{s?.status !== "Ended" ? (
-												<ContinuingIcon className={styles.continue} />
-											) : (
-												<StoppedIcon className={styles.stopped} />
-											)}
-										</td>
-										<td>
-											<a href={"/series/" + s?.id} className={styles.name}>
-												{s?.id}
-											</a>
-										</td>
-										<td>{profiles ? profiles[s.profile_id]?.name : ""}</td>
-										<td>/series/{s.id}</td>
-										<td>{formatSize(s.space_saved)}</td>
-										<td>{formatSize(s.size)}</td>
-									</tr>
-								))}
-							</tbody>
-						</table>
-					</>
+					<MassEditorTable
+						sortedSeries={sortedSeries}
+						selectedSeries={selectedSeries}
+						selectAll={selectAll}
+						handleSelectAllChange={handleSelectAllChange}
+						handleCheckboxChange={handleCheckboxChange}
+						profiles={profiles}
+					/>
 				) : (
 					<>No Media Found</>
 				)}

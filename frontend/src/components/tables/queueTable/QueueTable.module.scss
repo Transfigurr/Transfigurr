@@ -1,30 +1,7 @@
-table {
-	color: var(--textColor);
-	border-collapse: collapse;
-	width: 100%;
-	border: none;
-	font-size: 14px;
-
-	tbody {
-		border: none;
-		font-size: 14px;
-		tr {
-			border-top: 1px solid var(--borderColor);
-			padding: 15px;
-		}
-
-		tr:hover {
-			background-color: var(--tableRowHoverBackgroundColor);
-		}
-	}
-	thead {
-		text-align: left;
-	}
-	td,
-	th {
-		padding: 8px;
-		margin: 8px;
-	}
+.iconCell {
+	padding: 0px;
+	margin: 0px;
+	fill: var(--textColor);
 }
 
 .navigation {
@@ -60,4 +37,27 @@ table {
 	display: flex;
 	justify-content: flex-end;
 	align-items: flex-start;
+}
+
+.name {
+	color: var(--transfigurrPurple);
+	text-decoration: none;
+}
+
+.name:hover {
+	color: var(--transfigurrAlternativePurple);
+	text-decoration: underline;
+}
+
+.codecRow {
+	padding: 0px;
+	margin: 0px;
+}
+
+.currentContainer {
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+	height: 100px;
+	width: 100%;
 }

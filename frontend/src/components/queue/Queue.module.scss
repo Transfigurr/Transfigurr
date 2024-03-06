@@ -30,56 +30,18 @@
 		border: none;
 		font-size: 14px;
 	}
+	th,
+	td {
+		text-align: left;
+		padding: 8px;
+		margin: 8px;
+	}
 }
 
-th,
-td {
-	text-align: left;
-	padding: 8px;
-	margin: 8px;
-}
 .iconCell {
 	padding: 0px;
 	margin: 0px;
 	fill: var(--textColor);
-}
-tr {
-	padding: 8px;
-}
-
-.navigation {
-	color: var(--textColor);
-	fill: var(--textColor);
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 30px;
-	font-size: 13px;
-}
-
-.button {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	cursor: pointer;
-	height: 100%;
-}
-
-.disabled {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 100%;
-	opacity: 0.25;
-	cursor: auto;
-}
-
-.totalRecords {
-	color: var(--textColor);
-	font-size: 14px;
-	display: flex;
-	justify-content: flex-end;
-	align-items: flex-start;
 }
 
 .name {
@@ -92,20 +54,6 @@ tr {
 	text-decoration: underline;
 }
 
-.codec {
-	display: inline-flex;
-	justify-content: center;
-	align-items: center;
-	background-color: #4f566f;
-	border-radius: 2px;
-	color: white;
-	font-size: 11px;
-	padding: 1px 3px;
-	margin: 2px;
-	border: 1px solid var(--borderColor);
-	line-height: 1;
-	cursor: default;
-}
 .codecRow {
 	padding: 0px;
 	margin: 0px;

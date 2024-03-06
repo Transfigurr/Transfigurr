@@ -1,32 +1,26 @@
-table {
-	color: var(--textColor);
-	border-collapse: collapse;
-	width: 100%;
-	border: none;
-	font-size: 14px;
-
-	tbody {
-		border: none;
-		font-size: 14px;
-		tr {
-			border-top: 1px solid var(--borderColor);
-			padding: 15px;
-		}
-
-		tr:hover {
-			background-color: var(--tableRowHoverBackgroundColor);
-		}
-	}
-	thead {
-		text-align: left;
-	}
-	td,
-	th {
-		padding: 8px;
-		margin: 8px;
-	}
+.name {
+	color: var(--transfigurrPurple);
+	text-decoration: none;
 }
 
+.name:hover {
+	color: var(--transfigurrAlternativePurple);
+	text-decoration: underline;
+}
+
+.iconCell {
+	padding: 0px;
+	margin: 0px;
+	fill: var(--textColor);
+}
+
+.pageInfo {
+	height: 100%;
+	min-width: 35px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
 .navigation {
 	color: var(--textColor);
 	fill: var(--textColor);
@@ -60,4 +54,9 @@ table {
 	display: flex;
 	justify-content: flex-end;
 	align-items: flex-start;
+}
+
+.codecRow {
+	padding: 0px;
+	margin: 0px;
 }

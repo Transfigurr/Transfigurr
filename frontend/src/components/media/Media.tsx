@@ -2,12 +2,12 @@ import styles from "./Media.module.scss";
 import Footer from "../footer/Footer";
 import { useContext, useState } from "react";
 import { WebSocketContext } from "../../contexts/webSocketContext";
-import Table from "../table/Table";
 import MediaModel from "../modals/mediaModal/MediaModal";
 import Posters from "../posters/Posters";
 import Overviews from "../overviews/Overviews";
 import MediaToolbar from "../toolbars/mediaToolbar/MediaToolbar";
 import sortAndFilter from "../../utils/sortAndFilter";
+import MediaTable from "../tables/mediaTable/MediaTable";
 
 const Media = () => {
 	const wsContext = useContext(WebSocketContext);
@@ -50,7 +50,7 @@ const Media = () => {
 			<div className={styles.mediaContent}>
 				<div className={styles.contentContainer}>
 					{view === "table" && (
-						<Table
+						<MediaTable
 							settings={settings}
 							profiles={profiles}
 							sortedSeries={sortedSeries}

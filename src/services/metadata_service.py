@@ -35,6 +35,10 @@ class MetadataService:
                     await set_system({'id': 'metadata_running', 'value': False})
                     await set_system({'id': 'metadata_target', 'value': ''})
             except Exception as e:
+                try:
+                    await set_system({'id': 'metadata_running', 'value': False})
+                except Exception as e:
+                    logger.error("An error occurred while processing series %s", str(e), extra={'service': 'Metadata'})
                 logger.error("An error occurred while processing series %s", str(e), extra={'service': 'Metadata'})
             await asyncio.sleep(1)
 
