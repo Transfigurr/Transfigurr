@@ -278,7 +278,7 @@ def create_ffmpeg_command(input_file, output_file, codec_profile):
 
     if preset:
         if codec == 'av1':
-            command += ["-cpu-used", int(preset)]
+            command += ["-cpu-used", preset]
         else:
             command += ["-preset", preset]
 
