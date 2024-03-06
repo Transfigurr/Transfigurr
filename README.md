@@ -44,10 +44,10 @@ The architectures supported by this image are:
 
 This image provides various versions that are available via tags. Please read the descriptions carefully and exercise caution when using unstable or development tags.
 
-|   Tag   | Available | Description                           |
-| :-----: | :-------: | ------------------------------------- |
-| latest  |    ✅     | Stable releases from Transfigurr      |
-| develop |    ✅     | Development releases from Transfigurr |
+|   Tag   | Available | Description          |
+| :-----: | :-------: | -------------------- |
+| latest  |    ✅     | Stable releases      |
+| develop |    ✅     | Development releases |
 
 ## Application Setup
 
