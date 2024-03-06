@@ -2,12 +2,34 @@ import ToolBar from "../../ToolBar/ToolBar";
 import ToolBarItem from "../../ToolBarItem/ToolBarItem";
 import { ReactComponent as SortIcon } from "../../svgs/sort.svg";
 import { ReactComponent as FilterIcon } from "../../svgs/filter.svg";
-const MassEditorToolbar = ({
-	selected,
-	setSelected,
-	settings,
-	setSetting,
-}: any) => {
+const MassEditorToolbar = ({ selected, setSelected, settings }: any) => {
+	const setSetting = async (key: string, value: any) => {
+		if (key == "massEditor_sort" && value == settings.massEditor_sort) {
+			await fetch(`http://${window.location.hostname}:7889/api/settings`, {
+				method: "PUT",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				body: JSON.stringify({
+					id: "massEditor_sort_direction",
+					value:
+						settings?.massEditor_sort_direction === "ascending"
+							? "descending"
+							: "ascending",
+				}),
+			});
+		}
+		await fetch(`http://${window.location.hostname}:7889/api/settings`, {
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${localStorage.getItem("token")}`,
+			},
+			body: JSON.stringify({ id: key, value: value }),
+		});
+	};
+
 	const rightToolBarItems: any = [
 		<ToolBarItem
 			text="Sort"

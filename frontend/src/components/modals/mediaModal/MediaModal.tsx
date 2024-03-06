@@ -2,17 +2,25 @@ import styles from "./MediaModal.module.scss";
 import Modal from "../../modal/Modal";
 import InputContainer from "../../inputs/inputContainer/InputContainer";
 
-const MediaModal = ({
-	isOpen,
-	setIsOpen,
-	onSave,
-	content,
-	setContent,
-	type,
-}: any) => {
+const MediaModal = ({ isOpen, setIsOpen, content, setContent, type }: any) => {
 	const onClose = () => {
 		setIsOpen(false);
 	};
+
+	const onSave = async () => {
+		for (const key in content) {
+			fetch(`http://${window.location.hostname}:7889/api/settings`, {
+				method: "PUT",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				body: JSON.stringify({ id: key, value: content[key] }),
+			});
+		}
+		setIsOpen(false);
+	};
+
 	let title = "";
 	if (type == "posters") title = "Poster Options";
 	if (type == "table") title = "Table Options";

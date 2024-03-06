@@ -4,11 +4,26 @@ import { ReactComponent as TableIcon } from "../../svgs/table.svg";
 import { ReactComponent as FilterIcon } from "../../svgs/filter.svg";
 const EventsToolbar = ({
 	selected,
+	setContent,
+	setIsModalOpen,
 	setSelected,
-	handleOptionsClick,
-	setSetting,
 	settings,
 }: any) => {
+	const setSetting = async (key: string, value: any) => {
+		await fetch(`http://${window.location.hostname}:7889/api/settings`, {
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${localStorage.getItem("token")}`,
+			},
+			body: JSON.stringify({ id: key, value: value }),
+		});
+	};
+	const handleOptionsClick = () => {
+		setContent(settings);
+		setIsModalOpen(true);
+	};
+
 	return (
 		<ToolBar
 			leftToolBarItems={[]}

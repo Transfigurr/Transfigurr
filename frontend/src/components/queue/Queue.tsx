@@ -10,6 +10,7 @@ import { ReactComponent as QueueIcon } from "../svgs/queue.svg";
 import Codec from "../codec/Codec";
 import QueueToolbar from "../toolbars/queueToolbar/QueueToolbar";
 import QueueModal from "../modals/queueModal/QueueModal";
+import { formatSize } from "../../utils/format";
 
 const Queue = () => {
 	const wsContext = useContext(WebSocketContext);
@@ -19,6 +20,9 @@ const Queue = () => {
 	const settings = wsContext?.data?.settings;
 	const recordsPerPage = settings?.queue_page_size || 0;
 	const [currentPage, setCurrentPage] = useState(1);
+	const [selected, setSelected] = useState<string | null>(null);
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [content, setContent] = useState<any>({});
 	const queueArray = Array.from(Object.values(queue?.queue || []));
 	const indexOfLastRecord = currentPage * recordsPerPage;
 	const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
@@ -26,76 +30,35 @@ const Queue = () => {
 		indexOfFirstRecord,
 		indexOfLastRecord,
 	);
-
 	const totalPages = Math.ceil(queueArray.length / recordsPerPage);
-
 	const firstPage = () => {
 		setCurrentPage(1);
 	};
 	const lastPage = () => {
 		setCurrentPage(totalPages);
 	};
-
 	const nextPage = () => {
 		if (currentPage < totalPages) {
 			setCurrentPage(currentPage + 1);
 		}
 	};
-
 	const prevPage = () => {
 		if (currentPage > 1) {
 			setCurrentPage(currentPage - 1);
 		}
 	};
-
-	const [selected, setSelected] = useState<string | null>(null);
-
-	const setSetting = async (key: string, value: any) => {
-		await fetch(`http://${window.location.hostname}:7889/api/settings`, {
-			method: "PUT",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: `Bearer ${localStorage.getItem("token")}`,
-			},
-			body: JSON.stringify({ id: key, value: value }),
-		});
-	};
-
-	const onModalSave = async () => {
-		for (const key in content) {
-			fetch(`http://${window.location.hostname}:7889/api/settings`, {
-				method: "PUT",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-				body: JSON.stringify({ id: key, value: content[key] }),
-			});
-		}
-		setIsModalOpen(false);
-	};
-
-	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [content, setContent] = useState<any>({});
-
-	const handleOptionsClick = () => {
-		setContent(settings);
-		setIsModalOpen(true);
-	};
-
 	return (
 		<div className={styles.queue}>
 			<QueueToolbar
 				settings={settings}
-				setSetting={setSetting}
+				setContent={setContent}
+				setIsModalOpen={setIsModalOpen}
 				selected={selected}
 				setSelected={setSelected}
-				handleOptionsClick={handleOptionsClick}
 			/>
 			<QueueModal
 				isOpen={isModalOpen}
 				setIsOpen={setIsModalOpen}
-				onSave={onModalSave}
 				content={content}
 				setContent={setContent}
 			/>
@@ -253,9 +216,7 @@ const Queue = () => {
 													}
 												/>
 											</td>
-											<td>
-												{(q?.size / 1000000000).toFixed(2).toString() + " GB"}
-											</td>
+											<td>{formatSize(q?.size)}</td>
 										</tr>
 									))}
 								</tbody>

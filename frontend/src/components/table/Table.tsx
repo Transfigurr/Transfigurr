@@ -4,6 +4,7 @@ import { ReactComponent as BookmarkUnfilled } from "../svgs/bookmark_unfilled.sv
 import { ReactComponent as ContinuingIcon } from "../svgs/play_arrow.svg";
 import { ReactComponent as StoppedIcon } from "../svgs/stop.svg";
 import { Link } from "react-router-dom";
+import { formatSize } from "../../utils/format";
 const Table = ({ settings, profiles, sortedSeries }: any) => {
 	const progress = (series: any) => {
 		return (
@@ -103,13 +104,13 @@ const Table = ({ settings, profiles, sortedSeries }: any) => {
 								<td>/series/{series.id}</td>
 							)}
 							{settings?.media_table_showSpaceSaved == "1" && (
-								<td>{(series.space_saved / 1000000000).toFixed(2)} GB</td>
+								<td>{formatSize(series.space_saved)}</td>
 							)}
 							{settings?.media_table_showSizeOnDisk == "1" && (
-								<td>{(series.size / 1000000000).toFixed(2)} GB</td>
+								<td>{formatSize(series.size)}</td>
 							)}
 							{settings?.media_table_showSizeSaved == "1" && (
-								<td>{(series.space_saved / 1000000000).toFixed(2)} GB</td>
+								<td>{formatSize(series.space_saved)}</td>
 							)}
 							{settings?.media_table_showGenre == "1" && (
 								<td>{series.genre}</td>

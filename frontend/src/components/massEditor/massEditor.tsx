@@ -8,6 +8,8 @@ import { ReactComponent as StoppedIcon } from "../svgs/stop.svg";
 import InputCheckbox from "../inputs/inputCheckbox/InputCheckbox";
 import InputSelect from "../inputs/inputSelect/InputSelect";
 import MassEditorToolbar from "../toolbars/massEditorToolbar/MassEditorToolbar";
+import sortAndFilter from "../../utils/sortAndFilter";
+import { formatSize } from "../../utils/format";
 
 const MassEditor = () => {
 	const wsContext: any = useContext(WebSocketContext);
@@ -18,67 +20,19 @@ const MassEditor = () => {
 	const [selectedSeries, setSelectedSeries] = useState<any>([]);
 	const [monitored, setMonitored] = useState<any>(false);
 	const [profile, setProfile] = useState<any>();
+	const [selected, setSelected] = useState<string | null>(null);
+	const [selectAll, setSelectAll] = useState(false);
 
 	const sort = settings?.massEditor_sort;
+	const sortDirection = settings?.massEditor_sort_direction;
 	const filter = settings?.massEditor_filter;
-
-	let filteredSeries: any[] = Object.values(series || {});
-	if (filter == "monitored") {
-		filteredSeries = filteredSeries.filter((series: any) => series.monitored);
-	} else if (filter == "unmonitored") {
-		filteredSeries = filteredSeries.filter((series: any) => !series.monitored);
-	} else if (filter == "continuing") {
-		filteredSeries = filteredSeries.filter(
-			(series: any) => series.status != "Ended",
-		);
-	} else if (filter == "ended") {
-		filteredSeries = filteredSeries.filter(
-			(series: any) => series.status == "Ended",
-		);
-	} else if (filter == "missing") {
-		filteredSeries = filteredSeries.filter(
-			(series: any) => series.missing_episodes != 0,
-		);
-	}
-
-	let sortedSeries: any[] = filteredSeries;
-	const sortSeries = (seriesArray: any[], column: string) => {
-		return seriesArray.sort((a: any, b: any) => {
-			if (typeof a[column] === "string" && typeof b[column] === "string") {
-				return a[column].localeCompare(b[column]);
-			} else if (
-				typeof a[column] === "number" &&
-				typeof b[column] === "number"
-			) {
-				return a[column] - b[column];
-			} else {
-				return 0;
-			}
-		});
-	};
-	if (sort == "title") {
-		sortedSeries = sortSeries(sortedSeries, "id");
-	} else if (sort == "monitored/status") {
-		sortedSeries = sortSeries(sortedSeries, "monitored");
-	} else if (sort == "network") {
-		sortedSeries = sortSeries(sortedSeries, "networks");
-	} else if (sort == "profile") {
-		sortedSeries = sortedSeries.map((series: any) => {
-			const profile = profiles[series.profile_id];
-			return {
-				...series,
-				profile_id: profile?.name,
-			};
-		});
-		sortedSeries = sortSeries(sortedSeries, "profile_id");
-	} else if (sort == "episodes") {
-		sortedSeries = sortSeries(sortedSeries, "episode_count");
-	} else if (sort == "size") {
-		sortedSeries = sortSeries(sortedSeries, "size");
-	}
-	if (settings?.massEditor_sort_direction === "descending") {
-		sortedSeries = sortedSeries.reverse();
-	}
+	const sortedSeries = sortAndFilter(
+		series,
+		profiles,
+		sort,
+		sortDirection,
+		filter,
+	);
 
 	const applyChanges = () => {
 		for (const series of selectedSeries) {
@@ -105,7 +59,6 @@ const MassEditor = () => {
 				: [...prevSelected, series],
 		);
 	};
-	const [selectAll, setSelectAll] = useState(false);
 	const handleSelectAllChange = () => {
 		setSelectAll(!selectAll);
 		setSelectedSeries(!selectAll ? seriesArray : []);
@@ -115,41 +68,12 @@ const MassEditor = () => {
 		applyChanges();
 	}, [monitored, profile]);
 
-	const [selected, setSelected] = useState<string | null>(null);
-
-	const setSetting = async (key: string, value: any) => {
-		if (key == "massEditor_sort" && value == settings.massEditor_sort) {
-			await fetch(`http://${window.location.hostname}:7889/api/settings`, {
-				method: "PUT",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-				body: JSON.stringify({
-					id: "massEditor_sort_direction",
-					value:
-						settings?.massEditor_sort_direction === "ascending"
-							? "descending"
-							: "ascending",
-				}),
-			});
-		}
-		await fetch(`http://${window.location.hostname}:7889/api/settings`, {
-			method: "PUT",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: `Bearer ${localStorage.getItem("token")}`,
-			},
-			body: JSON.stringify({ id: key, value: value }),
-		});
-	};
 	return (
 		<div className={styles.massEditor}>
 			<MassEditorToolbar
 				selected={selected}
 				setSelected={setSelected}
 				settings={settings}
-				setSetting={setSetting}
 			/>
 			<div className={styles.content}>
 				{sortedSeries && sortedSeries.length !== 0 ? (
@@ -201,8 +125,8 @@ const MassEditor = () => {
 										</td>
 										<td>{profiles ? profiles[s.profile_id]?.name : ""}</td>
 										<td>/series/{s.id}</td>
-										<td>{(s.space_saved / 1000000000).toFixed(2)} GB</td>
-										<td>{(s.size / 1000000000).toFixed(2)} GB</td>
+										<td>{formatSize(s.space_saved)}</td>
+										<td>{formatSize(s.size)}</td>
 									</tr>
 								))}
 							</tbody>

@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import styles from "./Footer.module.scss";
 import { WebSocketContext } from "../../contexts/webSocketContext";
+import { formatSize } from "../../utils/format";
 const Footer = () => {
 	const wsContext = useContext(WebSocketContext);
 	const system = wsContext?.data?.system;
@@ -58,11 +59,11 @@ const Footer = () => {
 				<div className={styles.section}>
 					<div className={styles.data}>
 						{"Size on Disk   "}
-						{(system?.size_on_disk / 1000000000).toFixed(2)} GB
+						{formatSize(system?.size_on_disk)}
 					</div>
 					<div className={styles.data}>
 						{"Space Saved   "}
-						{(system?.space_saved / 1000000000).toFixed(2)} GB
+						{formatSize(system?.space_saved)}
 					</div>
 				</div>
 			</div>

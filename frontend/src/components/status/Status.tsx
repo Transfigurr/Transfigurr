@@ -1,6 +1,7 @@
 import styles from "./Status.module.scss";
 import { useContext } from "react";
 import { WebSocketContext } from "../../contexts/webSocketContext";
+import { formatSize } from "../../utils/format";
 const Status = () => {
 	const wsContext = useContext(WebSocketContext);
 	const system: any = wsContext?.data?.system;
@@ -21,8 +22,8 @@ const Status = () => {
 					<tbody>
 						<tr className={styles.row}>
 							<td>/config</td>
-							<td>{(system?.config_free_space / 1000000000).toFixed(2)} GB</td>
-							<td>{(system?.config_total_space / 1000000000).toFixed(2)} GB</td>
+							<td>{formatSize(system?.config_free_space)}</td>
+							<td>{formatSize(system?.config_total_space)}</td>
 							<td>
 								<div
 									style={{
@@ -51,8 +52,8 @@ const Status = () => {
 						</tr>
 						<tr className={styles.row}>
 							<td>/movies</td>
-							<td>{(system?.movies_free_space / 1000000000).toFixed(2)} GB</td>
-							<td>{(system?.movies_total_space / 1000000000).toFixed(2)} GB</td>
+							<td>{formatSize(system?.movies_free_space)}</td>
+							<td>{formatSize(system?.movies_total_space)}</td>
 							<td>
 								<div
 									style={{
@@ -81,8 +82,8 @@ const Status = () => {
 						</tr>
 						<tr className={styles.row}>
 							<td>/series</td>
-							<td>{(system?.series_free_space / 1000000000).toFixed(2)} GB</td>
-							<td>{(system?.series_total_space / 1000000000).toFixed(2)} GB</td>
+							<td>{formatSize(system?.series_free_space)}</td>
+							<td>{formatSize(system?.series_total_space)}</td>
 							<td>
 								<div
 									style={{
@@ -111,12 +112,8 @@ const Status = () => {
 						</tr>
 						<tr className={styles.row}>
 							<td>/transcode</td>
-							<td>
-								{(system?.transcode_free_space / 1000000000).toFixed(2)} GB
-							</td>
-							<td>
-								{(system?.transcode_total_space / 1000000000).toFixed(2)} GB
-							</td>
+							<td>{formatSize(system?.transcode_free_space)}</td>
+							<td>{formatSize(system?.transcode_total_space)}</td>
 							<td>
 								<div
 									style={{

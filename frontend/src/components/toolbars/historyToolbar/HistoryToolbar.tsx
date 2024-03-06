@@ -4,10 +4,15 @@ import { ReactComponent as TableIcon } from "../../svgs/table.svg";
 
 const HistoryToolbar = ({
 	settings,
+	setContent,
+	setIsModalOpen,
 	selected,
 	setSelected,
-	handleOptionsClick,
 }: any) => {
+	const handleOptionsClick = () => {
+		setContent(settings);
+		setIsModalOpen(true);
+	};
 	return (
 		<ToolBar
 			leftToolBarItems={[]}

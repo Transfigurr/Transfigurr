@@ -76,7 +76,13 @@
 		}
 		a {
 			color: var(--transfigurrPurple);
+			display: inline-block;
+			align-self: flex-start;
 			text-decoration: none;
+		}
+		a:hover {
+			text-decoration: underline;
+			color: var(--transfigurrAlternativePurple);
 		}
 	}
 }

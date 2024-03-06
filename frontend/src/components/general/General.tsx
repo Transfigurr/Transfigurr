@@ -1,7 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import styles from "./General.module.scss";
 import { WebSocketContext } from "../../contexts/webSocketContext";
-import ToolBar from "../ToolBar/ToolBar";
 import InputContainer from "../inputs/inputContainer/InputContainer";
 import GeneralToolbar from "../toolbars/generalToolbar/GeneralToolbar";
 
@@ -13,16 +12,6 @@ const General = () => {
 	const hasSetCurrentSettings = useRef(false);
 	const [settingsChanged, setSettingsChanged] = useState(false);
 	const [selected, setSelected] = useState<string | null>(null);
-	useEffect(() => {
-		if (initialSettings !== undefined && !hasSetCurrentSettings.current) {
-			setCurrentSettings({
-				...initialSettings,
-				password: "passwordplaceholder",
-			});
-			hasSetCurrentSettings.current = true;
-		}
-	}, [initialSettings]);
-
 	const handleChange = (key: string, value: any) => {
 		setCurrentSettings((prevSettings: any) => {
 			const newSettings = {
@@ -33,50 +22,26 @@ const General = () => {
 			setSettingsChanged(
 				JSON.stringify(newSettings) !== JSON.stringify(initialSettings),
 			);
-
 			return newSettings;
 		});
 	};
-	const handleSave = () => {
-		if (!settingsChanged) {
-			return;
+	useEffect(() => {
+		if (initialSettings !== undefined && !hasSetCurrentSettings.current) {
+			setCurrentSettings({
+				...initialSettings,
+				password: "passwordplaceholder",
+			});
+			hasSetCurrentSettings.current = true;
 		}
-		for (const key in currentSettings) {
-			if (key != "username" && key != "password") {
-				fetch(`http://${window.location.hostname}:7889/api/settings`, {
-					method: "PUT",
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${localStorage.getItem("token")}`,
-					},
-					body: JSON.stringify({ id: key, value: currentSettings[key] }),
-				});
-			} else {
-				if (key == "username") {
-					fetch(`http://${window.location.hostname}:7889/api/user`, {
-						method: "PUT",
-						headers: {
-							"Content-Type": "application/json",
-							Authorization: `Bearer ${localStorage.getItem("token")}`,
-						},
-						body: JSON.stringify({
-							username: currentSettings["username"],
-							password: currentSettings["password"],
-						}),
-					});
-				}
-			}
-		}
-		setSettingsChanged(false);
-	};
-
+	}, [initialSettings]);
 	return (
 		<div className={styles.general}>
 			<GeneralToolbar
 				selected={selected}
 				setSelected={setSelected}
-				handleSave={handleSave}
 				settingsChanged={settingsChanged}
+				setSettingsChanged={setSettingsChanged}
+				currentSettings={currentSettings}
 			/>
 			<div className={styles.content}>
 				<div className={styles.section}>

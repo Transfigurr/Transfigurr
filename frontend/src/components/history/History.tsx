@@ -9,6 +9,7 @@ import { ReactComponent as ResetWrench } from "../svgs/reset_wrench.svg";
 import Codec from "../codec/Codec";
 import HistoryToolbar from "../toolbars/historyToolbar/HistoryToolbar";
 import HistoryModal from "../modals/historyModal/HistoryModal";
+import { formatDate, formatSize } from "../../utils/format";
 
 const History = () => {
 	const wsContext: any = useContext(WebSocketContext);
@@ -16,17 +17,17 @@ const History = () => {
 	const history = wsContext?.data?.history;
 	const recordsPerPage = settings?.history_page_size || 0;
 	const [currentPage, setCurrentPage] = useState(1);
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [content, setContent] = useState({});
+	const [selected, setSelected] = useState(null);
 	const historyArray = Array.from(Object.values(history || {}));
-
 	const indexOfLastRecord = currentPage * recordsPerPage;
 	const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
 	const currentRecords = historyArray.slice(
 		indexOfFirstRecord,
 		indexOfLastRecord,
 	);
-
 	const totalPages = Math.ceil(historyArray.length / recordsPerPage);
-
 	const firstPage = () => {
 		setCurrentPage(1);
 	};
@@ -46,41 +47,18 @@ const History = () => {
 		}
 	};
 
-	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [content, setContent] = useState<any>({});
-
-	const handleOptionsClick = () => {
-		setContent(settings);
-		setIsModalOpen(true);
-	};
-	const [selected, setSelected] = useState<string | null>(null);
-
-	const onModalSave = async () => {
-		for (const key in content) {
-			fetch(`http://${window.location.hostname}:7889/api/settings`, {
-				method: "PUT",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-				body: JSON.stringify({ id: key, value: content[key] }),
-			});
-		}
-		setIsModalOpen(false);
-	};
-
 	return (
 		<div className={styles.history}>
 			<HistoryToolbar
 				settings={settings}
+				setContent={setContent}
+				setIsModalOpen={setIsModalOpen}
 				selected={selected}
 				setSelected={setSelected}
-				handleOptionsClick={handleOptionsClick}
 			/>
 			<HistoryModal
 				isOpen={isModalOpen}
 				setIsOpen={setIsModalOpen}
-				onSave={onModalSave}
 				content={content}
 				setContent={setContent}
 			/>
@@ -125,20 +103,8 @@ const History = () => {
 										<td className={styles.codecRow}>
 											<Codec codec={entry?.new_codec} />
 										</td>
-										<td>
-											{(entry?.episode?.space_saved / 1000000000)
-												.toFixed(2)
-												.toString() + " GB"}
-										</td>
-										<td>
-											{new Date(entry?.date)
-												.toLocaleDateString("en-US", {
-													year: "numeric",
-													month: "short",
-													day: "numeric",
-												})
-												.replace(/,/g, "")}
-										</td>
+										<td>{formatSize(entry?.episode?.space_saved)}</td>
+										<td>{formatDate(entry?.date)}</td>
 									</tr>
 								))}
 							</tbody>

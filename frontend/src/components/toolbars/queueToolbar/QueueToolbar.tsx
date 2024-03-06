@@ -6,11 +6,26 @@ import { ReactComponent as TableIcon } from "../../svgs/table.svg";
 
 const QueueToolbar = ({
 	settings,
-	setSetting,
+	setContent,
+	setIsModalOpen,
 	selected,
 	setSelected,
-	handleOptionsClick,
 }: any) => {
+	const handleOptionsClick = () => {
+		setContent(settings);
+		setIsModalOpen(true);
+	};
+	const setSetting = async (key: string, value: any) => {
+		await fetch(`http://${window.location.hostname}:7889/api/settings`, {
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${localStorage.getItem("token")}`,
+			},
+			body: JSON.stringify({ id: key, value: value }),
+		});
+	};
+
 	const middleToolBarItems: any = [
 		<ToolBarItem
 			text="Status"

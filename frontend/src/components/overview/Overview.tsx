@@ -8,6 +8,7 @@ import { ReactComponent as ProfileIcon } from "../svgs/person.svg";
 import { ReactComponent as DriveIcon } from "../svgs/hard_drive.svg";
 import { ReactComponent as FolderIcon } from "../svgs/folder.svg";
 import { ReactComponent as SeasonIcon } from "../svgs/circle.svg";
+import { formatSize } from "../../utils/format";
 
 const Overview = ({ series, settings, profiles }: any) => {
 	const size = settings?.media_overview_posterSize;
@@ -172,8 +173,7 @@ const Overview = ({ series, settings, profiles }: any) => {
 							{settings?.media_overview_showSizeOnDisk == "1" && (
 								<li className={styles.tag}>
 									<DriveIcon className={styles.tagIcon} />
-									{((series?.size || 0) / 1000000000).toFixed(2).toString() +
-										" GB"}
+									{formatSize(series?.size)}
 								</li>
 							)}
 						</ul>

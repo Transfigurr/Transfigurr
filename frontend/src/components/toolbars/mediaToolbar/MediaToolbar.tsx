@@ -11,16 +11,67 @@ import { ReactComponent as OverviewIcon } from "../../svgs/view_list.svg";
 import { ReactComponent as LoadingIcon } from "../../svgs/loading.svg";
 import ToolBar from "../../ToolBar/ToolBar";
 const MediaToolbar = ({
-	onUpdate,
 	selected,
 	setSelected,
+	setContent,
+	setIsModalOpen,
 	settings,
 	system,
-	setSetting,
 	view,
-	onRefresh,
-	handleOptionsClick,
 }: any) => {
+	const handleOptionsClick = () => {
+		setContent(settings);
+		setIsModalOpen(true);
+	};
+
+	const onRefresh = async () => {
+		await fetch(
+			`http://${window.location.hostname}:7889/api/scan/series/metadata`,
+			{
+				method: "PUT",
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+			},
+		);
+	};
+
+	const onUpdate = async () => {
+		await fetch(`http://${window.location.hostname}:7889/api/scan/series`, {
+			method: "PUT",
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem("token")}`,
+			},
+		});
+	};
+
+	const setSetting = async (key: string, value: any) => {
+		if (key == "media_sort" && value == settings.media_sort) {
+			await fetch(`http://${window.location.hostname}:7889/api/settings`, {
+				method: "PUT",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				body: JSON.stringify({
+					id: "media_sort_direction",
+					value:
+						settings?.media_sort_direction === "ascending"
+							? "descending"
+							: "ascending",
+				}),
+			});
+		}
+		await fetch(`http://${window.location.hostname}:7889/api/settings`, {
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${localStorage.getItem("token")}`,
+			},
+			body: JSON.stringify({ id: key, value: value }),
+		});
+	};
+
 	const leftToolBarItems: any = [
 		<ToolBarItem
 			text="Scan All"

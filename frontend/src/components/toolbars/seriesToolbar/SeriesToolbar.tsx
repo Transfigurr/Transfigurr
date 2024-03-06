@@ -7,13 +7,35 @@ import { ReactComponent as LoadingIcon } from "../../svgs/loading.svg";
 import { ReactComponent as RssFeedIcon } from "../../svgs/rss_feed.svg";
 const SeriesToolbar = ({
 	system,
-	handleScanClick,
 	selected,
 	setSelected,
 	series,
 	handleEditClick,
-	handleMetadataClick,
+	series_name,
 }: any) => {
+	const handleScanClick = async () => {
+		await fetch(
+			`http://${window.location.hostname}:7889/api/scan/series/${series_name}`,
+			{
+				method: "PUT",
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+			},
+		);
+	};
+
+	const handleMetadataClick = async () => {
+		await fetch(
+			`http://${window.location.hostname}:7889/api/scan/series/metadata/${series_name}`,
+			{
+				method: "PUT",
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+			},
+		);
+	};
 	const leftToolBarItems: any = [
 		<ToolBarItem
 			text="Scan"

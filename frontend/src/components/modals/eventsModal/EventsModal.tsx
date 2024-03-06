@@ -1,14 +1,21 @@
 import InputContainer from "../../inputs/inputContainer/InputContainer";
 import Modal from "../../modal/Modal";
 
-const EventsModal = ({
-	isOpen,
-	setIsOpen,
-	onSave,
-	content,
-	setContent,
-}: any) => {
+const EventsModal = ({ isOpen, setIsOpen, content, setContent }: any) => {
 	const onClose = () => {
+		setIsOpen(false);
+	};
+	const onSave = async () => {
+		for (const key in content) {
+			fetch(`http://${window.location.hostname}:7889/api/settings`, {
+				method: "PUT",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				body: JSON.stringify({ id: key, value: content[key] }),
+			});
+		}
 		setIsOpen(false);
 	};
 	if (!isOpen) return null;

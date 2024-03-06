@@ -12,6 +12,7 @@ import Season from "../season/Season";
 import { WebSocketContext } from "../../contexts/webSocketContext";
 import SeriesModal from "../modals/seriesModal/SeriesModal";
 import SeriesToolbar from "../toolbars/seriesToolbar/SeriesToolbar";
+import { formatSize } from "../../utils/format";
 
 const Series = ({ series_name }: any) => {
 	const wsContext = useContext(WebSocketContext);
@@ -26,33 +27,8 @@ const Series = ({ series_name }: any) => {
 		setIsModalOpen(true);
 		setContent(series);
 	};
-
 	const [selected, setSelected] = useState<string | null>(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const handleScanClick = async () => {
-		await fetch(
-			`http://${window.location.hostname}:7889/api/scan/series/${series_name}`,
-			{
-				method: "PUT",
-				headers: {
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-			},
-		);
-	};
-
-	const handleMetadataClick = async () => {
-		await fetch(
-			`http://${window.location.hostname}:7889/api/scan/series/metadata/${series_name}`,
-			{
-				method: "PUT",
-				headers: {
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-			},
-		);
-	};
-
 	const status = series?.status;
 	const network = series?.networks;
 	const genre = series?.genre;
@@ -63,7 +39,6 @@ const Series = ({ series_name }: any) => {
 		status === "Ended" ? firstAirDate + "-" + lastAirDate : firstAirDate + "-";
 	const [backdropSrc, setBackdropSrc] = useState<string | null>("");
 	const [posterSrc, setPosterSrc] = useState<string | null>("");
-
 	const loaded = useRef(false);
 
 	useEffect(() => {
@@ -129,8 +104,7 @@ const Series = ({ series_name }: any) => {
 				selected={selected}
 				setSelected={setSelected}
 				handleEditClick={handleEditClick}
-				handleScanClick={handleScanClick}
-				handleMetadataClick={handleMetadataClick}
+				series_name={series_name}
 			/>
 			<SeriesModal
 				isOpen={isModalOpen}
@@ -186,8 +160,7 @@ const Series = ({ series_name }: any) => {
 									<div className={styles.icon}>
 										<Drive />
 									</div>
-									{((series?.size || 0) / 1000000000).toFixed(2).toString() +
-										" GB"}
+									{formatSize(series?.size)}
 								</div>
 								<div className={styles.tag}>
 									<div className={styles.icon}>
