@@ -95,6 +95,9 @@ default_system = [
     {
         'id': 'metadata_target',
         'value': ''
-    }
-
+    },
+    {
+        'id': 'start_time',
+        'value': ""
+    },
 ]

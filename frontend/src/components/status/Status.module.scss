@@ -33,6 +33,7 @@
 	.about {
 		display: flex;
 		flex-direction: column;
+		padding-bottom: 20px;
 		.header {
 			font-size: 21px;
 			margin-bottom: 21px;
@@ -40,6 +41,37 @@
 			border-bottom: 1px solid var(--borderColor);
 			line-height: inherit;
 			padding: 0;
+		}
+		.row {
+			display: flex;
+			width: 100%;
+			flex-direction: row;
+			align-items: center;
+			font-size: 14px;
+			line-height: 1.5;
+		}
+		.left {
+			display: flex;
+			flex-direction: column;
+			width: 10%;
+			align-items: flex-end;
+			padding-right: 20px;
+			font-weight: bold;
+		}
+		.right {
+			display: flex;
+			flex-direction: column;
+			width: 90%;
+		}
+		a {
+			color: var(--transfigurrPurple);
+			display: inline-block;
+			align-self: flex-start;
+			text-decoration: none;
+		}
+		a:hover {
+			text-decoration: underline;
+			color: var(--transfigurrAlternativePurple);
 		}
 	}
 	.moreInfo {

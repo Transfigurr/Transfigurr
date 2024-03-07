@@ -1,10 +1,39 @@
 import styles from "./Status.module.scss";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { WebSocketContext } from "../../contexts/webSocketContext";
 import { formatSize } from "../../utils/format";
+import packageJson from "../../../package.json";
+const version = packageJson.version;
 const Status = () => {
 	const wsContext = useContext(WebSocketContext);
 	const system: any = wsContext?.data?.system;
+
+	const [delta, setDelta] = useState("");
+
+	useEffect(() => {
+		const intervalId = setInterval(() => {
+			const timestamp = new Date(system?.start_time);
+			const now = new Date();
+			const delta = Math.abs(now.getTime() - timestamp.getTime());
+
+			const seconds = Math.floor((delta / 1000) % 60);
+			const minutes = Math.floor((delta / 1000 / 60) % 60);
+			const hours = Math.floor((delta / (1000 * 60 * 60)) % 24);
+			const days = Math.floor(delta / (1000 * 60 * 60 * 24));
+
+			setDelta(
+				days +
+					"D " +
+					hours.toString().padStart(2, "0") +
+					":" +
+					minutes.toString().padStart(2, "0") +
+					":" +
+					seconds.toString().padStart(2, "0"),
+			);
+		}, 1000);
+
+		return () => clearInterval(intervalId);
+	}, [system?.start_time]);
 
 	return (
 		<div className={styles.status}>
@@ -142,6 +171,21 @@ const Status = () => {
 						</tr>
 					</tbody>
 				</table>
+			</div>
+			<div className={styles.about}>
+				<div className={styles.header}>About</div>
+				<div className={styles.row}>
+					<div className={styles.left}>Version</div>
+					<div className={styles.right}>{version}</div>
+				</div>
+				<div className={styles.row}>
+					<div className={styles.left}>Appdata Directory</div>
+					<div className={styles.right}>/config</div>
+				</div>
+				<div className={styles.row}>
+					<div className={styles.left}>Uptime</div>
+					<div className={styles.right}>{delta}</div>
+				</div>
 			</div>
 			<div className={styles.moreInfo}>
 				<div className={styles.header}>More Info</div>

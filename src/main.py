@@ -1,5 +1,5 @@
 import asyncio
-import json
+from datetime import datetime
 import os
 from fastapi import FastAPI, Request
 from fastapi.responses import FileResponse, HTMLResponse
@@ -8,6 +8,7 @@ from pathlib import Path
 from fastapi.openapi.utils import get_openapi
 from fastapi.middleware.cors import CORSMiddleware
 from src.api.controllers.settings_controller import get_all_settings
+from src.api.controllers.system_controller import set_system
 from src.utils.folders import get_root_folder, verify_folders
 from src.services.logging_service import start_logger
 from src.services.watchdog_service import start_watchdog
@@ -77,24 +78,21 @@ def custom_openapi():
     return app.openapi_schema
 
 
-async def write_api():
-    openapi_schema = custom_openapi()
-    openapi_path = 'src/Transfigurr.API.V1'
-    if not os.path.exists(openapi_path):
-        os.makedirs(openapi_path)
-    with open(openapi_path + '/openapi.json', 'w') as file:
-        json.dump(openapi_schema, file)
+async def write_uptime_to_db():
+    uptime_date = datetime.now()
+    await set_system({'id': 'start_time', 'value': uptime_date})
 
 
 async def startup_event():
     await verify_folders()
     log_level = (await get_all_settings()).get('log_level', '')
     start_logger(log_level)
-    asyncio.create_task(write_api())
+    await write_uptime_to_db()
     asyncio.create_task(scan_service.enqueue_all())
     asyncio.create_task(scan_service.process())
     asyncio.create_task(metadata_service.process())
     asyncio.create_task(encode_service.process())
+
     start_watchdog(await get_root_folder() + '/series')
 app.add_event_handler("startup", startup_event)
 
