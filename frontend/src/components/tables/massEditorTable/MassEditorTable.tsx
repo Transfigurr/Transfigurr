@@ -2,10 +2,10 @@ import InputCheckbox from "../../inputs/inputCheckbox/InputCheckbox";
 import Table from "../../table/Table";
 import styles from "./MassEditorTable.module.scss";
 import { formatSize } from "../../../utils/format";
-import { ReactComponent as BookmarkFilled } from "../../svgs/bookmark_filled.svg";
-import { ReactComponent as BookmarkUnfilled } from "../../svgs/bookmark_unfilled.svg";
-import { ReactComponent as ContinuingIcon } from "../../svgs/play_arrow.svg";
-import { ReactComponent as StoppedIcon } from "../../svgs/stop.svg";
+import BookmarkFilled from "../../svgs/bookmark_filled.svg?react";
+import BookmarkUnfilled from "../../svgs/bookmark_unfilled.svg?react";
+import ContinuingIcon from "../../svgs/play_arrow.svg?react";
+import StoppedIcon from "../../svgs/stop.svg?react";
 const MassEditorTable = ({
 	sortedSeries,
 	selectedSeries,
@@ -38,21 +38,21 @@ const MassEditorTable = ({
 						<td className={styles.inputCell}>
 							<InputCheckbox
 								checked={selectedSeries.some(
-									(series: any) => series.id === s.id,
+									(series: any) => series.id === s.id
 								)}
 								onChange={() => handleCheckboxChange(s)}
 							/>
 						</td>
 						<td className={styles.iconCell}>
 							{s?.monitored ? (
-								<BookmarkFilled className={styles.monitored} />
+								<BookmarkFilled className={styles.svg} />
 							) : (
-								<BookmarkUnfilled className={styles.monitored} />
+								<BookmarkUnfilled className={styles.svg} />
 							)}
 							{s?.status !== "Ended" ? (
-								<ContinuingIcon className={styles.continue} />
+								<ContinuingIcon className={styles.svg} />
 							) : (
-								<StoppedIcon className={styles.stopped} />
+								<StoppedIcon className={styles.svg} />
 							)}
 						</td>
 						<td>

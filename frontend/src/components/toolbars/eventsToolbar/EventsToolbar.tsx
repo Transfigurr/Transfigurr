@@ -1,14 +1,15 @@
+import styles from "./EventsToolbar.module.scss";
 import ToolBar from "../../toolBar/ToolBar";
 import ToolBarItem from "../../toolBarItem/ToolBarItem";
-import { ReactComponent as TableIcon } from "../../svgs/table.svg";
-import { ReactComponent as FilterIcon } from "../../svgs/filter.svg";
+import TableIcon from "../../svgs/table.svg?react";
+import FilterIcon from "../../svgs/filter.svg?react";
 const EventsToolbar = ({
 	selected,
 	setContent,
 	setIsModalOpen,
 	setSelected,
 	settings,
-}: any) => {
+}) => {
 	const setSetting = async (key: string, value: any) => {
 		await fetch(`http://${window.location.hostname}:7889/api/settings`, {
 			method: "PUT",
@@ -33,14 +34,7 @@ const EventsToolbar = ({
 					index={2}
 					key={2}
 					settings={settings}
-					icon={
-						<TableIcon
-							style={{
-								height: "100%",
-								width: "100%",
-							}}
-						/>
-					}
+					icon={<TableIcon className={styles.svg} />}
 					onClick={handleOptionsClick}
 					selected={selected}
 					setSelected={setSelected}
@@ -51,14 +45,7 @@ const EventsToolbar = ({
 					text="Filter"
 					index={5}
 					key={5}
-					icon={
-						<FilterIcon
-							style={{
-								height: "100%",
-								width: "100%",
-							}}
-						/>
-					}
+					icon={<FilterIcon className={styles.svg} />}
 					selected={selected}
 					settings={settings}
 					setSelected={setSelected}

@@ -1,10 +1,10 @@
+import styles from "./SeriesToolbar.module.scss";
 import ToolBarItem from "../../toolBarItem/ToolBarItem";
 import ToolBar from "../../toolBar/ToolBar";
-import { ReactComponent as SyncIcon } from "../../svgs/cached.svg";
-import styles from "./SeriesToolbar.module.scss";
-import { ReactComponent as EditIcon } from "../../svgs/edit.svg";
-import { ReactComponent as LoadingIcon } from "../../svgs/loading.svg";
-import { ReactComponent as RssFeedIcon } from "../../svgs/rss_feed.svg";
+import SyncIcon from "../../svgs/cached.svg?react";
+import EditIcon from "../../svgs/edit.svg?react";
+import LoadingIcon from "../../svgs/loading.svg?react";
+import RssFeedIcon from "../../svgs/rss_feed.svg?react";
 const SeriesToolbar = ({
 	system,
 	selected,
@@ -21,7 +21,7 @@ const SeriesToolbar = ({
 				headers: {
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
-			},
+			}
 		);
 	};
 
@@ -33,7 +33,7 @@ const SeriesToolbar = ({
 				headers: {
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
-			},
+			}
 		);
 	};
 	const leftToolBarItems: any = [
@@ -45,12 +45,8 @@ const SeriesToolbar = ({
 					className={
 						system?.scan_running && system?.scan_target == series?.id
 							? styles.spinning
-							: ""
+							: styles.svg
 					}
-					style={{
-						height: "100%",
-						width: "100%",
-					}}
 				/>
 			}
 			onClick={handleScanClick}
@@ -63,22 +59,9 @@ const SeriesToolbar = ({
 			icon={
 				system?.metadata_running == "1" &&
 				system?.metadata_target == series?.id ? (
-					<LoadingIcon
-						className={styles.loading}
-						style={{
-							fill: "white",
-							color: "white",
-							height: "30px",
-							width: "30px",
-						}}
-					/>
+					<LoadingIcon className={styles.loading} />
 				) : (
-					<RssFeedIcon
-						style={{
-							height: "100%",
-							width: "100%",
-						}}
-					/>
+					<RssFeedIcon className={styles.svg} />
 				)
 			}
 			onClick={handleMetadataClick}
@@ -88,7 +71,7 @@ const SeriesToolbar = ({
 		<ToolBarItem
 			text="Edit"
 			key="edit"
-			icon={<EditIcon />}
+			icon={<EditIcon className={styles.svg} />}
 			onClick={handleEditClick}
 			selected={selected}
 			setSelected={setSelected}

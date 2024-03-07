@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import styles from "./Overview.module.scss";
 import { Link } from "react-router-dom";
-import { ReactComponent as MonitoredIcon } from "../svgs/bookmark_filled.svg";
-import { ReactComponent as UnmonitoredIcon } from "../svgs/bookmark_unfilled.svg";
-import { ReactComponent as NetworkIcon } from "../svgs/tower.svg";
-import { ReactComponent as ProfileIcon } from "../svgs/person.svg";
-import { ReactComponent as DriveIcon } from "../svgs/hard_drive.svg";
-import { ReactComponent as FolderIcon } from "../svgs/folder.svg";
-import { ReactComponent as SeasonIcon } from "../svgs/circle.svg";
+import MonitoredIcon from "../svgs/bookmark_filled.svg?react";
+import UnmonitoredIcon from "../svgs/bookmark_unfilled.svg?react";
+import NetworkIcon from "../svgs/tower.svg?react";
+import ProfileIcon from "../svgs/person.svg?react";
+import DriveIcon from "../svgs/hard_drive.svg?react";
+import FolderIcon from "../svgs/folder.svg?react";
+import SeasonIcon from "../svgs/circle.svg?react";
 import { formatSize } from "../../utils/format";
 
 const Overview = ({ series, settings, profiles }: any) => {
@@ -34,7 +34,7 @@ const Overview = ({ series, settings, profiles }: any) => {
 				if ("caches" in window) {
 					cache = await caches.open("image-cache");
 					cachedResponse = await cache.match(
-						`http://${window.location.hostname}:7889/api/poster/series/${series?.id}`,
+						`http://${window.location.hostname}:7889/api/poster/series/${series?.id}`
 					);
 				}
 
@@ -48,7 +48,7 @@ const Overview = ({ series, settings, profiles }: any) => {
 							headers: {
 								Authorization: `Bearer ${localStorage.getItem("token")}`,
 							},
-						},
+						}
 					);
 
 					if (response.status !== 200) {
@@ -62,7 +62,7 @@ const Overview = ({ series, settings, profiles }: any) => {
 					if (cache) {
 						cache.put(
 							`http://${window.location.hostname}:7889/api/poster/series/${series?.id}`,
-							clonedResponse,
+							clonedResponse
 						);
 					}
 				}
@@ -137,22 +137,22 @@ const Overview = ({ series, settings, profiles }: any) => {
 							{settings?.media_overview_showMonitored == "1" && (
 								<li className={styles.tag}>
 									{series?.monitored ? (
-										<MonitoredIcon className={styles.tagIcon} />
+										<MonitoredIcon className={styles.svg} />
 									) : (
-										<UnmonitoredIcon className={styles.tagIcon} />
+										<UnmonitoredIcon className={styles.svg} />
 									)}
 									{series?.monitored ? "Monitored" : "Unmonitored"}
 								</li>
 							)}
 							{settings?.media_overview_showNetwork == "1" && (
 								<li className={styles.tag}>
-									<NetworkIcon className={styles.tagIcon} />
+									<NetworkIcon className={styles.svg} />
 									{series?.networks}
 								</li>
 							)}
 							{settings?.media_overview_showProfile == "1" && (
 								<li className={styles.tag}>
-									<ProfileIcon className={styles.tagIcon} />
+									<ProfileIcon className={styles.svg} />
 									{profiles && series?.profile_id in profiles
 										? profiles[series?.profile_id]?.name
 										: ""}
@@ -160,19 +160,19 @@ const Overview = ({ series, settings, profiles }: any) => {
 							)}
 							{settings?.media_overview_showSeasonCount == "1" && (
 								<li className={styles.tag}>
-									<SeasonIcon className={styles.tagIcon} />
+									<SeasonIcon className={styles.svg} />
 									{series?.seasons_count} Seasons
 								</li>
 							)}
 							{settings?.media_overview_showPath == "1" && (
 								<li className={styles.tag}>
-									<FolderIcon className={styles.tagIcon} />
+									<FolderIcon className={styles.svg} />
 									/series/{series?.id}
 								</li>
 							)}
 							{settings?.media_overview_showSizeOnDisk == "1" && (
 								<li className={styles.tag}>
-									<DriveIcon className={styles.tagIcon} />
+									<DriveIcon className={styles.svg} />
 									{formatSize(series?.size)}
 								</li>
 							)}

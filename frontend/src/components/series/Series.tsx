@@ -1,18 +1,18 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import styles from "./Series.module.scss";
-import { ReactComponent as Folder } from "../svgs/folder.svg";
-import { ReactComponent as Drive } from "../svgs/hard_drive.svg";
-import { ReactComponent as Profile } from "../svgs/person.svg";
-import { ReactComponent as Monitored } from "../svgs/bookmark_filled.svg";
-import { ReactComponent as Unmonitored } from "../svgs/bookmark_unfilled.svg";
-import { ReactComponent as Continuing } from "../svgs/play_arrow.svg";
-import { ReactComponent as Ended } from "../svgs/stop.svg";
-import { ReactComponent as Network } from "../svgs/tower.svg";
+import Drive from "../svgs/hard_drive.svg?react";
+import Profile from "../svgs/person.svg?react";
+import Monitored from "../svgs/bookmark_filled.svg?react";
+import Unmonitored from "../svgs/bookmark_unfilled.svg?react";
+import Continuing from "../svgs/play_arrow.svg?react";
+import Ended from "../svgs/stop.svg?react";
+import Network from "../svgs/tower.svg?react";
 import Season from "../season/Season";
 import { WebSocketContext } from "../../contexts/webSocketContext";
 import SeriesModal from "../modals/seriesModal/SeriesModal";
 import SeriesToolbar from "../toolbars/seriesToolbar/SeriesToolbar";
 import { formatSize } from "../../utils/format";
+import FolderIcon from "../svgs/folder.svg?react";
 
 const Series = ({ series_name }: any) => {
 	const wsContext = useContext(WebSocketContext);
@@ -47,7 +47,7 @@ const Series = ({ series_name }: any) => {
 		}
 		const fetchImage = async (
 			path: string,
-			setSrc: (src: string | null) => void,
+			setSrc: (src: string | null) => void
 		) => {
 			try {
 				let cache = null;
@@ -55,7 +55,7 @@ const Series = ({ series_name }: any) => {
 				if ("caches" in window) {
 					cache = await caches.open("image-cache");
 					cachedResponse = await cache.match(
-						`http://${window.location.hostname}:7889/api/${path}/series/${series?.id}`,
+						`http://${window.location.hostname}:7889/api/${path}/series/${series?.id}`
 					);
 				}
 
@@ -69,7 +69,7 @@ const Series = ({ series_name }: any) => {
 							headers: {
 								Authorization: `Bearer ${localStorage.getItem("token")}`,
 							},
-						},
+						}
 					);
 					if (response.status !== 200) {
 						setSrc(null);
@@ -81,7 +81,7 @@ const Series = ({ series_name }: any) => {
 					if (cache) {
 						cache.put(
 							`http://${window.location.hostname}:7889/api/${path}/series/${series?.id}`,
-							clonedResponse,
+							clonedResponse
 						);
 					}
 				}
@@ -130,9 +130,9 @@ const Series = ({ series_name }: any) => {
 							<div className={styles.titleRow}>
 								<div className={styles.headerIcon}>
 									{series?.monitored ? (
-										<Monitored style={{ height: "55px", width: "55px" }} />
+										<Monitored className={styles.monitoredSVG} />
 									) : (
-										<Unmonitored style={{ height: "55px", width: "55px" }} />
+										<Unmonitored className={styles.monitoredSVG} />
 									)}
 								</div>
 								{series?.name ? series?.name : series?.id}
@@ -151,20 +151,20 @@ const Series = ({ series_name }: any) => {
 							<div className={styles.tags}>
 								<div className={styles.tag}>
 									<div className={styles.icon}>
-										<Folder />
+										<FolderIcon className={styles.svg} />
 									</div>
 									{"/series/" + (series?.name ? series?.name : series?.id)}
 								</div>
 
 								<div className={styles.tag}>
 									<div className={styles.icon}>
-										<Drive />
+										<Drive className={styles.svg} />
 									</div>
 									{formatSize(series?.size)}
 								</div>
 								<div className={styles.tag}>
 									<div className={styles.icon}>
-										<Profile />
+										<Profile className={styles.svg} />
 									</div>
 									{profiles && series?.profile_id in profiles
 										? profiles[series?.profile_id]?.name
@@ -172,14 +172,22 @@ const Series = ({ series_name }: any) => {
 								</div>
 								<div className={styles.tag}>
 									<div className={styles.icon}>
-										{series?.monitored ? <Monitored /> : <Unmonitored />}
+										{series?.monitored ? (
+											<Monitored className={styles.svg} />
+										) : (
+											<Unmonitored className={styles.svg} />
+										)}
 									</div>
 									{series?.monitored ? "Monitored" : "Unmonitored"}
 								</div>
 								{status ? (
 									<div className={styles.tag}>
 										<div className={styles.icon}>
-											{status === "Ended" ? <Ended /> : <Continuing />}
+											{status === "Ended" ? (
+												<Ended className={styles.svg} />
+											) : (
+												<Continuing className={styles.svg} />
+											)}
 										</div>
 										{status}
 									</div>
@@ -189,7 +197,7 @@ const Series = ({ series_name }: any) => {
 								{network ? (
 									<div className={styles.tag}>
 										<div className={styles.icon}>
-											<Network />
+											<Network className={styles.svg} />
 										</div>
 										{network}
 									</div>

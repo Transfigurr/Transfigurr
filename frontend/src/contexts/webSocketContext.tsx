@@ -3,12 +3,12 @@ import React, { useState, useEffect, useRef } from "react";
 import { createContext } from "react";
 
 export type WebSocketContextType = {
-	data: any;
+	data;
 	ws: WebSocket | null;
 };
 
 export const WebSocketContext = createContext<WebSocketContextType | undefined>(
-	undefined,
+	undefined
 );
 
 interface WebSocketProviderProps {
@@ -24,8 +24,8 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
 	useEffect(() => {
 		ws.current = new WebSocket(
 			`ws://${window.location.hostname}:7889/ws?token=${localStorage.getItem(
-				"token",
-			)}`,
+				"token"
+			)}`
 		);
 		ws.current.onmessage = (e) => {
 			const newData = JSON.parse(e.data);

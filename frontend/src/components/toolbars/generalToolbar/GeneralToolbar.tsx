@@ -1,6 +1,7 @@
+import styles from "./GeneralToolbar.module.scss";
 import ToolBar from "../../toolBar/ToolBar";
 import ToolBarItem from "../../toolBarItem/ToolBarItem";
-import { ReactComponent as SaveIcon } from "../../svgs/save.svg";
+import SaveIcon from "../../svgs/save.svg?react";
 
 const GeneralToolbar = ({
 	selected,
@@ -45,7 +46,7 @@ const GeneralToolbar = ({
 		<ToolBarItem
 			text={!settingsChanged ? "No Changes" : "Save"}
 			key="save"
-			icon={<SaveIcon fontSize="medium" />}
+			icon={<SaveIcon className={styles.svg} />}
 			onClick={handleSave}
 			disabled={!settingsChanged}
 			selected={selected}

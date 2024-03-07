@@ -360,6 +360,7 @@ async def process_episode(e):
         video_stream = await analyze_media_file(input_file)
 
         if video_stream == codec_profile["codec"]:
+            encode_service.stage = "idle"
             return
 
         output_filename = f"{file_name}.{extension}"

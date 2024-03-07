@@ -1,7 +1,8 @@
+import styles from "./MassEditorToolbar.module.scss";
 import ToolBar from "../../toolBar/ToolBar";
 import ToolBarItem from "../../toolBarItem/ToolBarItem";
-import { ReactComponent as SortIcon } from "../../svgs/sort.svg";
-import { ReactComponent as FilterIcon } from "../../svgs/filter.svg";
+import SortIcon from "../../svgs/sort.svg?react";
+import FilterIcon from "../../svgs/filter.svg?react";
 const MassEditorToolbar = ({ selected, setSelected, settings }: any) => {
 	const setSetting = async (key: string, value: any) => {
 		if (key == "massEditor_sort" && value == settings.massEditor_sort) {
@@ -38,14 +39,7 @@ const MassEditorToolbar = ({ selected, setSelected, settings }: any) => {
 			settings={settings}
 			sortDirection={settings?.massEditor_sort_direction}
 			sort={true}
-			icon={
-				<SortIcon
-					style={{
-						height: "100%",
-						width: "100%",
-					}}
-				/>
-			}
+			icon={<SortIcon className={styles.svg} />}
 			selected={selected}
 			setSelected={setSelected}
 			dropdownItems={[
@@ -97,14 +91,7 @@ const MassEditorToolbar = ({ selected, setSelected, settings }: any) => {
 			text="Filter"
 			index={5}
 			key={5}
-			icon={
-				<FilterIcon
-					style={{
-						height: "100%",
-						width: "100%",
-					}}
-				/>
-			}
+			icon={<FilterIcon className={styles.svg} />}
 			selected={selected}
 			settings={settings}
 			setSelected={setSelected}

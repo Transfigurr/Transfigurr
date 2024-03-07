@@ -46,12 +46,15 @@
 			color: white;
 			font-size: 14px;
 		}
-		.svg {
+		.svgContainer {
 			display: flex;
-			align-items: flex-start;
+			align-items: center;
 			justify-content: flex-end;
+			flex-direction: row;
 			flex: 1;
 			fill: white;
+			height: 100%;
+			flex: 1;
 		}
 
 		cursor: pointer;
@@ -67,4 +70,16 @@
 
 .toolBarItem {
 	position: relative;
+}
+.svg {
+	height: 20px;
+	width: 20px;
+}
+svg {
+	height: 100%;
+	width: 100%;
+}
+.iconCell {
+	display: flex;
+	align-items: center;
 }

@@ -1,6 +1,6 @@
 import styles from "./ToolBarItem.module.scss";
-import { ReactComponent as CheckmarkIcon } from "../svgs/check.svg";
-import { ReactComponent as ArrowDropdownIcon } from "../svgs/arrow_dropdown.svg";
+import CheckmarkIcon from "../svgs/check.svg?react";
+import ArrowDropdownIcon from "../svgs/arrow_dropdown.svg?react";
 import { useEffect, useRef } from "react";
 const ToolBarOption = ({
 	icon,
@@ -71,7 +71,7 @@ const ToolBarOption = ({
 							>
 								<div className={styles.text}>{item?.text}</div>
 								{item?.id === settings[item?.setting_id] || "" ? (
-									<div className={styles.svg}>
+									<div className={styles.svgContainer}>
 										{sort ? (
 											<ArrowDropdownIcon
 												style={
@@ -79,11 +79,10 @@ const ToolBarOption = ({
 														? { transform: "rotate(180deg)" }
 														: {}
 												}
+												className={styles.svg}
 											/>
 										) : (
-											<CheckmarkIcon
-												style={{ height: "20px", width: "20px" }}
-											/>
+											<CheckmarkIcon className={styles.svg} />
 										)}
 									</div>
 								) : (

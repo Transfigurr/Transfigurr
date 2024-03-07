@@ -1,9 +1,9 @@
 import { useState } from "react";
 import styles from "./Season.module.scss";
-import { ReactComponent as Open } from "../svgs/expand_circle_up.svg";
-import { ReactComponent as Close } from "../svgs/expand_circle_down.svg";
-import { ReactComponent as MonitoredIcon } from "../svgs/bookmark_filled.svg";
-import { ReactComponent as UnmonitoredIcon } from "../svgs/bookmark_unfilled.svg";
+import Open from "../svgs/expand_circle_up.svg?react";
+import Close from "../svgs/expand_circle_down.svg?react";
+import MonitoredIcon from "../svgs/bookmark_filled.svg?react";
+import UnmonitoredIcon from "../svgs/bookmark_unfilled.svg?react";
 import { formatDate, formatSize } from "../../utils/format";
 const Season = ({ season, monitored }: any) => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -22,9 +22,9 @@ const Season = ({ season, monitored }: any) => {
 			<div className={styles.seasonHeader} onClick={onSeasonClick}>
 				<div className={styles.left}>
 					{monitored ? (
-						<MonitoredIcon className={styles.icon} />
+						<MonitoredIcon className={styles.svg} />
 					) : (
-						<UnmonitoredIcon className={styles.icon} />
+						<UnmonitoredIcon className={styles.svg} />
 					)}
 					<div className={styles.seasonNumber}>{season?.name}</div>
 					<div
@@ -40,10 +40,10 @@ const Season = ({ season, monitored }: any) => {
 					<div className={styles.open}>
 						{isOpen ? (
 							<>
-								<Open />
+								<Open className={styles.openSVG} />
 							</>
 						) : (
-							<Close />
+							<Close className={styles.openSVG} />
 						)}
 					</div>
 				</div>
@@ -83,7 +83,7 @@ const Season = ({ season, monitored }: any) => {
 					</tbody>
 				</table>
 				<div className={styles.seasonInfoFooter} onClick={onSeasonClick}>
-					<Open />
+					<Open className={styles.svg} />
 				</div>
 			</div>
 		</div>

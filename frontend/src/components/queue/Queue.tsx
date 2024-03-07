@@ -1,8 +1,8 @@
 import styles from "./Queue.module.scss";
 import { useContext, useState } from "react";
 import { WebSocketContext } from "../../contexts/webSocketContext";
-import { ReactComponent as ResetWrench } from "../svgs/reset_wrench.svg";
 import QueueToolbar from "../toolbars/queueToolbar/QueueToolbar";
+import ResetWrench from "../svgs/reset_wrench.svg?react";
 import QueueModal from "../modals/queueModal/QueueModal";
 import { formatETA } from "../../utils/format";
 import QueueTable from "../tables/queueTable/QueueTable";
@@ -51,13 +51,8 @@ const Queue = () => {
 								</thead>
 								<tbody>
 									<tr className={styles.row}>
-										<td>
-											<ResetWrench
-												style={{
-													height: "25px",
-													width: "25px",
-												}}
-											/>
+										<td className={styles.iconCell}>
+											<ResetWrench className={styles.svg} />
 										</td>
 										<td className={styles.name}>
 											<a

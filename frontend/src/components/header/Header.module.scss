@@ -118,3 +118,15 @@
 		}
 	}
 }
+svg {
+	height: 100%;
+	width: 100%;
+}
+.logoSVG {
+	fill: var(--transfigurrPurple);
+}
+.actionSVG {
+	fill: white;
+	height: 20px;
+	width: 20px;
+}

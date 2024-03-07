@@ -1,5 +1,5 @@
 import styles from "./QueueTable.module.scss";
-import { ReactComponent as QueueIcon } from "../../svgs/queue.svg";
+import QueueIcon from "../../svgs/queue.svg?react";
 import Codec from "../../codec/Codec";
 import { formatSize } from "../../../utils/format";
 import Table from "../../table/Table";
@@ -12,7 +12,7 @@ const QueueTable = ({ queueArray, profiles, series, settings }: any) => {
 	const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
 	const currentRecords = queueArray.slice(
 		indexOfFirstRecord,
-		indexOfLastRecord,
+		indexOfLastRecord
 	);
 	const firstPage = () => {
 		setCurrentPage(1);
@@ -53,16 +53,10 @@ const QueueTable = ({ queueArray, profiles, series, settings }: any) => {
 				</tr>
 			</thead>
 			<tbody>
-				{currentRecords?.map((q: any, index: number) => (
+				{currentRecords?.map((q: any) => (
 					<tr>
 						<td>
-							<QueueIcon
-								style={{
-									height: "25px",
-									width: "25px",
-									fill: "var(--textColor)",
-								}}
-							/>
+							<QueueIcon className={styles.svg} />
 						</td>
 						<td>
 							<a href={"/series/" + q?.series_id} className={styles.name}>

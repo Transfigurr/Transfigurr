@@ -1,7 +1,7 @@
 import styles from "./EventsTable.module.scss";
-import { ReactComponent as Info } from "../../svgs/info.svg";
-import { ReactComponent as Warning } from "../../svgs/warning.svg";
-import { ReactComponent as Error } from "../../svgs/error.svg";
+import Info from "../../svgs/info.svg?react";
+import Warning from "../../svgs/warning.svg?react";
+import Error from "../../svgs/error.svg?react";
 import { formatDate } from "../../../utils/format";
 import Table from "../../table/Table";
 import { useState } from "react";
@@ -13,7 +13,7 @@ const EventsTable = ({ sortedLogs, settings }: any) => {
 	const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
 	const currentRecords = sortedLogs.slice(
 		indexOfFirstRecord,
-		indexOfLastRecord,
+		indexOfLastRecord
 	);
 	const totalPages = Math.ceil(sortedLogs.length / recordsPerPage);
 	const firstPage = () => {

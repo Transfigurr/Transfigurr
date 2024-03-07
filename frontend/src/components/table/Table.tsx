@@ -1,8 +1,8 @@
 import styles from "./Table.module.scss";
-import { ReactComponent as SkipNext } from "../svgs/skip_next.svg";
-import { ReactComponent as SkipPrevious } from "../svgs/skip_previous.svg";
-import { ReactComponent as NavigateNext } from "../svgs/navigate_next.svg";
-import { ReactComponent as NavigateBefore } from "../svgs/navigate_before.svg";
+import SkipNext from "../svgs/skip_next.svg?react";
+import SkipPrevious from "../svgs/skip_previous.svg?react";
+import NavigateNext from "../svgs/navigate_next.svg?react";
+import NavigateBefore from "../svgs/navigate_before.svg?react";
 const Table = ({
 	children,
 	showPagination = false,
@@ -23,13 +23,13 @@ const Table = ({
 							onClick={firstPage}
 							className={currentPage === 1 ? styles.disabled : styles.button}
 						>
-							<SkipPrevious />
+							<SkipPrevious className={styles.svg} />
 						</div>
 						<div
 							onClick={prevPage}
 							className={currentPage === 1 ? styles.disabled : styles.button}
 						>
-							<NavigateBefore />
+							<NavigateBefore className={styles.svg} />
 						</div>
 						<div className={styles.pageInfo}>
 							{currentPage} / {totalPages}
@@ -40,7 +40,7 @@ const Table = ({
 								currentPage === totalPages ? styles.disabled : styles.button
 							}
 						>
-							<NavigateNext />
+							<NavigateNext className={styles.svg} />
 						</div>
 						<div
 							onClick={lastPage}
@@ -48,7 +48,7 @@ const Table = ({
 								currentPage === totalPages ? styles.disabled : styles.button
 							}
 						>
-							<SkipNext />
+							<SkipNext className={styles.svg} />
 						</div>
 					</div>
 					<div className={styles.totalRecords}>Total Records: {totalPages}</div>

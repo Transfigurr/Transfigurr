@@ -11,6 +11,7 @@ import MediaTable from "../tables/mediaTable/MediaTable";
 
 const Media = () => {
 	const wsContext = useContext(WebSocketContext);
+	console.log(wsContext);
 	const series = wsContext?.data?.series;
 	const settings = wsContext?.data?.settings;
 	const profiles = wsContext?.data?.profiles;
@@ -23,7 +24,7 @@ const Media = () => {
 		profiles,
 		sort,
 		sortDirection,
-		filter,
+		filter
 	);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [content, setContent] = useState({});

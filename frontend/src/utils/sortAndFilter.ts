@@ -3,7 +3,7 @@ const sortAndFilter = (
 	profiles: any,
 	sort: string,
 	sortDirection: string,
-	filter: string,
+	filter: string
 ) => {
 	let filteredSeries: any[] = Object.values(series || {});
 	if (filter == "monitored") {
@@ -12,15 +12,15 @@ const sortAndFilter = (
 		filteredSeries = filteredSeries.filter((series: any) => !series.monitored);
 	} else if (filter == "continuing") {
 		filteredSeries = filteredSeries.filter(
-			(series: any) => series.status != "Ended",
+			(series: any) => series.status != "Ended"
 		);
 	} else if (filter == "ended") {
 		filteredSeries = filteredSeries.filter(
-			(series: any) => series.status == "Ended",
+			(series: any) => series.status == "Ended"
 		);
 	} else if (filter == "missing") {
 		filteredSeries = filteredSeries.filter(
-			(series: any) => series.missing_episodes != 0,
+			(series: any) => series.missing_episodes != 0
 		);
 	}
 

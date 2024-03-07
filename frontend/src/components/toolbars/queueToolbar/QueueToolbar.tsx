@@ -1,8 +1,9 @@
+import styles from "./QueueToolbar.module.scss";
 import ToolBar from "../../toolBar/ToolBar";
 import ToolBarItem from "../../toolBarItem/ToolBarItem";
-import { ReactComponent as Pause } from "../../svgs/pause_circle.svg";
-import { ReactComponent as Start } from "../../svgs/play_circle.svg";
-import { ReactComponent as TableIcon } from "../../svgs/table.svg";
+import Pause from "../../svgs/pause_circle.svg?react";
+import Start from "../../svgs/play_circle.svg?react";
+import TableIcon from "../../svgs/table.svg?react";
 
 const QueueToolbar = ({
 	settings,
@@ -34,19 +35,9 @@ const QueueToolbar = ({
 			settings={settings}
 			icon={
 				settings?.queue_status === "inactive" ? (
-					<Pause
-						style={{
-							height: "100%",
-							width: "100%",
-						}}
-					/>
+					<Pause className={styles.svg} />
 				) : (
-					<Start
-						style={{
-							height: "100%",
-							width: "100%",
-						}}
-					/>
+					<Start className={styles.svg} />
 				)
 			}
 			selected={selected}
@@ -75,14 +66,7 @@ const QueueToolbar = ({
 			index={2}
 			key={2}
 			settings={settings}
-			icon={
-				<TableIcon
-					style={{
-						height: "100%",
-						width: "100%",
-					}}
-				/>
-			}
+			icon={<TableIcon className={styles.svg} />}
 			onClick={handleOptionsClick}
 			selected={selected}
 			setSelected={setSelected}

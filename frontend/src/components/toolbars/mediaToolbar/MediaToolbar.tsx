@@ -1,14 +1,14 @@
 import styles from "./MediaToolbar.module.scss";
 import ToolBarItem from "../../toolBarItem/ToolBarItem";
-import { ReactComponent as Rss } from "../../svgs/rss_feed.svg";
-import { ReactComponent as Sync } from "../../svgs/cached.svg";
-import { ReactComponent as AppsIcon } from "../../svgs/apps.svg";
-import { ReactComponent as ViewIcon } from "../../svgs/visibility.svg";
-import { ReactComponent as SortIcon } from "../../svgs/sort.svg";
-import { ReactComponent as FilterIcon } from "../../svgs/filter.svg";
-import { ReactComponent as TableIcon } from "../../svgs/table.svg";
-import { ReactComponent as OverviewIcon } from "../../svgs/view_list.svg";
-import { ReactComponent as LoadingIcon } from "../../svgs/loading.svg";
+import Rss from "../../svgs/rss_feed.svg?react";
+import Sync from "../../svgs/cached.svg?react";
+import AppsIcon from "../../svgs/apps.svg?react";
+import ViewIcon from "../../svgs/visibility.svg?react";
+import SortIcon from "../../svgs/sort.svg?react";
+import FilterIcon from "../../svgs/filter.svg?react";
+import TableIcon from "../../svgs/table.svg?react";
+import OverviewIcon from "../../svgs/view_list.svg?react";
+import LoadingIcon from "../../svgs/loading.svg?react";
 import ToolBar from "../../toolBar/ToolBar";
 const MediaToolbar = ({
 	selected,
@@ -32,7 +32,7 @@ const MediaToolbar = ({
 				headers: {
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
-			},
+			}
 		);
 	};
 
@@ -79,11 +79,9 @@ const MediaToolbar = ({
 			key={0}
 			icon={
 				<Sync
-					className={system?.scan_running === "1" ? styles.spinning : ""}
-					style={{
-						height: "100%",
-						width: "100%",
-					}}
+					className={
+						system?.scan_running === "1" ? styles.spinning : styles.svg
+					}
 				/>
 			}
 			onClick={onUpdate}
@@ -96,22 +94,9 @@ const MediaToolbar = ({
 			key={1}
 			icon={
 				system?.metadata_running == "1" ? (
-					<LoadingIcon
-						className={styles.loading}
-						style={{
-							fill: "white",
-							color: "white",
-							height: "30px",
-							width: "30px",
-						}}
-					/>
+					<LoadingIcon className={styles.loading} />
 				) : (
-					<Rss
-						style={{
-							height: "100%",
-							width: "100%",
-						}}
-					/>
+					<Rss />
 				)
 			}
 			onClick={onRefresh}
@@ -128,26 +113,11 @@ const MediaToolbar = ({
 			settings={settings}
 			icon={
 				view === "table" ? (
-					<TableIcon
-						style={{
-							height: "100%",
-							width: "100%",
-						}}
-					/>
+					<TableIcon className={styles.svg} />
 				) : view === "posters" ? (
-					<AppsIcon
-						style={{
-							height: "100%",
-							width: "100%",
-						}}
-					/>
+					<AppsIcon className={styles.svg} />
 				) : view === "overview" ? (
-					<OverviewIcon
-						style={{
-							height: "100%",
-							width: "100%",
-						}}
-					/>
+					<OverviewIcon className={styles.svg} />
 				) : null
 			}
 			onClick={handleOptionsClick}
@@ -161,14 +131,7 @@ const MediaToolbar = ({
 			index={3}
 			key={3}
 			settings={settings}
-			icon={
-				<ViewIcon
-					style={{
-						height: "100%",
-						width: "100%",
-					}}
-				/>
-			}
+			icon={<ViewIcon className={styles.svg} />}
 			selected={selected}
 			setSelected={setSelected}
 			dropdownItems={[
@@ -202,14 +165,7 @@ const MediaToolbar = ({
 			settings={settings}
 			sortDirection={settings?.media_sort_direction}
 			sort={true}
-			icon={
-				<SortIcon
-					style={{
-						height: "100%",
-						width: "100%",
-					}}
-				/>
-			}
+			icon={<SortIcon className={styles.svg} />}
 			selected={selected}
 			setSelected={setSelected}
 			dropdownItems={[
@@ -261,14 +217,7 @@ const MediaToolbar = ({
 			text="Filter"
 			index={5}
 			key={5}
-			icon={
-				<FilterIcon
-					style={{
-						height: "100%",
-						width: "100%",
-					}}
-				/>
-			}
+			icon={<FilterIcon className={styles.svg} />}
 			selected={selected}
 			settings={settings}
 			setSelected={setSelected}

@@ -26,32 +26,14 @@ const MassEditor = () => {
 		profiles,
 		sort,
 		sortDirection,
-		filter,
+		filter
 	);
-
-	const applyChanges = () => {
-		for (const series of selectedSeries) {
-			series.monitored =
-				parseInt(monitored) !== -1 ? parseInt(monitored) : undefined;
-			series.profile_id =
-				parseInt(profile) !== 0 ? parseInt(profile) : undefined;
-			fetch(`http://${window.location.hostname}:7889/api/series/${series.id}`, {
-				method: "PUT",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-
-				body: JSON.stringify(series),
-			});
-		}
-	};
 
 	const handleCheckboxChange = (series: any) => {
 		setSelectedSeries((prevSelected: any[]) =>
 			prevSelected.some((s) => s.id === series.id)
 				? prevSelected.filter((s) => s.id !== series.id)
-				: [...prevSelected, series],
+				: [...prevSelected, series]
 		);
 	};
 	const handleSelectAllChange = () => {
@@ -60,8 +42,28 @@ const MassEditor = () => {
 	};
 
 	useEffect(() => {
+		const applyChanges = () => {
+			for (const series of selectedSeries) {
+				series.monitored =
+					parseInt(monitored) !== -1 ? parseInt(monitored) : undefined;
+				series.profile_id =
+					parseInt(profile) !== 0 ? parseInt(profile) : undefined;
+				fetch(
+					`http://${window.location.hostname}:7889/api/series/${series.id}`,
+					{
+						method: "PUT",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${localStorage.getItem("token")}`,
+						},
+
+						body: JSON.stringify(series),
+					}
+				);
+			}
+		};
 		applyChanges();
-	}, [monitored, profile]);
+	}, [monitored, profile, selectedSeries]);
 
 	return (
 		<div className={styles.massEditor}>
@@ -113,7 +115,7 @@ const MassEditor = () => {
 									<option value={profile.id} key={index}>
 										{profile.name}
 									</option>
-								),
+								)
 							)}
 						</InputSelect>
 					</div>

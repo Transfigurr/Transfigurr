@@ -31,7 +31,7 @@ const ProfileSummary = ({ content, setContent, containers, codecs }: any) => {
 							<option value={container} key={index}>
 								{container}
 							</option>
-						),
+						)
 					)}
 				</InputContainer>
 				<InputContainer
@@ -47,7 +47,7 @@ const ProfileSummary = ({ content, setContent, containers, codecs }: any) => {
 							<option value={extension} key={index}>
 								.{extension}
 							</option>
-						),
+						)
 					)}
 				</InputContainer>
 				<InputContainer
@@ -67,7 +67,7 @@ const ProfileSummary = ({ content, setContent, containers, codecs }: any) => {
 			<div className={styles.right}>
 				<label>Targets</label>
 				<div className={styles.targets}>
-					{Object.entries(codecs)?.map(([key, value]: any) => (
+					{Object.entries(codecs)?.map(([key]: any) => (
 						<div
 							key={key}
 							className={styles.target}

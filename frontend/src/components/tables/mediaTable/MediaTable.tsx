@@ -1,8 +1,8 @@
 import styles from "./MediaTable.module.scss";
-import { ReactComponent as BookmarkFilled } from "../../svgs/bookmark_filled.svg";
-import { ReactComponent as BookmarkUnfilled } from "../../svgs/bookmark_unfilled.svg";
-import { ReactComponent as ContinuingIcon } from "../../svgs/play_arrow.svg";
-import { ReactComponent as StoppedIcon } from "../../svgs/stop.svg";
+import BookmarkFilled from "../../svgs/bookmark_filled.svg?react";
+import BookmarkUnfilled from "../../svgs/bookmark_unfilled.svg?react";
+import ContinuingIcon from "../../svgs/play_arrow.svg?react";
+import StoppedIcon from "../../svgs/stop.svg?react";
 import { Link } from "react-router-dom";
 import { formatSize } from "../../../utils/format";
 import Table from "../../table/Table";
@@ -53,14 +53,14 @@ const MediaTable = ({ settings, profiles, sortedSeries }: any) => {
 						<tr className={styles.row} key={key}>
 							<td className={styles.iconCell}>
 								{series?.monitored ? (
-									<BookmarkFilled className={styles.monitored} />
+									<BookmarkFilled className={styles.svg} />
 								) : (
-									<BookmarkUnfilled className={styles.monitored} />
+									<BookmarkUnfilled className={styles.svg} />
 								)}
 								{series?.status !== "Ended" ? (
-									<ContinuingIcon className={styles.continue} />
+									<ContinuingIcon className={styles.svg} />
 								) : (
-									<StoppedIcon className={styles.stopped} />
+									<StoppedIcon className={styles.svg} />
 								)}
 							</td>
 							<td>

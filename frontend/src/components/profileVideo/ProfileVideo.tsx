@@ -31,7 +31,7 @@ const ProfileVideo = ({
 							});
 						}}
 					>
-						{Object.entries(codecs)?.map(([key, value]: any) => (
+						{Object.entries(codecs)?.map(([key]: any) => (
 							<option value={key} key={key}>
 								{key}
 							</option>
@@ -58,7 +58,7 @@ const ProfileVideo = ({
 								<option value={encoder} key={index}>
 									{encoder}
 								</option>
-							),
+							)
 						)}
 					</InputContainer>
 					<InputContainer
@@ -149,7 +149,7 @@ const ProfileVideo = ({
 								<option value={preset} key={index}>
 									{preset}
 								</option>
-							),
+							)
 						)}
 					</InputContainer>
 					<InputContainer
@@ -165,7 +165,7 @@ const ProfileVideo = ({
 								<option value={tune} key={index}>
 									{tune}
 								</option>
-							),
+							)
 						)}
 					</InputContainer>
 					<InputContainer
@@ -181,7 +181,7 @@ const ProfileVideo = ({
 								<option value={profile} key={index}>
 									{profile}
 								</option>
-							),
+							)
 						)}
 					</InputContainer>
 					<InputContainer
@@ -197,7 +197,7 @@ const ProfileVideo = ({
 								<option value={level} key={index}>
 									{level}
 								</option>
-							),
+							)
 						)}
 					</InputContainer>
 				</div>

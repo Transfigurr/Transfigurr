@@ -1,5 +1,5 @@
 import styles from "./HistoryTable.module.scss";
-import { ReactComponent as ResetWrench } from "../../svgs/reset_wrench.svg";
+import ResetWrench from "../../svgs/reset_wrench.svg?react";
 import Codec from "../../codec/Codec";
 import { formatDate, formatSize } from "../../../utils/format";
 import Table from "../../table/Table";
@@ -12,7 +12,7 @@ const HistoryTable = ({ historyArray, settings }: any) => {
 	const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
 	const currentRecords = historyArray.slice(
 		indexOfFirstRecord,
-		indexOfLastRecord,
+		indexOfLastRecord
 	);
 	const totalPages = Math.ceil(historyArray.length / recordsPerPage);
 	const firstPage = () => {
@@ -57,7 +57,7 @@ const HistoryTable = ({ historyArray, settings }: any) => {
 				{currentRecords.reverse().map((entry: any, index: number) => (
 					<tr className={styles.row} key={index}>
 						<td>
-							<ResetWrench />
+							<ResetWrench className={styles.svg} />
 						</td>
 						<td>
 							<a

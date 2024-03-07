@@ -1,5 +1,4 @@
-import styles from "./ProfileModal.module.scss";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { WebSocketContext } from "../../../contexts/webSocketContext";
 import ProfileEditor from "../../profileEditor/ProfileEditor";
 import Modal from "../../modal/Modal";

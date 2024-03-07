@@ -1,6 +1,7 @@
+import styles from "./HistoryToolbar.module.scss";
 import ToolBar from "../../toolBar/ToolBar";
 import ToolBarItem from "../../toolBarItem/ToolBarItem";
-import { ReactComponent as TableIcon } from "../../svgs/table.svg";
+import TableIcon from "../../svgs/table.svg?react";
 
 const HistoryToolbar = ({
 	settings,
@@ -23,14 +24,7 @@ const HistoryToolbar = ({
 					index={2}
 					key={2}
 					settings={settings}
-					icon={
-						<TableIcon
-							style={{
-								height: "100%",
-								width: "100%",
-							}}
-						/>
-					}
+					icon={<TableIcon className={styles.svg} />}
 					onClick={handleOptionsClick}
 					selected={selected}
 					setSelected={setSelected}

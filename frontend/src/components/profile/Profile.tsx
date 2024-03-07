@@ -1,13 +1,14 @@
 import styles from "./Profile.module.scss";
-import { ReactComponent as AddIcon } from "../svgs/add.svg";
+import AddIcon from "../svgs/add.svg?react";
 import Codec from "../codec/Codec";
+
 const Profile = ({ name, type = "", codecs, onClick, profile }: any) => {
 	return (
 		<div className={styles.profile} key={name} onClick={() => onClick(profile)}>
 			{type === "add" ? (
 				<div className={styles.add}>
 					<div className={styles.box}>
-						{<AddIcon style={{ fill: "var(--textColor)" }} />}
+						<AddIcon className={styles.svg} />
 					</div>
 				</div>
 			) : (

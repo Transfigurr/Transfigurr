@@ -1,13 +1,13 @@
 import styles from "./Header.module.scss";
-import { ReactComponent as Person } from "../svgs/person.svg";
-import { ReactComponent as Logo } from "../svgs/transfigurr.svg";
+import Person from "../svgs/person.svg?react";
+import Logo from "../svgs/transfigurr.svg?react";
 import { WebSocketContext } from "../../contexts/webSocketContext";
 import { useContext, useEffect, useRef, useState } from "react";
-import { ReactComponent as Timer } from "../svgs/timer.svg";
-import { ReactComponent as Build } from "../svgs/build.svg";
-import { ReactComponent as Pending } from "../svgs/pending.svg";
-import { ReactComponent as RestartIcon } from "../svgs/restart.svg";
-import { ReactComponent as ShutdownIcon } from "../svgs/shutdown.svg";
+import Timer from "../svgs/timer.svg?react";
+import Build from "../svgs/build.svg?react";
+import Pending from "../svgs/pending.svg?react";
+import RestartIcon from "../svgs/restart.svg?react";
+import ShutdownIcon from "../svgs/shutdown.svg?react";
 import { Link } from "react-router-dom";
 import { formatETA } from "../../utils/format";
 
@@ -43,7 +43,7 @@ const HeaderComponent = () => {
 				headers: {
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
-			},
+			}
 		);
 	};
 
@@ -62,18 +62,12 @@ const HeaderComponent = () => {
 		<div className={styles.header}>
 			<div className={styles.left}>
 				<Link to="/" className={styles.logo}>
-					<Logo
-						style={{
-							height: "100%",
-							width: "100%",
-							fill: "var(--transfigurrPurple)",
-						}}
-					/>
+					<Logo className={styles.logoSVG} />
 				</Link>
 				<div className={styles.status}>
 					<div className={styles.line}>
 						<div className={styles.icon}>
-							<Timer style={{ fill: "white", height: "15px" }} />
+							<Timer className={styles.svg} />
 						</div>
 						<div className={styles.text}>
 							{queue && queue.stage !== "idle"
@@ -84,7 +78,7 @@ const HeaderComponent = () => {
 					</div>
 					<div className={styles.line}>
 						<div className={styles.icon}>
-							<Pending />
+							<Pending className={styles.svg} />
 						</div>
 						<div className={styles.text}>
 							{queue && queue.stage !== "idle" && formatETA(queue?.eta)}
@@ -92,7 +86,7 @@ const HeaderComponent = () => {
 					</div>
 					<div className={styles.line}>
 						<div className={styles.icon}>
-							<Build />
+							<Build className={styles.svg} />
 						</div>
 
 						<div className={styles.text}>
@@ -105,23 +99,25 @@ const HeaderComponent = () => {
 			</div>
 			<div className={styles.right}>
 				<div className={styles.profile}>
-					<Person
+					<div
 						className={styles.svg}
-						style={{ height: "100%", width: "100%" }}
 						onClick={() => setOpenDropdown(!openDropdown)}
 						ref={dropdownRef}
-					/>
+					>
+						<Person className={styles.svg} />
+					</div>
+
 					{openDropdown ? (
 						<div className={styles.dropdown}>
 							<div className={styles.item} onClick={restart}>
 								<div className={styles.profilesvg}>
-									<RestartIcon style={{ height: "100%", width: "100%" }} />
+									<RestartIcon className={styles.actionSVG} />
 								</div>
 								<div className={styles.text}>Restart</div>
 							</div>
 							<div className={styles.item} onClick={shutdown}>
 								<div className={styles.profilesvg}>
-									<ShutdownIcon style={{ height: "100%", width: "100%" }} />
+									<ShutdownIcon className={styles.actionSVG} />
 								</div>
 								<div className={styles.text}>Shutdown</div>
 							</div>
