@@ -14,7 +14,7 @@ COPY src /src
 # Stage 3: Combine frontend and backend
 FROM python:alpine
 WORKDIR /
-COPY --from=frontend /frontend/build /frontend/build
+COPY --from=frontend /frontend/dist /frontend/dist
 COPY --from=backend /src /src
 
 # Stage 4: Install python requirements and ffmpeg
