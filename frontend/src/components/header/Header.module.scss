@@ -4,6 +4,7 @@
 	background-color: var(--pageHeaderBackgroundColor);
 	align-items: center;
 	z-index: 4;
+	min-width: 300px;
 	position: relative;
 	.left {
 		display: flex;
@@ -12,6 +13,7 @@
 		.logo {
 			height: 55px;
 			width: 55px;
+			min-width: 55px;
 			padding-left: 20px;
 			cursor: pointer;
 		}
