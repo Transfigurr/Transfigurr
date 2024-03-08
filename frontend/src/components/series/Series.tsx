@@ -1,22 +1,19 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import ToolBar from "../ToolBar/ToolBar";
 import styles from "./Series.module.scss";
-import ToolBarItem from "../ToolBarItem/ToolBarItem";
-import { ReactComponent as RssFeedIcon } from "../svgs/rss_feed.svg";
-import { ReactComponent as SyncIcon } from "../svgs/cached.svg";
-import { ReactComponent as Folder } from "../svgs/folder.svg";
-import { ReactComponent as Drive } from "../svgs/hard_drive.svg";
-import { ReactComponent as Profile } from "../svgs/person.svg";
-import { ReactComponent as Monitored } from "../svgs/bookmark_filled.svg";
-import { ReactComponent as Unmonitored } from "../svgs/bookmark_unfilled.svg";
-import { ReactComponent as Continuing } from "../svgs/play_arrow.svg";
-import { ReactComponent as Ended } from "../svgs/stop.svg";
-import { ReactComponent as Network } from "../svgs/tower.svg";
-import { ReactComponent as EditIcon } from "../svgs/edit.svg";
-import { ReactComponent as LoadingIcon } from "../svgs/loading.svg";
+import Drive from "../svgs/hard_drive.svg?react";
+import Profile from "../svgs/person.svg?react";
+import Monitored from "../svgs/bookmark_filled.svg?react";
+import Unmonitored from "../svgs/bookmark_unfilled.svg?react";
+import Continuing from "../svgs/play_arrow.svg?react";
+import Ended from "../svgs/stop.svg?react";
+import Network from "../svgs/tower.svg?react";
 import Season from "../season/Season";
 import { WebSocketContext } from "../../contexts/webSocketContext";
-import SeriesModals from "../seriesModals/SeriesModals";
+import SeriesModal from "../modals/seriesModal/SeriesModal";
+import SeriesToolbar from "../toolbars/seriesToolbar/SeriesToolbar";
+import { formatSize } from "../../utils/format";
+import FolderIcon from "../svgs/folder.svg?react";
+import { Tooltip } from "react-tooltip";
 
 const Series = ({ series_name }: any) => {
 	const wsContext = useContext(WebSocketContext);
@@ -26,100 +23,13 @@ const Series = ({ series_name }: any) => {
 			? wsContext?.data?.series[series_name]
 			: {};
 	const system = wsContext?.data?.system;
-
 	const [content, setContent] = useState<any>({});
 	const handleEditClick = () => {
 		setIsModalOpen(true);
 		setContent(series);
 	};
-
 	const [selected, setSelected] = useState<string | null>(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const handleScanClick = async () => {
-		await fetch(
-			`http://${window.location.hostname}:7889/api/scan/series/${series_name}`,
-			{
-				method: "PUT",
-				headers: {
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-			},
-		);
-	};
-
-	const handleMetadataClick = async () => {
-		await fetch(
-			`http://${window.location.hostname}:7889/api/scan/series/metadata/${series_name}`,
-			{
-				method: "PUT",
-				headers: {
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-			},
-		);
-	};
-
-	const leftToolBarItems: any = [
-		<ToolBarItem
-			text="Scan"
-			key="scan"
-			icon={
-				<SyncIcon
-					className={
-						system?.scan_running && system?.scan_target == series?.id
-							? styles.spinning
-							: ""
-					}
-					style={{
-						height: "100%",
-						width: "100%",
-					}}
-				/>
-			}
-			onClick={handleScanClick}
-			selected={selected}
-			setSelected={setSelected}
-		/>,
-		<ToolBarItem
-			text="Refresh Metadata"
-			key="metadata"
-			icon={
-				system?.metadata_running == "1" &&
-				system?.metadata_target == series?.id ? (
-					<LoadingIcon
-						className={styles.loading}
-						style={{
-							fill: "white",
-							color: "white",
-							height: "30px",
-							width: "30px",
-						}}
-					/>
-				) : (
-					<RssFeedIcon
-						style={{
-							height: "100%",
-							width: "100%",
-						}}
-					/>
-				)
-			}
-			onClick={handleMetadataClick}
-			selected={selected}
-			setSelected={setSelected}
-		/>,
-		<ToolBarItem
-			text="Edit"
-			key="edit"
-			icon={<EditIcon />}
-			onClick={handleEditClick}
-			selected={selected}
-			setSelected={setSelected}
-		/>,
-	];
-
-	const middleToolBarItems: any = [];
-	const rightToolBarItems: any = [];
 	const status = series?.status;
 	const network = series?.networks;
 	const genre = series?.genre;
@@ -130,7 +40,6 @@ const Series = ({ series_name }: any) => {
 		status === "Ended" ? firstAirDate + "-" + lastAirDate : firstAirDate + "-";
 	const [backdropSrc, setBackdropSrc] = useState<string | null>("");
 	const [posterSrc, setPosterSrc] = useState<string | null>("");
-
 	const loaded = useRef(false);
 
 	useEffect(() => {
@@ -139,7 +48,7 @@ const Series = ({ series_name }: any) => {
 		}
 		const fetchImage = async (
 			path: string,
-			setSrc: (src: string | null) => void,
+			setSrc: (src: string | null) => void
 		) => {
 			try {
 				let cache = null;
@@ -147,7 +56,7 @@ const Series = ({ series_name }: any) => {
 				if ("caches" in window) {
 					cache = await caches.open("image-cache");
 					cachedResponse = await cache.match(
-						`http://${window.location.hostname}:7889/api/${path}/series/${series?.id}`,
+						`http://${window.location.hostname}:7889/api/${path}/series/${series?.id}`
 					);
 				}
 
@@ -161,7 +70,7 @@ const Series = ({ series_name }: any) => {
 							headers: {
 								Authorization: `Bearer ${localStorage.getItem("token")}`,
 							},
-						},
+						}
 					);
 					if (response.status !== 200) {
 						setSrc(null);
@@ -173,7 +82,7 @@ const Series = ({ series_name }: any) => {
 					if (cache) {
 						cache.put(
 							`http://${window.location.hostname}:7889/api/${path}/series/${series?.id}`,
-							clonedResponse,
+							clonedResponse
 						);
 					}
 				}
@@ -190,23 +99,20 @@ const Series = ({ series_name }: any) => {
 	}, [series?.id]);
 	return (
 		<div className={styles.series}>
-			{isModalOpen ? (
-				<div className={styles.modalBackdrop}>
-					<div className={styles.modalContent}>
-						<SeriesModals
-							setIsModalOpen={setIsModalOpen}
-							content={content}
-							setContent={setContent}
-						/>
-					</div>
-				</div>
-			) : (
-				<></>
-			)}
-			<ToolBar
-				leftToolBarItems={leftToolBarItems}
-				middleToolBarItems={middleToolBarItems}
-				rightToolBarItems={rightToolBarItems}
+			<SeriesToolbar
+				series={series}
+				system={system}
+				selected={selected}
+				setSelected={setSelected}
+				handleEditClick={handleEditClick}
+				series_name={series_name}
+			/>
+			<SeriesModal
+				isOpen={isModalOpen}
+				setIsOpen={setIsModalOpen}
+				content={content}
+				setContent={setContent}
+				profiles={profiles}
 			/>
 			<div className={styles.seriesContent}>
 				<div className={styles.header}>
@@ -225,12 +131,34 @@ const Series = ({ series_name }: any) => {
 						<div className={styles.details}>
 							<div className={styles.titleRow}>
 								<div className={styles.headerIcon}>
+									<Tooltip
+										id="monitoredTooltip"
+										place="top"
+										content="Monitored"
+										style={{
+											fontSize: "12px",
+											padding: "5px 10px",
+										}}
+									/>
+									<Tooltip
+										id="unmonitoredTooltip"
+										place="top"
+										content="Unmonitored"
+										style={{ fontSize: "12px", padding: "5px 10px" }}
+									/>
 									{series?.monitored ? (
-										<Monitored style={{ height: "55px", width: "55px" }} />
+										<Monitored
+											data-tooltip-id="monitoredTooltip"
+											className={styles.monitoredSVG}
+										/>
 									) : (
-										<Unmonitored style={{ height: "55px", width: "55px" }} />
+										<Unmonitored
+											data-tooltip-id="unmonitoredTooltip"
+											className={styles.monitoredSVG}
+										/>
 									)}
 								</div>
+
 								{series?.name ? series?.name : series?.id}
 							</div>
 							<div className={styles.seriesDetails}>
@@ -247,21 +175,20 @@ const Series = ({ series_name }: any) => {
 							<div className={styles.tags}>
 								<div className={styles.tag}>
 									<div className={styles.icon}>
-										<Folder />
+										<FolderIcon className={styles.svg} />
 									</div>
 									{"/series/" + (series?.name ? series?.name : series?.id)}
 								</div>
 
 								<div className={styles.tag}>
 									<div className={styles.icon}>
-										<Drive />
+										<Drive className={styles.svg} />
 									</div>
-									{((series?.size || 0) / 1000000000).toFixed(2).toString() +
-										" GB"}
+									{formatSize(series?.size)}
 								</div>
 								<div className={styles.tag}>
 									<div className={styles.icon}>
-										<Profile />
+										<Profile className={styles.svg} />
 									</div>
 									{profiles && series?.profile_id in profiles
 										? profiles[series?.profile_id]?.name
@@ -269,14 +196,38 @@ const Series = ({ series_name }: any) => {
 								</div>
 								<div className={styles.tag}>
 									<div className={styles.icon}>
-										{series?.monitored ? <Monitored /> : <Unmonitored />}
+										<Tooltip
+											id="monitoredTooltip2"
+											place="top"
+											content="Monitored"
+										/>
+										<Tooltip
+											id="unmonitoredTooltip2"
+											place="top"
+											content="Unmonitored"
+										/>
+										{series?.monitored ? (
+											<Monitored
+												data-tooltip-id="monitoredTooltip2"
+												className={styles.svg}
+											/>
+										) : (
+											<Unmonitored
+												data-tooltip-id="unmonitoredTooltip2"
+												className={styles.svg}
+											/>
+										)}
 									</div>
 									{series?.monitored ? "Monitored" : "Unmonitored"}
 								</div>
 								{status ? (
 									<div className={styles.tag}>
 										<div className={styles.icon}>
-											{status === "Ended" ? <Ended /> : <Continuing />}
+											{status === "Ended" ? (
+												<Ended className={styles.svg} />
+											) : (
+												<Continuing className={styles.svg} />
+											)}
 										</div>
 										{status}
 									</div>
@@ -286,7 +237,7 @@ const Series = ({ series_name }: any) => {
 								{network ? (
 									<div className={styles.tag}>
 										<div className={styles.icon}>
-											<Network />
+											<Network className={styles.svg} />
 										</div>
 										{network}
 									</div>

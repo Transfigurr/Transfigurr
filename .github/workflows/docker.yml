@@ -2,8 +2,9 @@ name: Build Image
 
 on: 
   push:
-      branches:
-          - develop*
+    branches:
+      - main
+      - develop*
   pull_request:
     types: [closed]
     branches:

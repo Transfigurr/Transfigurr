@@ -50,6 +50,10 @@ class ScanService:
                 await asyncio.sleep(1)
             except Exception as e:
                 logger.error("An error occurred while processing series %s", str(e), extra={'service': 'Scan'})
+                try:
+                    await set_system({'id': 'scan_running', 'value': False})
+                except Exception as e:
+                    logger.error("An error occurred while processing series %s", str(e), extra={'service': 'Scan'})
             await asyncio.sleep(1)
 
 

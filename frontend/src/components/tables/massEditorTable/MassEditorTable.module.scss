@@ -1,0 +1,45 @@
+.name {
+	color: var(--transfigurrPurple);
+	text-decoration: none;
+}
+
+.name:hover {
+	color: var(--transfigurrAlternativePurple);
+	text-decoration: underline;
+}
+
+.iconCell {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 50px;
+	margin: 1px;
+	fill: var(--textColor);
+}
+
+.inputCell {
+	width: 14px;
+}
+
+.checkbox {
+	height: 20px;
+	width: 20px;
+}
+
+.continue {
+	height: 25px;
+	width: 25px;
+}
+.monitored {
+	width: 20px;
+	height: 20px;
+}
+
+.stopped {
+	width: 25px;
+	height: 25px;
+}
+.svg {
+	fill: var(--textColor);
+	color: var(--textColor);
+}

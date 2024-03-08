@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import styles from "./Settings.module.scss";
-const Settings = ({ setSelectedItem }: any) => {
+const Settings = () => {
 	return (
 		<div className={styles.settings}>
 			<div className={styles.setting}>

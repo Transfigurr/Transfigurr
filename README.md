@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/Transfigurr/Transfigurr">
-    <img src="frontend/public/transfigurr.png" alt="Logo" width="150" height="150">
+    <img src="https://raw.githubusercontent.com/Transfigurr/Transfigurr/main/frontend/public/transfigurr.png" alt="Logo" width="150" height="150">
   </a>
 
   <h3 align="center"><a href="https://github.com/transfigurr/transfigurr">Transfigurr</a></h3>
@@ -28,7 +28,7 @@
 
 ## Supported Architectures
 
-Docker manifest is utilized for multi-platform awareness. More information is available from docker [here](https://distribution.github.io/distribution/spec/manifest-v2-2/#manifest-list) and our announcement [here](https://blog.linuxserver.io/2019/02/21/the-lsio-pipeline-project/).
+Docker manifest is utilized for multi-platform awareness. More information is available from docker [here](https://distribution.github.io/distribution/spec/manifest-v2-2/#manifest-list).
 
 Simply pulling `transfigurr/transfigurr:latest` should retrieve the correct image for your arch, but you can also pull specific arch images via tags.
 
@@ -44,10 +44,10 @@ The architectures supported by this image are:
 
 This image provides various versions that are available via tags. Please read the descriptions carefully and exercise caution when using unstable or development tags.
 
-|   Tag   | Available | Description                           |
-| :-----: | :-------: | ------------------------------------- |
-| latest  |    ✅     | Stable releases from Transfigurr      |
-| develop |    ✅     | Development releases from Transfigurr |
+|   Tag   | Available | Description          |
+| :-----: | :-------: | -------------------- |
+| latest  |    ✅     | Stable releases      |
+| develop |    ✅     | Development releases |
 
 ## Application Setup
 

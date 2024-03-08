@@ -1,9 +1,9 @@
 import SideBarItem from "../sideBarItem/SideBarItem";
 import styles from "./SideBar.module.scss";
-import { ReactComponent as MediaIcon } from "../svgs/play_arrow.svg";
-import { ReactComponent as ActivityIcon } from "../svgs/schedule.svg";
-import { ReactComponent as SettingsIcon } from "../svgs/settings.svg";
-import { ReactComponent as SystemIcon } from "../svgs/laptop.svg";
+import MediaIcon from "../svgs/play_arrow.svg?react";
+import ActivityIcon from "../svgs/schedule.svg?react";
+import SettingsIcon from "../svgs/settings.svg?react";
+import SystemIcon from "../svgs/laptop.svg?react";
 
 import { useLocation } from "react-router";
 import { useEffect } from "react";
@@ -16,38 +16,31 @@ const MenuComponent = ({
 }: any) => {
 	const location: any = useLocation();
 	const pathname: string = location.pathname;
-	const sidebar: any = {
-		"/": [0, -1],
-		"/mass-editor": [0, 0],
-		"/activity": [1, -1],
-		"/activity/queue": [1, 0],
-		"/activity/history": [1, 1],
-
-		"/settings": [2, -1],
-		"/settings/media-management": [2, 0],
-		"/settings/profiles": [2, 0],
-		"/settings/general": [2, 1],
-		"/system": [3, -1],
-		"/system/status": [3, 0],
-		"/system/events": [3, 1],
-	};
 
 	useEffect(() => {
+		const sidebar: any = {
+			"/": [0, -1],
+			"/mass-editor": [0, 0],
+			"/activity": [1, -1],
+			"/activity/queue": [1, 0],
+			"/activity/history": [1, 1],
+
+			"/settings": [2, -1],
+			"/settings/media-management": [2, 0],
+			"/settings/profiles": [2, 0],
+			"/settings/general": [2, 1],
+			"/system": [3, -1],
+			"/system/status": [3, 0],
+			"/system/events": [3, 1],
+		};
 		setSelectedOption(pathname in sidebar ? sidebar[pathname][0] : 0);
 		setSelectedItem(pathname in sidebar ? sidebar[pathname][1] : -1);
-	}, [pathname]);
+	}, [pathname, setSelectedItem, setSelectedOption]);
 
 	const mediaOptions = {
 		id: 0,
 		text: "Media",
-		svg: (
-			<MediaIcon
-				style={{
-					height: "100%",
-					width: "100%",
-				}}
-			/>
-		),
+		svg: <MediaIcon className={styles.svg} />,
 		link: "/",
 		children: [
 			{
@@ -60,14 +53,7 @@ const MenuComponent = ({
 	const activityOptions = {
 		id: 1,
 		text: "Activity",
-		svg: (
-			<ActivityIcon
-				style={{
-					height: "100%",
-					width: "100%",
-				}}
-			/>
-		),
+		svg: <ActivityIcon className={styles.svg} />,
 		link: "/activity",
 		children: [
 			{
@@ -84,14 +70,7 @@ const MenuComponent = ({
 	const settingsOptions = {
 		id: 2,
 		text: "Settings",
-		svg: (
-			<SettingsIcon
-				style={{
-					height: "100%",
-					width: "100%",
-				}}
-			/>
-		),
+		svg: <SettingsIcon className={styles.svg} />,
 		link: "/settings",
 		children: [
 			{
@@ -108,14 +87,7 @@ const MenuComponent = ({
 	const systemOptions = {
 		id: 3,
 		text: "System",
-		svg: (
-			<SystemIcon
-				style={{
-					height: "100%",
-					width: "100%",
-				}}
-			/>
-		),
+		svg: <SystemIcon className={styles.svg} />,
 		link: "/system/status",
 		children: [
 			{

@@ -1,10 +1,10 @@
-from sqlalchemy import insert
-from src.models.profile import Profile_Codec
+from src.models.profile_codec import Profile_Codec
 
 
-def seed_profile_codecs(conn):
+def seed_profile_codecs(session):
     for profile_codec in default_profile_codecs:
-        conn.execute(insert(Profile_Codec).values(profile_codec))
+        session.add(Profile_Codec(**profile_codec))
+    session.commit()
 
 
 default_profile_codecs = [

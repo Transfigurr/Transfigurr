@@ -2,179 +2,55 @@ import styles from "./Media.module.scss";
 import Footer from "../footer/Footer";
 import { useContext, useState } from "react";
 import { WebSocketContext } from "../../contexts/webSocketContext";
-import Table from "../table/Table";
-import MediaModel from "../mediaModal/MediaModal";
+import MediaModel from "../modals/mediaModal/MediaModal";
 import Posters from "../posters/Posters";
 import Overviews from "../overviews/Overviews";
-import MediaToolbar from "../mediaToolbar/MediaToolbar";
+import MediaToolbar from "../toolbars/mediaToolbar/MediaToolbar";
+import sortAndFilter from "../../utils/sortAndFilter";
+import MediaTable from "../tables/mediaTable/MediaTable";
 
-const ExplorerComponent = () => {
+const Media = () => {
 	const wsContext = useContext(WebSocketContext);
-	const series: any = wsContext?.data?.series;
+	const series = wsContext?.data?.series;
 	const settings = wsContext?.data?.settings;
 	const profiles = wsContext?.data?.profiles;
 	const view = settings?.media_view;
 	const sort = settings?.media_sort;
 	const filter = settings?.media_filter;
-	let filteredSeries: any[] = Object.values(series || {});
-	if (filter == "monitored") {
-		filteredSeries = filteredSeries.filter((series: any) => series.monitored);
-	} else if (filter == "unmonitored") {
-		filteredSeries = filteredSeries.filter((series: any) => !series.monitored);
-	} else if (filter == "continuing") {
-		filteredSeries = filteredSeries.filter(
-			(series: any) => series.status != "Ended",
-		);
-	} else if (filter == "ended") {
-		filteredSeries = filteredSeries.filter(
-			(series: any) => series.status == "Ended",
-		);
-	} else if (filter == "missing") {
-		filteredSeries = filteredSeries.filter(
-			(series: any) => series.missing_episodes != 0,
-		);
-	}
-
-	let sortedSeries: any[] = filteredSeries;
-	const sortSeries = (seriesArray: any[], column: string) => {
-		return seriesArray.sort((a: any, b: any) => {
-			if (typeof a[column] === "string" && typeof b[column] === "string") {
-				return a[column].localeCompare(b[column]);
-			} else if (
-				typeof a[column] === "number" &&
-				typeof b[column] === "number"
-			) {
-				return a[column] - b[column];
-			} else {
-				return 0;
-			}
-		});
-	};
-	if (sort == "title") {
-		sortedSeries = sortSeries(sortedSeries, "id");
-	} else if (sort == "monitored/status") {
-		sortedSeries = sortSeries(sortedSeries, "monitored");
-	} else if (sort == "network") {
-		sortedSeries = sortSeries(sortedSeries, "networks");
-	} else if (sort == "profile") {
-		sortedSeries = sortedSeries.map((series: any) => {
-			const profile = profiles[series.profile_id];
-			return {
-				...series,
-				profile_id: profile?.name,
-			};
-		});
-		sortedSeries = sortSeries(sortedSeries, "profile_id");
-	} else if (sort == "episodes") {
-		sortedSeries = sortSeries(sortedSeries, "episode_count");
-	} else if (sort == "size") {
-		sortedSeries = sortSeries(sortedSeries, "size");
-	}
-	if (settings?.media_sort_direction === "descending") {
-		sortedSeries = sortedSeries.reverse();
-	}
-	const onUpdate = async () => {
-		await fetch(`http://${window.location.hostname}:7889/api/scan/series`, {
-			method: "PUT",
-			headers: {
-				Authorization: `Bearer ${localStorage.getItem("token")}`,
-			},
-		});
-	};
-
+	const sortDirection = settings?.media_sort_direction;
+	const sortedSeries = sortAndFilter(
+		series,
+		profiles,
+		sort,
+		sortDirection,
+		filter
+	);
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [content, setContent] = useState<any>({});
+	const [content, setContent] = useState({});
+	const [selected, setSelected] = useState(null);
 
-	const handleOptionsClick = () => {
-		setContent(settings);
-		setIsModalOpen(true);
-	};
-
-	const onRefresh = async () => {
-		await fetch(
-			`http://${window.location.hostname}:7889/api/scan/series/metadata`,
-			{
-				method: "PUT",
-				headers: {
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-			},
-		);
-	};
-
-	const setSetting = async (key: string, value: any) => {
-		if (key == "media_sort" && value == settings.media_sort) {
-			await fetch(`http://${window.location.hostname}:7889/api/settings`, {
-				method: "PUT",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-				body: JSON.stringify({
-					id: "media_sort_direction",
-					value:
-						settings?.media_sort_direction === "ascending"
-							? "descending"
-							: "ascending",
-				}),
-			});
-		}
-		await fetch(`http://${window.location.hostname}:7889/api/settings`, {
-			method: "PUT",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: `Bearer ${localStorage.getItem("token")}`,
-			},
-			body: JSON.stringify({ id: key, value: value }),
-		});
-	};
-
-	const [selected, setSelected] = useState<string | null>(null);
-
-	const onModalSave = async () => {
-		for (const key in content) {
-			fetch(`http://${window.location.hostname}:7889/api/settings`, {
-				method: "PUT",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-				body: JSON.stringify({ id: key, value: content[key] }),
-			});
-		}
-		setIsModalOpen(false);
-	};
 	return (
 		<div className={styles.media}>
 			<MediaToolbar
-				onUpdate={onUpdate}
 				selected={selected}
 				setSelected={setSelected}
+				setContent={setContent}
+				setIsModalOpen={setIsModalOpen}
 				settings={settings}
-				setSetting={setSetting}
 				view={view}
 				system={wsContext?.data.system}
-				onRefresh={onRefresh}
-				handleOptionsClick={handleOptionsClick}
 			/>
-			{isModalOpen && (
-				<div className={styles.modalBackdrop}>
-					<div className={styles.modalContent}>
-						<MediaModel
-							type={view}
-							isOpen={isModalOpen}
-							setIsOpen={setIsModalOpen}
-							onSave={onModalSave}
-							content={content}
-							setContent={setContent}
-						/>
-					</div>
-				</div>
-			)}
+			<MediaModel
+				type={view}
+				isOpen={isModalOpen}
+				setIsOpen={setIsModalOpen}
+				content={content}
+				setContent={setContent}
+			/>
 			<div className={styles.mediaContent}>
 				<div className={styles.contentContainer}>
 					{view === "table" && (
-						<Table
+						<MediaTable
 							settings={settings}
 							profiles={profiles}
 							sortedSeries={sortedSeries}
@@ -196,4 +72,4 @@ const ExplorerComponent = () => {
 		</div>
 	);
 };
-export default ExplorerComponent;
+export default Media;

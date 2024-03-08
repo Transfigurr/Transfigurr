@@ -1,10 +1,10 @@
-from sqlalchemy import insert
 from src.models.system import System
 
 
-def seed_system(conn):
+def seed_system(session):
     for system in default_system:
-        conn.execute(insert(System).values(system))
+        session.add(System(**system))
+    session.commit()
 
 
 default_system = [
@@ -95,6 +95,9 @@ default_system = [
     {
         'id': 'metadata_target',
         'value': ''
-    }
-
+    },
+    {
+        'id': 'start_time',
+        'value': ""
+    },
 ]

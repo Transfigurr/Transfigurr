@@ -47,7 +47,7 @@ function App() {
 						headers: {
 							Authorization: token,
 						},
-					},
+					}
 				);
 				const data = await response;
 				setIsLoggedIn(data.ok);
@@ -62,7 +62,7 @@ function App() {
 	}
 	return !isLoggedIn ? (
 		<Authenticaton />
-	) : (
+	) : t ? (
 		<Router>
 			<div className={styles.app}>
 				<HeaderComponent />
@@ -82,27 +82,27 @@ function App() {
 				</div>
 			</div>
 		</Router>
-	);
+	) : null;
 
 	function Page({ setSelectedOption, setSelectedItem }: any) {
 		const location: any = useLocation();
 		const pathname: string = location.pathname;
-		const sidebar: any = {
-			"/": [0, -1],
-			"/mass-editor": [0, 0],
-			"/activity": [1, -1],
-			"/activity/queue": [1, 0],
-			"/activity/history": [1, 1],
-
-			"/settings": [2, -1],
-			"/settings/profiles": [2, 0],
-			"/settings/general": [2, 1],
-			"/system": [3, -1],
-			"/system/status": [3, 0],
-			"/system/events": [3, 1],
-		};
 
 		useEffect(() => {
+			const sidebar: any = {
+				"/": [0, -1],
+				"/mass-editor": [0, 0],
+				"/activity": [1, -1],
+				"/activity/queue": [1, 0],
+				"/activity/history": [1, 1],
+
+				"/settings": [2, -1],
+				"/settings/profiles": [2, 0],
+				"/settings/general": [2, 1],
+				"/system": [3, -1],
+				"/system/status": [3, 0],
+				"/system/events": [3, 1],
+			};
 			setSelectedOption(pathname in sidebar ? sidebar[pathname][0] : 0);
 			setSelectedItem(pathname in sidebar ? sidebar[pathname][1] : -1);
 		}, [pathname, setSelectedOption, setSelectedItem]);

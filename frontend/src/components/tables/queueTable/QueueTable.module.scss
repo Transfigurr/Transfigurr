@@ -1,0 +1,69 @@
+.iconCell {
+	padding: 0px;
+	margin: 0px;
+	fill: var(--textColor);
+}
+
+.navigation {
+	color: var(--textColor);
+	fill: var(--textColor);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 30px;
+	font-size: 13px;
+}
+
+.button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	height: 100%;
+}
+
+.disabled {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	opacity: 0.25;
+	cursor: auto;
+}
+
+.totalRecords {
+	color: var(--textColor);
+	font-size: 14px;
+	display: flex;
+	justify-content: flex-end;
+	align-items: flex-start;
+}
+
+.name {
+	color: var(--transfigurrPurple);
+	text-decoration: none;
+}
+
+.name:hover {
+	color: var(--transfigurrAlternativePurple);
+	text-decoration: underline;
+}
+
+.codecRow {
+	padding: 0px;
+	margin: 0px;
+}
+
+.currentContainer {
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+	height: 100px;
+	width: 100%;
+}
+.svg {
+	height: 25px;
+	width: 25px;
+	color: var(--textColor);
+	fill: var(--textColor);
+}

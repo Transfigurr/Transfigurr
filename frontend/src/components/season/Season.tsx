@@ -1,9 +1,10 @@
 import { useState } from "react";
 import styles from "./Season.module.scss";
-import { ReactComponent as Open } from "../svgs/expand_circle_up.svg";
-import { ReactComponent as Close } from "../svgs/expand_circle_down.svg";
-import { ReactComponent as MonitoredIcon } from "../svgs/bookmark_filled.svg";
-import { ReactComponent as UnmonitoredIcon } from "../svgs/bookmark_unfilled.svg";
+import Open from "../svgs/expand_circle_up.svg?react";
+import Close from "../svgs/expand_circle_down.svg?react";
+import MonitoredIcon from "../svgs/bookmark_filled.svg?react";
+import UnmonitoredIcon from "../svgs/bookmark_unfilled.svg?react";
+import { formatDate, formatSize } from "../../utils/format";
 const Season = ({ season, monitored }: any) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const onSeasonClick = () => {
@@ -21,9 +22,9 @@ const Season = ({ season, monitored }: any) => {
 			<div className={styles.seasonHeader} onClick={onSeasonClick}>
 				<div className={styles.left}>
 					{monitored ? (
-						<MonitoredIcon className={styles.icon} />
+						<MonitoredIcon className={styles.svg} />
 					) : (
-						<UnmonitoredIcon className={styles.icon} />
+						<UnmonitoredIcon className={styles.svg} />
 					)}
 					<div className={styles.seasonNumber}>{season?.name}</div>
 					<div
@@ -33,18 +34,16 @@ const Season = ({ season, monitored }: any) => {
 						{season?.episode_count - season?.missing_episodes} /{" "}
 						{season?.episode_count}
 					</div>
-					<div className={styles.size}>
-						{(season?.size / 1000000000).toFixed(2).toString() + " GB"}
-					</div>
+					<div className={styles.size}>{formatSize(season?.size)}</div>
 				</div>
 				<div className={styles.center}>
 					<div className={styles.open}>
 						{isOpen ? (
 							<>
-								<Open />
+								<Open className={styles.openSVG} />
 							</>
 						) : (
-							<Close />
+							<Close className={styles.openSVG} />
 						)}
 					</div>
 				</div>
@@ -76,27 +75,15 @@ const Season = ({ season, monitored }: any) => {
 											? episode.episode_name
 											: episode.filename}
 									</td>
-									<td>
-										{episode?.air_date
-											? new Date(episode?.air_date).toLocaleString("en-US", {
-													month: "short",
-												}) +
-												" " +
-												new Date(episode?.air_date).getDate() +
-												" " +
-												new Date(episode?.air_date).getFullYear()
-											: ""}
-									</td>
+									<td>{formatDate(episode?.air_date)}</td>
 									<td>{episode?.video_codec}</td>
-									<td>
-										{(episode?.size / 1000000000).toFixed(2).toString() + " GB"}
-									</td>
+									<td>{formatSize(episode?.size)}</td>
 								</tr>
 							))}
 					</tbody>
 				</table>
 				<div className={styles.seasonInfoFooter} onClick={onSeasonClick}>
-					<Open />
+					<Open className={styles.svg} />
 				</div>
 			</div>
 		</div>

@@ -1,0 +1,36 @@
+.section {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	min-height: 400px;
+	overflow-y: scroll;
+	scrollbar-width: none;
+	.top {
+		display: flex;
+		flex-direction: row;
+		padding-top: 10px;
+		height: 50%;
+	}
+	.left {
+		display: flex;
+		flex-direction: column;
+		width: 50%;
+	}
+	.right {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 50%;
+	}
+	.bottom {
+		display: flex;
+		flex-direction: row;
+		padding-top: 10px;
+		height: 50%;
+	}
+}
+
+.line {
+	width: 100%;
+	border-bottom: 1px solid var(--borderColor);
+}

@@ -5,11 +5,11 @@ from src.api.controllers.auth_controller import login_with_token
 router = APIRouter()
 
 
-@router.get("/api/backdrop/series/{series_id}", tags=["Artwork"])
+@router.get("/api/backdrop/series/{series_id}", tags=["Artwork"], name="Get Series Backdrop")
 async def get_series_backdrop_route(series_id: str, user: str = Depends(login_with_token)):
     return await get_series_backdrop(series_id)
 
 
-@router.get("/api/poster/series/{series_id}", tags=["Artwork"])
+@router.get("/api/poster/series/{series_id}", tags=["Artwork"], name="Get Series Poster")
 async def get_series_poster_route(series_id: str, user: str = Depends(login_with_token)):
     return await get_series_poster(series_id)

@@ -1,7 +1,7 @@
 import styles from "./Profiles.module.scss";
 import Profile from "../profile/Profile";
 import { useContext, useState } from "react";
-import ProfileModal from "../profileModal/ProfileModal";
+import ProfileModal from "../modals/profileModal/ProfileModal";
 import { WebSocketContext } from "../../contexts/webSocketContext";
 
 const Profiles = () => {
@@ -11,16 +11,7 @@ const Profiles = () => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const handleProfileClick = (profile: any) => {
 		setSelectedProfile(profile);
-		setContent({
-			id: profile?.id,
-			name: profile?.name,
-			codec: profile?.codec,
-			codecs: profile?.codecs || [],
-			speed: profile?.speed,
-			container: profile?.container,
-			encoder: profile?.encoder,
-			extension: profile?.extension,
-		});
+		setContent(profile);
 		setIsModalOpen(true);
 	};
 
@@ -49,16 +40,7 @@ const Profiles = () => {
 		});
 		setIsModalOpen(false);
 	};
-	const [content, setContent] = useState({
-		id: String,
-		name: selectedProfile?.name,
-		codec: selectedProfile?.codec,
-		codecs: selectedProfile.codecs || [],
-		speed: selectedProfile?.speed,
-		container: selectedProfile?.container,
-		extension: selectedProfile?.extension,
-		encoder: selectedProfile?.encoder,
-	});
+	const [content, setContent] = useState(selectedProfile);
 	const profilesArray: any = [];
 
 	for (const i in profiles) {
@@ -67,23 +49,17 @@ const Profiles = () => {
 
 	return (
 		<div className={styles.profiles}>
-			{isModalOpen && (
-				<div className={styles.modalBackdrop}>
-					<div className={styles.modalContent}>
-						<ProfileModal
-							header={"Edit - Codec Profile"}
-							type={"profile"}
-							isOpen={isModalOpen}
-							setIsOpen={setIsModalOpen}
-							onSave={onModalSave}
-							onDelete={onModalDelete}
-							data={selectedProfile}
-							content={content}
-							setContent={setContent}
-						/>
-					</div>
-				</div>
-			)}
+			<ProfileModal
+				header={"Edit - Profile"}
+				type={"profile"}
+				isOpen={isModalOpen}
+				setIsOpen={setIsModalOpen}
+				onSave={onModalSave}
+				onDelete={onModalDelete}
+				data={selectedProfile}
+				content={content}
+				setContent={setContent}
+			/>
 			<div className={styles.content}>
 				<div className={styles.codecProfiles}>
 					<div className={styles.header}>Profiles</div>

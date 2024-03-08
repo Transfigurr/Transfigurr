@@ -1,0 +1,22 @@
+.content {
+	display: flex;
+	padding: 20px;
+	height: 500px;
+	max-height: 500px;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-start;
+}
+
+.tabs {
+	display: flex;
+	flex-direction: row;
+	.tab {
+		cursor: pointer;
+		color: var(--textColor);
+		margin: 5px;
+		padding: 5px;
+		border: 1px solid var(--borderColor);
+		border-radius: 4px;
+	}
+}

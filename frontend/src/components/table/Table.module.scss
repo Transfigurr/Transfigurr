@@ -1,76 +1,63 @@
-.tableContainer {
-	padding: 20px;
-	.table {
-		color: var(--textColor);
-		border-collapse: collapse;
-		width: 100%;
+table {
+	color: var(--textColor);
+	border-collapse: collapse;
+	width: 100%;
+	border: none;
+	font-size: 14px;
+
+	tbody {
 		border: none;
 		font-size: 14px;
-		.row {
+		tr {
 			border-top: 1px solid var(--borderColor);
 			padding: 15px;
 		}
-		.row:hover {
+
+		tr:hover {
 			background-color: var(--tableRowHoverBackgroundColor);
 		}
-		.headRow {
-			border: none;
-			font-size: 14px;
-		}
+	}
+	thead {
+		text-align: left;
+	}
+	td,
+	th {
+		padding: 8px;
+		margin: 8px;
 	}
 }
 
-.name {
-	color: var(--transfigurrPurple);
-	text-decoration: none;
-}
-
-.name:hover {
-	color: var(--transfigurrAlternativePurple);
-	text-decoration: underline;
-}
-
-.iconCell {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 50px;
-	margin: 1px;
-	fill: var(--textColor);
-}
-
-.episodeCount {
-	display: inline-block;
-	align-items: center;
-	justify-content: center;
-	fill: var(--textColor);
-	text-align: center;
-	width: 100%;
-	border-radius: 3px;
-	font-size: 12px;
-	color: white;
-}
-
-.progressBar {
-	position: relative;
-	transition: width 200ms ease;
-	display: flex;
-	flex-direction: row;
-	background-color: var(--posterProgressBarBackgroundColor);
+.navigation {
 	color: var(--textColor);
-	font-size: 12px;
-	height: 15px;
-	border-radius: 3px;
-	.progress {
-		border-radius: 3px;
-	}
-	.detailText {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		color: white;
-	}
+	fill: var(--textColor);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 30px;
+	font-size: 13px;
+}
+
+.button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	height: 100%;
+}
+
+.disabled {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	opacity: 0.25;
+	cursor: auto;
+}
+
+.totalRecords {
+	color: var(--textColor);
+	font-size: 14px;
+	display: flex;
+	justify-content: flex-end;
+	align-items: flex-start;
 }

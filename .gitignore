@@ -16,6 +16,8 @@
 /config
 /transcode
 /test
+/frontend/public
+/frontend/dist
 
 # misc
 .DS_Store

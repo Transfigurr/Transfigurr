@@ -55,8 +55,8 @@
 
 		&:hover {
 			transition: box-shadow 0.3s;
-			-webkit-box-shadow: 0 0 10px var(--cardShadowColor);
-			box-shadow: 0 0 10px var(--cardShadowColor);
+			-webkit-box-shadow: 0 10px 20px 5px var(--cardShadowColor);
+			box-shadow: 0 0 20px 5px var(--cardShadowColor);
 		}
 	}
 }

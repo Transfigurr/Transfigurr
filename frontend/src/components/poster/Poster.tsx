@@ -32,7 +32,7 @@ const PosterComponent = ({ name, posterWidth, posterHeight }: any) => {
 				if ("caches" in window) {
 					cache = await caches.open("image-cache");
 					cachedResponse = await cache.match(
-						`http://${window.location.hostname}:7889/api/poster/series/${series?.id}`,
+						`http://${window.location.hostname}:7889/api/poster/series/${series?.id}`
 					);
 				}
 
@@ -46,7 +46,7 @@ const PosterComponent = ({ name, posterWidth, posterHeight }: any) => {
 							headers: {
 								Authorization: `Bearer ${localStorage.getItem("token")}`,
 							},
-						},
+						}
 					);
 
 					if (response.status !== 200) {
@@ -60,7 +60,7 @@ const PosterComponent = ({ name, posterWidth, posterHeight }: any) => {
 					if (cache) {
 						cache.put(
 							`http://${window.location.hostname}:7889/api/poster/series/${series?.id}`,
-							clonedResponse,
+							clonedResponse
 						);
 					}
 				}
@@ -85,7 +85,6 @@ const PosterComponent = ({ name, posterWidth, posterHeight }: any) => {
 							alt={name}
 							style={{ maxWidth: posterWidth, maxHeight: posterHeight }}
 						/>
-
 						<div className={styles.footer}>
 							<div className={styles.progressBar}>
 								<div

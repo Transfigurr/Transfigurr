@@ -2,13 +2,14 @@ import logging
 import logging.handlers
 import queue
 import sqlite3
+import time
 
 
 class SQLiteHandler(logging.Handler):
     def __init__(self, db='config/db/database.db'):
         logging.Handler.__init__(self)
         self.db = db
-        self.formatter = logging.Formatter()
+        self.formatter = CustomFormatter("%(asctime)s [%(levelname)s] [%(service)s] %(message)s", datefmt='%Y-%m-%dT%H:%M:%S')
 
     def emit(self, record):
         conn = None
@@ -44,12 +45,24 @@ class SQLiteHandler(logging.Handler):
                 conn.close()
 
 
+class CustomFormatter(logging.Formatter):
+    def formatTime(self, record, datefmt=None):
+        ct = self.converter(record.created)
+        if datefmt:
+            s = time.strftime(datefmt, ct)
+            return "%s.%03d" % (s, record.msecs)
+        else:
+            t = time.strftime(self.default_time_format, ct)
+            return "%s.%03d" % (t, record.msecs)
+
+
 def start_logger(log_level):
-    log_queue = queue.Queue(-1)  # Infinite size
+    log_queue = queue.Queue(-1)
     queue_handler = logging.handlers.QueueHandler(log_queue)
     sqlite_handler = SQLiteHandler()
-    formatter = logging.Formatter("%(asctime)s [%(levelname)s] [%(service)s] %(message)s")
+    formatter = CustomFormatter("%(asctime)s [%(levelname)s] [%(service)s] %(message)s", datefmt='%Y-%m-%dT%H:%M:%S')
     sqlite_handler.setFormatter(formatter)
+    sqlite_handler.formatter = formatter
     logger = logging.getLogger('logger')
     if log_level == 'debug':
         logger.setLevel(logging.DEBUG)
