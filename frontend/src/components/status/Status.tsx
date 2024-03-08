@@ -48,7 +48,7 @@ const Status = () => {
 							<th>Location</th>
 							<th>Free Space</th>
 							<th>Total Space</th>
-							<th>Bar</th>
+							<th>Progress</th>
 						</tr>
 					</thead>
 					<tbody>

@@ -6,6 +6,7 @@ import StoppedIcon from "../../svgs/stop.svg?react";
 import { Link } from "react-router-dom";
 import { formatSize } from "../../../utils/format";
 import Table from "../../table/Table";
+import { Tooltip } from "react-tooltip";
 const MediaTable = ({ settings, profiles, sortedSeries }: any) => {
 	const progress = (series: any) => {
 		return (
@@ -53,15 +54,43 @@ const MediaTable = ({ settings, profiles, sortedSeries }: any) => {
 						<tr className={styles.row} key={key}>
 							<td className={styles.iconCell}>
 								{series?.monitored ? (
-									<BookmarkFilled className={styles.svg} />
+									<BookmarkFilled
+										data-tooltip-id="monitoredTooltip"
+										className={styles.svg}
+									/>
 								) : (
-									<BookmarkUnfilled className={styles.svg} />
+									<BookmarkUnfilled
+										data-tooltip-id="unmonitoredTooltip"
+										className={styles.svg}
+									/>
 								)}
 								{series?.status !== "Ended" ? (
-									<ContinuingIcon className={styles.svg} />
+									<ContinuingIcon
+										data-tooltip-id="continuingTooltip"
+										className={styles.svg}
+									/>
 								) : (
-									<StoppedIcon className={styles.svg} />
+									<StoppedIcon
+										data-tooltip-id="stoppedTooltip"
+										className={styles.svg}
+									/>
 								)}
+								<Tooltip
+									id="monitoredTooltip"
+									place="top"
+									content="Monitored"
+								/>
+								<Tooltip
+									id="unmonitoredTooltip"
+									place="top"
+									content="Unmonitored"
+								/>
+								<Tooltip
+									id="continuingTooltip"
+									place="top"
+									content="Continuing"
+								/>
+								<Tooltip id="stoppedTooltip" place="top" content="Stopped" />
 							</td>
 							<td>
 								<Link to={"/series/" + series?.id} className={styles.name}>

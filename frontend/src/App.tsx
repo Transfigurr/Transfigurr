@@ -57,7 +57,7 @@ function App() {
 
 		fetchToken();
 	}, []);
-	if (!loaded) {
+	if (!loaded || !t) {
 		return null;
 	}
 	return !isLoggedIn ? (

@@ -51,7 +51,7 @@ async def analyze_media_file(file_path):
             if stream['codec_type'] == 'video':
                 return stream['codec_name']
     except Exception as e:
-        logger.error(f"Error analyzing the media file {file_path}: {e}", extra={'service': 'Scan'})
+        logger.error(f"Error Analyzing the media file {file_path}: {e}", extra={'service': 'Scan'})
         return
 
 
@@ -330,7 +330,7 @@ async def process_episode(e):
     try:
         if not e:
             return
-        encode_service.stage = "analyzing"
+        encode_service.stage = "Analyzing"
         episode = await get_episode(e["id"])
         series = await get_series(episode["series_id"])
         profiles = await get_all_profiles()
@@ -360,7 +360,7 @@ async def process_episode(e):
         video_stream = await analyze_media_file(input_file)
 
         if video_stream == codec_profile["codec"]:
-            encode_service.stage = "idle"
+            encode_service.stage = "Idle"
             return
 
         output_filename = f"{file_name}.{extension}"
@@ -376,7 +376,7 @@ async def process_episode(e):
         encoding_succesful = await run_ffmpeg(input_file, output_file, codec_profile)
 
         if not encoding_succesful:
-            encode_service.stage = "idle"
+            encode_service.stage = "Idle"
             logger.error(f"An error occurred while encoding {input_file}", extra={'service': 'Encode'})
             return
 
@@ -395,7 +395,7 @@ async def process_episode(e):
 
         await set_history(episode, codec_profile)
 
-        encode_service.stage = "idle"
+        encode_service.stage = "Idle"
         encode_service.current_progress = 0
         encode_service.current_eta = 0
     except Exception as e:

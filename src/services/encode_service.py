@@ -11,7 +11,7 @@ class EncodeService:
         self.encode_queue = asyncio.Queue()
         self.encode_set = set()
         self.active = True
-        self.stage = 'idle'
+        self.stage = 'Idle'
         self.current = None
         self.processing = False
         self.current_progress = 0

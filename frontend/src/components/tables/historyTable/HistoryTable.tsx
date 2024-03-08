@@ -3,7 +3,7 @@ import ResetWrench from "../../svgs/reset_wrench.svg?react";
 import Codec from "../../codec/Codec";
 import { formatDate, formatSize } from "../../../utils/format";
 import Table from "../../table/Table";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const HistoryTable = ({ historyArray, settings }: any) => {
 	const recordsPerPage = settings?.history_page_size || 0;
@@ -31,6 +31,10 @@ const HistoryTable = ({ historyArray, settings }: any) => {
 			setCurrentPage(currentPage - 1);
 		}
 	};
+	useEffect(() => {
+		setCurrentPage(1);
+	}, [recordsPerPage]);
+
 	return (
 		<Table
 			showPagination={true}
@@ -38,6 +42,7 @@ const HistoryTable = ({ historyArray, settings }: any) => {
 			currentPage={currentPage}
 			prevPage={prevPage}
 			totalPages={totalPages}
+			totalRecords={historyArray.length}
 			lastPage={lastPage}
 			nextPage={nextPage}
 		>

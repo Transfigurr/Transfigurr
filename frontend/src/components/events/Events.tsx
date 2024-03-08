@@ -20,7 +20,7 @@ const Events = () => {
 		});
 	} else if (settings?.events_filter == "error") {
 		sortedLogs = sortedLogs.filter((log: any) => {
-			return log.level == "Error";
+			return log.level == "ERROR";
 		});
 	}
 	const [isModalOpen, setIsModalOpen] = useState(false);

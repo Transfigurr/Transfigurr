@@ -70,7 +70,7 @@ const HeaderComponent = () => {
 							<Timer className={styles.svg} />
 						</div>
 						<div className={styles.text}>
-							{queue && queue.stage !== "idle"
+							{queue && queue.stage !== "Idle"
 								? Math.floor(queue?.progress)
 								: "--"}
 							%
@@ -81,7 +81,7 @@ const HeaderComponent = () => {
 							<Pending className={styles.svg} />
 						</div>
 						<div className={styles.text}>
-							{queue && queue.stage !== "idle" && formatETA(queue?.eta)}
+							{queue && queue.stage !== "Idle" && formatETA(queue?.eta)}
 						</div>
 					</div>
 					<div className={styles.line}>
@@ -92,7 +92,7 @@ const HeaderComponent = () => {
 						<div className={styles.text}>
 							{settings?.queue_status == "active"
 								? queue?.stage || "--"
-								: "paused"}
+								: "Paused"}
 						</div>
 					</div>
 				</div>

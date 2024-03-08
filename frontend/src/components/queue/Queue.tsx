@@ -84,7 +84,7 @@ const Queue = () => {
 										<td>
 											{settings?.queue_status == "active"
 												? queue?.stage || "--"
-												: "paused"}
+												: "Paused"}
 										</td>
 										<td>{queue?.current && formatETA(queue?.eta)}</td>
 										<td>

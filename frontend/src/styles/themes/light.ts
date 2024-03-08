@@ -238,7 +238,7 @@ const light = {
 
 	progressBarFrontTextColor: white,
 	progressBarBackTextColor: darkGray,
-	progressBarBackgroundColor: "#727070",
+	progressBarBackgroundColor: "#f5f5f5",
 	posterProgressBarBackgroundColor: "rgb(91, 91, 91)",
 	logEventsBackgroundColor: white,
 };

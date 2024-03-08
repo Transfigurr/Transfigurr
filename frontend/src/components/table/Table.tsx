@@ -10,6 +10,7 @@ const Table = ({
 	currentPage,
 	prevPage,
 	totalPages,
+	totalRecords = 0,
 	lastPage,
 	nextPage,
 }: any) => {
@@ -51,7 +52,9 @@ const Table = ({
 							<SkipNext className={styles.svg} />
 						</div>
 					</div>
-					<div className={styles.totalRecords}>Total Records: {totalPages}</div>
+					<div className={styles.totalRecords}>
+						Total Records: {totalRecords}
+					</div>
 				</>
 			)}
 		</>

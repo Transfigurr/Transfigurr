@@ -3,7 +3,7 @@ import QueueIcon from "../../svgs/queue.svg?react";
 import Codec from "../../codec/Codec";
 import { formatSize } from "../../../utils/format";
 import Table from "../../table/Table";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 const QueueTable = ({ queueArray, profiles, series, settings }: any) => {
 	const [currentPage, setCurrentPage] = useState(1);
 	const recordsPerPage = settings?.queue_page_size || 0;
@@ -30,6 +30,10 @@ const QueueTable = ({ queueArray, profiles, series, settings }: any) => {
 			setCurrentPage(currentPage - 1);
 		}
 	};
+	useEffect(() => {
+		setCurrentPage(1);
+	}, [recordsPerPage]);
+
 	return (
 		<Table
 			showPagination={true}
@@ -37,6 +41,7 @@ const QueueTable = ({ queueArray, profiles, series, settings }: any) => {
 			currentPage={currentPage}
 			prevPage={prevPage}
 			totalPages={totalPages}
+			totalRecords={queueArray.length}
 			lastPage={lastPage}
 			nextPage={nextPage}
 		>

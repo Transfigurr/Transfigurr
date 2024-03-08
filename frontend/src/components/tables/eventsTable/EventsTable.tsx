@@ -4,7 +4,8 @@ import Warning from "../../svgs/warning.svg?react";
 import Error from "../../svgs/error.svg?react";
 import { formatDate } from "../../../utils/format";
 import Table from "../../table/Table";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Tooltip } from "react-tooltip";
 
 const EventsTable = ({ sortedLogs, settings }: any) => {
 	const recordsPerPage = settings?.events_page_size || 0;
@@ -33,6 +34,10 @@ const EventsTable = ({ sortedLogs, settings }: any) => {
 		}
 	};
 
+	useEffect(() => {
+		setCurrentPage(1);
+	}, [recordsPerPage]);
+
 	return (
 		<Table
 			showPagination={true}
@@ -42,6 +47,7 @@ const EventsTable = ({ sortedLogs, settings }: any) => {
 			totalPages={totalPages}
 			lastPage={lastPage}
 			nextPage={nextPage}
+			totalRecords={sortedLogs.length}
 		>
 			<thead>
 				<tr className={styles.headRow}>
@@ -57,6 +63,7 @@ const EventsTable = ({ sortedLogs, settings }: any) => {
 						<td className={styles.iconCell}>
 							{entry?.level === "INFO" ? (
 								<Info
+									data-tooltip-id="infoTooltip"
 									style={{
 										height: "100%",
 										width: "100%",
@@ -65,6 +72,7 @@ const EventsTable = ({ sortedLogs, settings }: any) => {
 								/>
 							) : entry?.level === "WARNING" ? (
 								<Warning
+									data-tooltip-id="warningTooltip"
 									style={{
 										height: "100%",
 										width: "100%",
@@ -73,6 +81,7 @@ const EventsTable = ({ sortedLogs, settings }: any) => {
 								/>
 							) : entry?.level === "ERROR" ? (
 								<Error
+									data-tooltip-id="errorTooltip"
 									style={{
 										height: "100%",
 										width: "100%",
@@ -80,6 +89,13 @@ const EventsTable = ({ sortedLogs, settings }: any) => {
 									}}
 								/>
 							) : null}
+							<Tooltip id="infoTooltip" place="top" content="Info Level" />
+							<Tooltip
+								id="warningTooltip"
+								place="top"
+								content="Warning Level"
+							/>
+							<Tooltip id="errorTooltip" place="top" content="Error Level" />
 						</td>
 						<td className={styles.timestamp}>{formatDate(entry?.timestamp)}</td>
 						<td style={{ width: "50px" }}>{entry?.service}</td>

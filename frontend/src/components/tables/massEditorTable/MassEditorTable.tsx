@@ -6,6 +6,7 @@ import BookmarkFilled from "../../svgs/bookmark_filled.svg?react";
 import BookmarkUnfilled from "../../svgs/bookmark_unfilled.svg?react";
 import ContinuingIcon from "../../svgs/play_arrow.svg?react";
 import StoppedIcon from "../../svgs/stop.svg?react";
+import { Tooltip } from "react-tooltip";
 const MassEditorTable = ({
 	sortedSeries,
 	selectedSeries,
@@ -45,15 +46,39 @@ const MassEditorTable = ({
 						</td>
 						<td className={styles.iconCell}>
 							{s?.monitored ? (
-								<BookmarkFilled className={styles.svg} />
+								<BookmarkFilled
+									data-tooltip-id="monitoredTooltip"
+									className={styles.svg}
+								/>
 							) : (
-								<BookmarkUnfilled className={styles.svg} />
+								<BookmarkUnfilled
+									data-tooltip-id="unmonitoredTooltip"
+									className={styles.svg}
+								/>
 							)}
 							{s?.status !== "Ended" ? (
-								<ContinuingIcon className={styles.svg} />
+								<ContinuingIcon
+									data-tooltip-id="continuingTooltip"
+									className={styles.svg}
+								/>
 							) : (
-								<StoppedIcon className={styles.svg} />
+								<StoppedIcon
+									data-tooltip-id="stoppedTooltip"
+									className={styles.svg}
+								/>
 							)}
+							<Tooltip id="monitoredTooltip" place="top" content="Monitored" />
+							<Tooltip
+								id="unmonitoredTooltip"
+								place="top"
+								content="Unmonitored"
+							/>
+							<Tooltip
+								id="continuingTooltip"
+								place="top"
+								content="Continuing"
+							/>
+							<Tooltip id="stoppedTooltip" place="top" content="Stopped" />
 						</td>
 						<td>
 							<a href={"/series/" + s?.id} className={styles.name}>

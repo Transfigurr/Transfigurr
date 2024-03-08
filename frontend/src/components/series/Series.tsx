@@ -13,6 +13,7 @@ import SeriesModal from "../modals/seriesModal/SeriesModal";
 import SeriesToolbar from "../toolbars/seriesToolbar/SeriesToolbar";
 import { formatSize } from "../../utils/format";
 import FolderIcon from "../svgs/folder.svg?react";
+import { Tooltip } from "react-tooltip";
 
 const Series = ({ series_name }: any) => {
 	const wsContext = useContext(WebSocketContext);
@@ -111,6 +112,7 @@ const Series = ({ series_name }: any) => {
 				setIsOpen={setIsModalOpen}
 				content={content}
 				setContent={setContent}
+				profiles={profiles}
 			/>
 			<div className={styles.seriesContent}>
 				<div className={styles.header}>
@@ -129,12 +131,34 @@ const Series = ({ series_name }: any) => {
 						<div className={styles.details}>
 							<div className={styles.titleRow}>
 								<div className={styles.headerIcon}>
+									<Tooltip
+										id="monitoredTooltip"
+										place="top"
+										content="Monitored"
+										style={{
+											fontSize: "12px",
+											padding: "5px 10px",
+										}}
+									/>
+									<Tooltip
+										id="unmonitoredTooltip"
+										place="top"
+										content="Unmonitored"
+										style={{ fontSize: "12px", padding: "5px 10px" }}
+									/>
 									{series?.monitored ? (
-										<Monitored className={styles.monitoredSVG} />
+										<Monitored
+											data-tooltip-id="monitoredTooltip"
+											className={styles.monitoredSVG}
+										/>
 									) : (
-										<Unmonitored className={styles.monitoredSVG} />
+										<Unmonitored
+											data-tooltip-id="unmonitoredTooltip"
+											className={styles.monitoredSVG}
+										/>
 									)}
 								</div>
+
 								{series?.name ? series?.name : series?.id}
 							</div>
 							<div className={styles.seriesDetails}>
@@ -172,10 +196,26 @@ const Series = ({ series_name }: any) => {
 								</div>
 								<div className={styles.tag}>
 									<div className={styles.icon}>
+										<Tooltip
+											id="monitoredTooltip2"
+											place="top"
+											content="Monitored"
+										/>
+										<Tooltip
+											id="unmonitoredTooltip2"
+											place="top"
+											content="Unmonitored"
+										/>
 										{series?.monitored ? (
-											<Monitored className={styles.svg} />
+											<Monitored
+												data-tooltip-id="monitoredTooltip2"
+												className={styles.svg}
+											/>
 										) : (
-											<Unmonitored className={styles.svg} />
+											<Unmonitored
+												data-tooltip-id="unmonitoredTooltip2"
+												className={styles.svg}
+											/>
 										)}
 									</div>
 									{series?.monitored ? "Monitored" : "Unmonitored"}

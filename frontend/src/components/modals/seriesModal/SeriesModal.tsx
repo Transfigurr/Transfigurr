@@ -1,11 +1,15 @@
-import useProfilesAPI from "../../../hooks/useProfilesAPI";
 import styles from "./SeriesModal.module.scss";
 import InputSelect from "../../inputs/inputSelect/InputSelect";
 import InputCheckbox from "../../inputs/inputCheckbox/InputCheckbox";
 import Modal from "../../modal/Modal";
 
-const SeriesModal = ({ isOpen, setIsOpen, content, setContent }: any) => {
-	const profiles: object = useProfilesAPI();
+const SeriesModal = ({
+	isOpen,
+	setIsOpen,
+	content,
+	setContent,
+	profiles,
+}: any) => {
 	const onSave = async () => {
 		await fetch(
 			`http://${window.location.hostname}:7889/api/series/${content.name}`,
@@ -16,7 +20,7 @@ const SeriesModal = ({ isOpen, setIsOpen, content, setContent }: any) => {
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 				body: JSON.stringify(content),
-			},
+			}
 		);
 		setIsOpen(false);
 	};
