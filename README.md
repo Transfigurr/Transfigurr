@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/Transfigurr/Transfigurr">
-    <img src="https://raw.githubusercontent.com/Transfigurr/Transfigurr/main/frontend/public/transfigurr.png" alt="Logo" width="150" height="150">
+    <img src="https://raw.githubusercontent.com/Transfigurr/Transfigurr/main/frontend/public/transfigurr.svg" alt="Logo" width="150" height="150">
   </a>
 
   <h3 align="center"><a href="https://github.com/transfigurr/transfigurr">Transfigurr</a></h3>
@@ -18,7 +18,7 @@
 </p>
 
 [![GitHub Stars](https://img.shields.io/github/stars/transfigurr/transfigurr.svg?color=9C27B0&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/transfigurr/transfigurr)
-[![GitHub Release](https://img.shields.io/github/release/transfigurr/transfigurr.svg?color=9C27B0&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/transfigurr/transfigurr/releases)
+[![GitHub Release](https://img.shields.io/github/release/transfigurr/transfigurr.svg?include_prereleases&color=9C27B0&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/transfigurr/transfigurr/releases)
 [![GitHub Package Repository](https://img.shields.io/static/v1.svg?color=9C27B0&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=transfigurr&message=GitHub%20Package&logo=github)](https://github.com/transfigurr/transfigurr/packages)
 [![Docker Pulls](https://img.shields.io/docker/pulls/transfigurr/transfigurr.svg?color=9C27B0&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=pulls&logo=docker)](https://hub.docker.com/r/transfigurr/transfigurr)
 [![Docker Stars](https://img.shields.io/docker/stars/transfigurr/transfigurr.svg?color=9C27B0&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=stars&logo=docker)](https://hub.docker.com/r/transfigurr/transfigurr)
