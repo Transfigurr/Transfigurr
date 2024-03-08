@@ -24,7 +24,7 @@
 [![Docker Stars](https://img.shields.io/docker/stars/transfigurr/transfigurr.svg?color=9C27B0&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=stars&logo=docker)](https://hub.docker.com/r/transfigurr/transfigurr)
 [![GitHub Build Workflow Status](https://img.shields.io/github/actions/workflow/status/transfigurr/transfigurr/docker.yml?branch=main&style=for-the-badge&jobUrl=https%3A%2F%2Fci.transfigurr.com%2Fjob%2FDocker-Pipeline-Builders%2Fjob%2Ftransfigurr%2Fjob%2Fmaster%2F&logo=github)](https://ci.transfigurr.com/job/Docker-Pipeline-Builders/job/transfigurr/job/master/)
 
-[Transfigurr](https://transfigurr.media/) Transfigurr is a modern media management tool specifically designed for automating codec encodings using FFmpeg. It streamlines the process of video file conversion according to custom ffmpeg profiles, making it an essential tool for media enthusiasts and professionals alike.
+[Transfigurr](https://transfigurr.media/) is a modern media management tool specifically designed for automating codec encodings using FFmpeg. It streamlines the process of video file conversion according to custom ffmpeg profiles, making it an essential tool for media enthusiasts and professionals alike.
 
 ## Supported Architectures
 
