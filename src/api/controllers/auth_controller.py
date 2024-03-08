@@ -1,4 +1,3 @@
-
 import secrets
 from fastapi import Depends, HTTPException, Query
 from jose import jwt

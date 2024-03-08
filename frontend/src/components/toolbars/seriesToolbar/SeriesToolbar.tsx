@@ -15,9 +15,9 @@ const SeriesToolbar = ({
 }: any) => {
 	const handleScanClick = async () => {
 		await fetch(
-			`http://${window.location.hostname}:7889/api/scan/series/${series_name}`,
+			`http://${window.location.hostname}:7889/api/actions/scan/series/${series_name}`,
 			{
-				method: "PUT",
+				method: "POST",
 				headers: {
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
@@ -27,9 +27,9 @@ const SeriesToolbar = ({
 
 	const handleMetadataClick = async () => {
 		await fetch(
-			`http://${window.location.hostname}:7889/api/scan/series/metadata/${series_name}`,
+			`http://${window.location.hostname}:7889/api/actions/refresh/series/metadata/${series_name}`,
 			{
-				method: "PUT",
+				method: "POST",
 				headers: {
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},

@@ -57,12 +57,12 @@ function App() {
 
 		fetchToken();
 	}, []);
-	if (!loaded || !t) {
+	if (!loaded) {
 		return null;
 	}
 	return !isLoggedIn ? (
 		<Authenticaton />
-	) : (
+	) : t ? (
 		<Router>
 			<div className={styles.app}>
 				<HeaderComponent />
@@ -82,7 +82,7 @@ function App() {
 				</div>
 			</div>
 		</Router>
-	);
+	) : null;
 
 	function Page({ setSelectedOption, setSelectedItem }: any) {
 		const location: any = useLocation();

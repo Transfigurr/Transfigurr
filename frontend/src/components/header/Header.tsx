@@ -39,7 +39,7 @@ const HeaderComponent = () => {
 		await fetch(
 			`http://${window.location.hostname}:7889/api/actions/shutdown`,
 			{
-				method: "PUT",
+				method: "POST",
 				headers: {
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
@@ -49,7 +49,7 @@ const HeaderComponent = () => {
 
 	const restart = async () => {
 		await fetch(`http://${window.location.hostname}:7889/api/actions/restart`, {
-			method: "PUT",
+			method: "POST",
 			headers: {
 				Authorization: `Bearer ${localStorage.getItem("token")}`,
 			},

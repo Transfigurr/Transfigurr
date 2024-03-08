@@ -26,9 +26,9 @@ const MediaToolbar = ({
 
 	const onRefresh = async () => {
 		await fetch(
-			`http://${window.location.hostname}:7889/api/scan/series/metadata`,
+			`http://${window.location.hostname}:7889/api/actions/refresh/series/metadata`,
 			{
-				method: "PUT",
+				method: "POST",
 				headers: {
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
@@ -37,12 +37,15 @@ const MediaToolbar = ({
 	};
 
 	const onUpdate = async () => {
-		await fetch(`http://${window.location.hostname}:7889/api/scan/series`, {
-			method: "PUT",
-			headers: {
-				Authorization: `Bearer ${localStorage.getItem("token")}`,
-			},
-		});
+		await fetch(
+			`http://${window.location.hostname}:7889/api/actions/scan/series`,
+			{
+				method: "POST",
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+			}
+		);
 	};
 
 	const setSetting = async (key: string, value: any) => {

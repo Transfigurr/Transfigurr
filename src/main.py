@@ -6,7 +6,6 @@ from src.api.routes import (
     codec_routes,
     history_routes,
     profile_routes,
-    scan_routes,
     series_routes,
     episode_routes,
     settings_routes,
@@ -31,7 +30,6 @@ app.add_middleware(
 
 routers = [
     season_routes.router,
-    scan_routes.router,
     settings_routes.router,
     codec_routes.router,
     profile_routes.router,
