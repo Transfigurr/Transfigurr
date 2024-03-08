@@ -81,7 +81,7 @@ const HeaderComponent = () => {
 							<Pending className={styles.svg} />
 						</div>
 						<div className={styles.text}>
-							{queue && queue.stage !== "Idle" && formatETA(queue?.eta)}
+							{queue && queue.stage !== "Idle" ? formatETA(queue?.eta) : "--"}
 						</div>
 					</div>
 					<div className={styles.line}>

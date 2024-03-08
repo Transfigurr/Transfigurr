@@ -1,5 +1,5 @@
 import styles from "./MassEditor.module.scss";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { WebSocketContext } from "../../contexts/webSocketContext";
 import InputSelect from "../inputs/inputSelect/InputSelect";
 import MassEditorToolbar from "../toolbars/massEditorToolbar/MassEditorToolbar";
@@ -13,6 +13,7 @@ const MassEditor = () => {
 	const seriesArray = Array.from(Object.values(series || {}));
 	const profiles: any = wsContext?.data?.profiles;
 	const [selectedSeries, setSelectedSeries] = useState<any>([]);
+	const selectedSeriesRef = useRef(selectedSeries);
 	const [monitored, setMonitored] = useState<any>(false);
 	const [profile, setProfile] = useState<any>();
 	const [selected, setSelected] = useState<string | null>(null);
@@ -42,8 +43,12 @@ const MassEditor = () => {
 	};
 
 	useEffect(() => {
+		selectedSeriesRef.current = selectedSeries;
+	}, [selectedSeries]);
+
+	useEffect(() => {
 		const applyChanges = () => {
-			for (const series of selectedSeries) {
+			for (const series of selectedSeriesRef.current) {
 				series.monitored =
 					parseInt(monitored) !== -1 ? parseInt(monitored) : undefined;
 				series.profile_id =
@@ -63,7 +68,7 @@ const MassEditor = () => {
 			}
 		};
 		applyChanges();
-	}, [monitored, profile, selectedSeries]);
+	}, [monitored, profile]);
 
 	return (
 		<div className={styles.massEditor}>
