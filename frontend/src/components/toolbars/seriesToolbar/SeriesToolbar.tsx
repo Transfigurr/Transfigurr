@@ -14,27 +14,21 @@ const SeriesToolbar = ({
 	series_name,
 }: any) => {
 	const handleScanClick = async () => {
-		await fetch(
-			`http://${window.location.hostname}:7889/api/actions/scan/series/${series_name}`,
-			{
-				method: "POST",
-				headers: {
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-			}
-		);
+		await fetch(`/api/actions/scan/series/${series_name}`, {
+			method: "POST",
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem("token")}`,
+			},
+		});
 	};
 
 	const handleMetadataClick = async () => {
-		await fetch(
-			`http://${window.location.hostname}:7889/api/actions/refresh/series/metadata/${series_name}`,
-			{
-				method: "POST",
-				headers: {
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-			}
-		);
+		await fetch(`/api/actions/refresh/series/metadata/${series_name}`, {
+			method: "POST",
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem("token")}`,
+			},
+		});
 	};
 	const leftToolBarItems: any = [
 		<ToolBarItem

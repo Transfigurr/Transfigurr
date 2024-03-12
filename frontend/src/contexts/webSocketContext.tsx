@@ -23,9 +23,9 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
 
 	useEffect(() => {
 		ws.current = new WebSocket(
-			`ws://${window.location.hostname}:7889/ws?token=${localStorage.getItem(
-				"token"
-			)}`
+			`ws://${window.location.hostname}:${
+				window.location.port
+			}/ws?token=${localStorage.getItem("token")}`
 		);
 		ws.current.onmessage = (e) => {
 			const newData = JSON.parse(e.data);

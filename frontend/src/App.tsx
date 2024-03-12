@@ -40,15 +40,13 @@ function App() {
 		const fetchToken = async () => {
 			const token = localStorage.getItem("token");
 			if (token) {
-				const response = await fetch(
-					`http://${window.location.hostname}:7889/api/logintoken`,
-					{
-						method: "POST",
-						headers: {
-							Authorization: token,
-						},
-					}
-				);
+				const response = await fetch(`/api/logintoken`, {
+					method: "POST",
+					headers: {
+						Authorization: token,
+					},
+				});
+
 				const data = await response;
 				setIsLoggedIn(data.ok);
 			}
@@ -57,6 +55,7 @@ function App() {
 
 		fetchToken();
 	}, []);
+
 	if (!loaded) {
 		return null;
 	}

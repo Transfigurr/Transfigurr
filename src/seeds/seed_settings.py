@@ -171,4 +171,8 @@ default_settings = [
         "id": "events_page_size",
         "value": 15
     },
+    {
+        "id": "port",
+        "value": 7889
+    }
 ]

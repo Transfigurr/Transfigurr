@@ -8,14 +8,11 @@ const Authentication = () => {
 
 	useEffect(() => {
 		const fetchUser = async () => {
-			const response = await fetch(
-				`http://${window.location.hostname}:7889/api/activated`,
-				{
-					headers: {
-						Authorization: `Bearer ${localStorage.getItem("token")}`,
-					},
+			const response = await fetch(`/api/activated`, {
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
-			);
+			});
 			const userData = await response.json();
 			setUser(userData);
 			setLoaded(true);
@@ -26,23 +23,20 @@ const Authentication = () => {
 	const handleSubmit = async (event: React.FormEvent) => {
 		event.preventDefault();
 		if (user) {
-			const token = await fetch(
-				`http://${window.location.hostname}:7889/api/login`,
-				{
-					method: "POST",
-					body: JSON.stringify({ username: username, password: password }),
-					headers: {
-						Authorization: `Bearer ${localStorage.getItem("token")}`,
-					},
+			const token = await fetch(`/api/login`, {
+				method: "POST",
+				body: JSON.stringify({ username: username, password: password }),
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
-			);
+			});
 			if (token.status === 200) {
 				const tokenData = await token.json();
 				localStorage.setItem("token", tokenData);
 				window.location.reload();
 			}
 		} else {
-			await fetch(`http://${window.location.hostname}:7889/api/register`, {
+			await fetch(`/api/register`, {
 				method: "POST",
 				body: JSON.stringify({ username: username, password: password }),
 				headers: {

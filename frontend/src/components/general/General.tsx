@@ -20,7 +20,7 @@ const General = () => {
 			};
 
 			setSettingsChanged(
-				JSON.stringify(newSettings) !== JSON.stringify(initialSettings),
+				JSON.stringify(newSettings) !== JSON.stringify(initialSettings)
 			);
 			return newSettings;
 		});
@@ -112,6 +112,16 @@ const General = () => {
 						warningText="Requires restart to take effect"
 						selected={currentSettings?.password}
 						onChange={(e: any) => handleChange("password", e.target.value)}
+					/>
+				</div>
+				<div className={styles.section}>
+					<label className={styles.header}>Host</label>
+					<InputContainer
+						type="text"
+						label="Internal Port"
+						warningText="Requires restart to take effect"
+						selected={currentSettings?.port}
+						onChange={(e: any) => handleChange("port", e.target.value)}
 					/>
 				</div>
 				<div className={styles.section}>

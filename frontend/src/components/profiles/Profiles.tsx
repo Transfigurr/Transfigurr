@@ -16,21 +16,18 @@ const Profiles = () => {
 	};
 
 	const onModalDelete = async () => {
-		await fetch(
-			`http://${window.location.hostname}:7889/api/profiles/${selectedProfile?.id}`,
-			{
-				method: "DELETE",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
+		await fetch(`/api/profiles/${selectedProfile?.id}`, {
+			method: "DELETE",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${localStorage.getItem("token")}`,
 			},
-		);
+		});
 		setIsModalOpen(false);
 	};
 
 	const onModalSave = async () => {
-		await fetch(`http://${window.location.hostname}:7889/api/profiles`, {
+		await fetch(`/api/profiles`, {
 			method: "PUT",
 			headers: {
 				"Content-Type": "application/json",

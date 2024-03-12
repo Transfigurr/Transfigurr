@@ -7,7 +7,7 @@ const QueueModal = ({ isOpen, setIsOpen, content, setContent }: any) => {
 	};
 	const onModalSave = async () => {
 		for (const key in content) {
-			fetch(`http://${window.location.hostname}:7889/api/settings`, {
+			fetch(`/api/settings`, {
 				method: "PUT",
 				headers: {
 					"Content-Type": "application/json",
