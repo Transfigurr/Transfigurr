@@ -16,7 +16,7 @@ const GeneralToolbar = ({
 		}
 		for (const key in currentSettings) {
 			if (key != "username" && key != "password") {
-				fetch(`http://${window.location.hostname}:7889/api/settings`, {
+				fetch(`/api/settings`, {
 					method: "PUT",
 					headers: {
 						"Content-Type": "application/json",
@@ -26,7 +26,7 @@ const GeneralToolbar = ({
 				});
 			} else {
 				if (key == "username") {
-					fetch(`http://${window.location.hostname}:7889/api/user`, {
+					fetch(`/api/user`, {
 						method: "PUT",
 						headers: {
 							"Content-Type": "application/json",

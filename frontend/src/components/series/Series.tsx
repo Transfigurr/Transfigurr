@@ -56,7 +56,7 @@ const Series = ({ series_name }: any) => {
 				if ("caches" in window) {
 					cache = await caches.open("image-cache");
 					cachedResponse = await cache.match(
-						`http://${window.location.hostname}:7889/api/${path}/series/${series?.id}`
+						`/api/${path}/series/${series?.id}`
 					);
 				}
 
@@ -64,14 +64,11 @@ const Series = ({ series_name }: any) => {
 					const blob = await cachedResponse.blob();
 					setSrc(URL.createObjectURL(blob));
 				} else {
-					const response = await fetch(
-						`http://${window.location.hostname}:7889/api/${path}/series/${series?.id}`,
-						{
-							headers: {
-								Authorization: `Bearer ${localStorage.getItem("token")}`,
-							},
-						}
-					);
+					const response = await fetch(`/api/${path}/series/${series?.id}`, {
+						headers: {
+							Authorization: `Bearer ${localStorage.getItem("token")}`,
+						},
+					});
 					if (response.status !== 200) {
 						setSrc(null);
 						return;
@@ -80,10 +77,7 @@ const Series = ({ series_name }: any) => {
 					const blob = await response.blob();
 					setSrc(URL.createObjectURL(blob));
 					if (cache) {
-						cache.put(
-							`http://${window.location.hostname}:7889/api/${path}/series/${series?.id}`,
-							clonedResponse
-						);
+						cache.put(`/api/${path}/series/${series?.id}`, clonedResponse);
 					}
 				}
 			} catch (e) {

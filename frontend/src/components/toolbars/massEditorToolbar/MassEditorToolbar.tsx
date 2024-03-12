@@ -6,7 +6,7 @@ import FilterIcon from "../../svgs/filter.svg?react";
 const MassEditorToolbar = ({ selected, setSelected, settings }: any) => {
 	const setSetting = async (key: string, value: any) => {
 		if (key == "massEditor_sort" && value == settings.massEditor_sort) {
-			await fetch(`http://${window.location.hostname}:7889/api/settings`, {
+			await fetch(`/api/settings`, {
 				method: "PUT",
 				headers: {
 					"Content-Type": "application/json",
@@ -21,7 +21,7 @@ const MassEditorToolbar = ({ selected, setSelected, settings }: any) => {
 				}),
 			});
 		}
-		await fetch(`http://${window.location.hostname}:7889/api/settings`, {
+		await fetch(`/api/settings`, {
 			method: "PUT",
 			headers: {
 				"Content-Type": "application/json",

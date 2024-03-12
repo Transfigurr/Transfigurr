@@ -11,17 +11,14 @@ const SeriesModal = ({
 	profiles,
 }: any) => {
 	const onSave = async () => {
-		await fetch(
-			`http://${window.location.hostname}:7889/api/series/${content.name}`,
-			{
-				method: "PUT",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-				body: JSON.stringify(content),
-			}
-		);
+		await fetch(`/api/series/${content.name}`, {
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${localStorage.getItem("token")}`,
+			},
+			body: JSON.stringify(content),
+		});
 		setIsOpen(false);
 	};
 

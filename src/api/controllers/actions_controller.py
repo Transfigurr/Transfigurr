@@ -1,20 +1,28 @@
-
-
-import os
-import signal
-
+import logging
 from src.services.metadata_service import metadata_service
 from src.services.scan_service import scan_service
 
+logger = logging.getLogger('logger')
+
 
 async def restart():
-    os.kill(os.getpid(), signal.SIGHUP)
-    return
+    try:
+        with open('/config/restart.txt', 'a') as f:
+            f.write('\n')
+        return
+    except Exception as e:
+        logger.error(f'An error occurred while restarting: {e}', extra={'service': 'System'})
+        return False
 
 
 async def shutdown():
-    os.kill(os.getpid(), signal.SIGHUP)
-    return
+    try:
+        with open('/config/shutdown.txt', 'a') as f:
+            f.write('\n')
+        return
+    except Exception as e:
+        logger.error(f'An error occurred while shutting down: {e}', extra={'service': 'System'})
+        return False
 
 
 async def refresh_all_metadata():

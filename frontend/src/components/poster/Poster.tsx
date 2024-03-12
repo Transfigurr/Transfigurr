@@ -32,7 +32,7 @@ const PosterComponent = ({ name, posterWidth, posterHeight }: any) => {
 				if ("caches" in window) {
 					cache = await caches.open("image-cache");
 					cachedResponse = await cache.match(
-						`http://${window.location.hostname}:7889/api/poster/series/${series?.id}`
+						`/api/poster/series/${series?.id}`
 					);
 				}
 
@@ -40,14 +40,11 @@ const PosterComponent = ({ name, posterWidth, posterHeight }: any) => {
 					const blob = await cachedResponse.blob();
 					setImgSrc(URL.createObjectURL(blob));
 				} else {
-					const response = await fetch(
-						`http://${window.location.hostname}:7889/api/poster/series/${series?.id}`,
-						{
-							headers: {
-								Authorization: `Bearer ${localStorage.getItem("token")}`,
-							},
-						}
-					);
+					const response = await fetch(`/api/poster/series/${series?.id}`, {
+						headers: {
+							Authorization: `Bearer ${localStorage.getItem("token")}`,
+						},
+					});
 
 					if (response.status !== 200) {
 						setImgSrc(null);
@@ -58,10 +55,7 @@ const PosterComponent = ({ name, posterWidth, posterHeight }: any) => {
 					const blob = await response.blob();
 					setImgSrc(URL.createObjectURL(blob));
 					if (cache) {
-						cache.put(
-							`http://${window.location.hostname}:7889/api/poster/series/${series?.id}`,
-							clonedResponse
-						);
+						cache.put(`/api/poster/series/${series?.id}`, clonedResponse);
 					}
 				}
 			} catch (e) {

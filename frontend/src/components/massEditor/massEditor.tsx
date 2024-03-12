@@ -53,18 +53,15 @@ const MassEditor = () => {
 					parseInt(monitored) !== -1 ? parseInt(monitored) : undefined;
 				series.profile_id =
 					parseInt(profile) !== 0 ? parseInt(profile) : undefined;
-				fetch(
-					`http://${window.location.hostname}:7889/api/series/${series.id}`,
-					{
-						method: "PUT",
-						headers: {
-							"Content-Type": "application/json",
-							Authorization: `Bearer ${localStorage.getItem("token")}`,
-						},
+				fetch(`/api/series/${series.id}`, {
+					method: "PUT",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${localStorage.getItem("token")}`,
+					},
 
-						body: JSON.stringify(series),
-					}
-				);
+					body: JSON.stringify(series),
+				});
 			}
 		};
 		applyChanges();

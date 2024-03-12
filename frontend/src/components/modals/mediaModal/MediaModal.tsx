@@ -9,7 +9,7 @@ const MediaModal = ({ isOpen, setIsOpen, content, setContent, type }: any) => {
 
 	const onSave = async () => {
 		for (const key in content) {
-			fetch(`http://${window.location.hostname}:7889/api/settings`, {
+			fetch(`/api/settings`, {
 				method: "PUT",
 				headers: {
 					"Content-Type": "application/json",
@@ -57,7 +57,7 @@ const MediaModal = ({ isOpen, setIsOpen, content, setContent, type }: any) => {
 								label="Detailed Progress Bar"
 								type="checkbox"
 								checked={Boolean(
-									Number(content?.media_poster_detailedProgressBar),
+									Number(content?.media_poster_detailedProgressBar)
 								)}
 								helpText="Show text on progress bar"
 								onChange={(e: any) =>
@@ -240,7 +240,7 @@ const MediaModal = ({ isOpen, setIsOpen, content, setContent, type }: any) => {
 								label="Detailed Progress Bar"
 								type="checkbox"
 								checked={Boolean(
-									Number(content?.media_overview_detailedProgressBar),
+									Number(content?.media_overview_detailedProgressBar)
 								)}
 								helpText={"Show text on progress bar"}
 								onChange={(e: any) =>
@@ -291,7 +291,7 @@ const MediaModal = ({ isOpen, setIsOpen, content, setContent, type }: any) => {
 								label="Show Season Count"
 								type="checkbox"
 								checked={Boolean(
-									Number(content?.media_overview_showSeasonCount),
+									Number(content?.media_overview_showSeasonCount)
 								)}
 								helpText={"Show season count in tags"}
 								onChange={(e: any) =>
@@ -317,7 +317,7 @@ const MediaModal = ({ isOpen, setIsOpen, content, setContent, type }: any) => {
 								label="Show Size On Disk"
 								type="checkbox"
 								checked={Boolean(
-									Number(content?.media_overview_showSizeOnDisk),
+									Number(content?.media_overview_showSizeOnDisk)
 								)}
 								helpText={"Show size on disk in tags"}
 								onChange={(e: any) =>

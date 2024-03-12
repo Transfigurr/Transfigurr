@@ -26,6 +26,8 @@ RUN apk add --no-cache --update \
 # Stage 5: Copy the init script and execute
 WORKDIR /
 COPY init /init
+COPY /startup /startup
+
 RUN chmod +x /init
 ENV PUID=1000
 ENV PGID=1000

@@ -25,32 +25,26 @@ const MediaToolbar = ({
 	};
 
 	const onRefresh = async () => {
-		await fetch(
-			`http://${window.location.hostname}:7889/api/actions/refresh/series/metadata`,
-			{
-				method: "POST",
-				headers: {
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-			}
-		);
+		await fetch(`/api/actions/refresh/series/metadata`, {
+			method: "POST",
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem("token")}`,
+			},
+		});
 	};
 
 	const onUpdate = async () => {
-		await fetch(
-			`http://${window.location.hostname}:7889/api/actions/scan/series`,
-			{
-				method: "POST",
-				headers: {
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-			}
-		);
+		await fetch(`/api/actions/scan/series`, {
+			method: "POST",
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem("token")}`,
+			},
+		});
 	};
 
 	const setSetting = async (key: string, value: any) => {
 		if (key == "media_sort" && value == settings.media_sort) {
-			await fetch(`http://${window.location.hostname}:7889/api/settings`, {
+			await fetch(`/api/settings`, {
 				method: "PUT",
 				headers: {
 					"Content-Type": "application/json",
@@ -65,7 +59,7 @@ const MediaToolbar = ({
 				}),
 			});
 		}
-		await fetch(`http://${window.location.hostname}:7889/api/settings`, {
+		await fetch(`/api/settings`, {
 			method: "PUT",
 			headers: {
 				"Content-Type": "application/json",

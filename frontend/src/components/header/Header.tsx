@@ -36,19 +36,19 @@ const HeaderComponent = () => {
 	}, [openDropdown]);
 
 	const shutdown = async () => {
-		await fetch(
-			`http://${window.location.hostname}:7889/api/actions/shutdown`,
-			{
-				method: "POST",
-				headers: {
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-			}
-		);
+		setOpenDropdown(false);
+		await fetch(`/api/actions/shutdown`, {
+			method: "POST",
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem("token")}`,
+			},
+		});
 	};
 
 	const restart = async () => {
-		await fetch(`http://${window.location.hostname}:7889/api/actions/restart`, {
+		setOpenDropdown(false);
+
+		await fetch(`/api/actions/restart`, {
 			method: "POST",
 			headers: {
 				Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -102,13 +102,12 @@ const HeaderComponent = () => {
 					<div
 						className={styles.svg}
 						onClick={() => setOpenDropdown(!openDropdown)}
-						ref={dropdownRef}
 					>
 						<Person className={styles.svg} />
 					</div>
 
 					{openDropdown ? (
-						<div className={styles.dropdown}>
+						<div className={styles.dropdown} ref={dropdownRef}>
 							<div className={styles.item} onClick={restart}>
 								<div className={styles.profilesvg}>
 									<RestartIcon className={styles.actionSVG} />

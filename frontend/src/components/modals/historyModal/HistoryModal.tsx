@@ -4,7 +4,7 @@ import Modal from "../../modal/Modal";
 const HistoryModal = ({ isOpen, setIsOpen, content, setContent }: any) => {
 	const onSave = async () => {
 		for (const key in content) {
-			fetch(`http://${window.location.hostname}:7889/api/settings`, {
+			fetch(`/api/settings`, {
 				method: "PUT",
 				headers: {
 					"Content-Type": "application/json",

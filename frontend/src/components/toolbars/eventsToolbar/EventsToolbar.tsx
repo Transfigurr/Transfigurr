@@ -11,7 +11,7 @@ const EventsToolbar = ({
 	settings,
 }) => {
 	const setSetting = async (key: string, value: any) => {
-		await fetch(`http://${window.location.hostname}:7889/api/settings`, {
+		await fetch(`/api/settings`, {
 			method: "PUT",
 			headers: {
 				"Content-Type": "application/json",
