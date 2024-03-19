@@ -23,6 +23,7 @@ import { getTheme } from "./styles/themes";
 import Events from "./components/events/Events";
 import Authenticaton from "./components/authentication/Authentication";
 import { ThemeContext } from "./contexts/themeContext";
+import Movie from "./components/movie/Movie";
 
 function App() {
 	const [selectedItem, setSelectedItem] = useState<any>(null);
@@ -110,6 +111,7 @@ function App() {
 			<Routes>
 				<Route path="/" element={<MediaComponent />} />
 				<Route path="/series/:seriesName" element={<SeriesSelect />} />
+				<Route path="/movies/:movieName" element={<MovieSelect />} />
 				<Route path="/mass-editor" element={<MassEditor />} />
 
 				<Route path="/activity" element={<Activity />} />
@@ -140,6 +142,10 @@ function App() {
 	function SeriesSelect() {
 		const { seriesName } = useParams();
 		return <Series series_name={seriesName} />;
+	}
+	function MovieSelect() {
+		const { movieName } = useParams();
+		return <Movie movie_name={movieName} />;
 	}
 
 	function NotFound() {

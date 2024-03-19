@@ -9,11 +9,11 @@ import MassEditorTable from "../tables/massEditorTable/MassEditorTable";
 const MassEditor = () => {
 	const wsContext: any = useContext(WebSocketContext);
 	const series: any = wsContext?.data?.series;
+	const movies: any = wsContext?.data?.movies;
 	const settings: any = wsContext?.data?.settings;
-	const seriesArray = Array.from(Object.values(series || {}));
 	const profiles: any = wsContext?.data?.profiles;
-	const [selectedSeries, setSelectedSeries] = useState<any>([]);
-	const selectedSeriesRef = useRef(selectedSeries);
+	const [selectedMedia, setSelectedMedia] = useState<any>([]);
+	const selectedMediaRef = useRef(selectedMedia);
 	const [monitored, setMonitored] = useState<any>(false);
 	const [profile, setProfile] = useState<any>();
 	const [selected, setSelected] = useState<string | null>(null);
@@ -22,45 +22,47 @@ const MassEditor = () => {
 	const sort = settings?.massEditor_sort;
 	const sortDirection = settings?.massEditor_sort_direction;
 	const filter = settings?.massEditor_filter;
-	const sortedSeries = sortAndFilter(
+	const sortedMedia = sortAndFilter(
 		series,
+		movies,
 		profiles,
 		sort,
 		sortDirection,
 		filter
 	);
 
-	const handleCheckboxChange = (series: any) => {
-		setSelectedSeries((prevSelected: any[]) =>
-			prevSelected.some((s) => s.id === series.id)
-				? prevSelected.filter((s) => s.id !== series.id)
-				: [...prevSelected, series]
+	const handleCheckboxChange = (media: any) => {
+		setSelectedMedia((prevSelected: any[]) =>
+			prevSelected.some((m) => m.id === media.id)
+				? prevSelected.filter((m) => m.id !== media.id)
+				: [...prevSelected, media]
 		);
 	};
 	const handleSelectAllChange = () => {
 		setSelectAll(!selectAll);
-		setSelectedSeries(!selectAll ? seriesArray : []);
+		setSelectedMedia(!selectAll ? sortedMedia : []);
 	};
 
 	useEffect(() => {
-		selectedSeriesRef.current = selectedSeries;
-	}, [selectedSeries]);
+		selectedMediaRef.current = selectedMedia;
+	}, [selectedMedia]);
 
 	useEffect(() => {
 		const applyChanges = () => {
-			for (const series of selectedSeriesRef.current) {
-				series.monitored =
+			for (const media of selectedMediaRef.current) {
+				const type = media?.missing_episodes != undefined ? "series" : "movies";
+				media.monitored =
 					parseInt(monitored) !== -1 ? parseInt(monitored) : undefined;
-				series.profile_id =
+				media.profile_id =
 					parseInt(profile) !== 0 ? parseInt(profile) : undefined;
-				fetch(`/api/series/${series.id}`, {
+				fetch(`/api/${type}/${media.id}`, {
 					method: "PUT",
 					headers: {
 						"Content-Type": "application/json",
 						Authorization: `Bearer ${localStorage.getItem("token")}`,
 					},
 
-					body: JSON.stringify(series),
+					body: JSON.stringify(media),
 				});
 			}
 		};
@@ -75,10 +77,10 @@ const MassEditor = () => {
 				settings={settings}
 			/>
 			<div className={styles.content}>
-				{sortedSeries && sortedSeries.length !== 0 ? (
+				{sortedMedia && sortedMedia.length !== 0 ? (
 					<MassEditorTable
-						sortedSeries={sortedSeries}
-						selectedSeries={selectedSeries}
+						sortedMedia={sortedMedia}
+						selectedMedia={selectedMedia}
 						selectAll={selectAll}
 						handleSelectAllChange={handleSelectAllChange}
 						handleCheckboxChange={handleCheckboxChange}

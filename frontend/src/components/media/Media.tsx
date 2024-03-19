@@ -11,6 +11,7 @@ import MediaTable from "../tables/mediaTable/MediaTable";
 
 const Media = () => {
 	const wsContext = useContext(WebSocketContext);
+	const movies = wsContext?.data?.movies;
 	const series = wsContext?.data?.series;
 	const settings = wsContext?.data?.settings;
 	const profiles = wsContext?.data?.profiles;
@@ -18,8 +19,9 @@ const Media = () => {
 	const sort = settings?.media_sort;
 	const filter = settings?.media_filter;
 	const sortDirection = settings?.media_sort_direction;
-	const sortedSeries = sortAndFilter(
+	const sortedMedia = sortAndFilter(
 		series,
+		movies,
 		profiles,
 		sort,
 		sortDirection,
@@ -28,7 +30,6 @@ const Media = () => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [content, setContent] = useState({});
 	const [selected, setSelected] = useState(null);
-
 	return (
 		<div className={styles.media}>
 			<MediaToolbar
@@ -53,15 +54,15 @@ const Media = () => {
 						<MediaTable
 							settings={settings}
 							profiles={profiles}
-							sortedSeries={sortedSeries}
+							sortedMedia={sortedMedia}
 						/>
 					)}
 					{view === "posters" && (
-						<Posters settings={settings} sortedSeries={sortedSeries || []} />
+						<Posters settings={settings} sortedMedia={sortedMedia || []} />
 					)}
 					{view === "overview" && (
 						<Overviews
-							sortedSeries={sortedSeries}
+							sortedMedia={sortedMedia}
 							settings={settings}
 							profiles={profiles}
 						/>

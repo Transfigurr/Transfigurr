@@ -10,7 +10,7 @@ class Series(Base):
 
     id: str = Column(String, primary_key=True)
     name: str = Column(String)
-    first_air_date: str = Column(String)
+    release_date: str = Column(String)
     genre: str = Column(String)
     status: str = Column(String)
     last_air_date: str = Column(String)

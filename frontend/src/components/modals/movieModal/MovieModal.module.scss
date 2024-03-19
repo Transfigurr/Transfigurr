@@ -1,0 +1,29 @@
+.content {
+	display: flex;
+	flex-direction: column;
+	padding: 20px;
+	min-width: 400px;
+	background-color: var(--modalBackgroundColor);
+
+	.inputContainer {
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-start;
+		align-items: center;
+		padding: 10px 0px;
+		width: 650px;
+		height: 100%;
+
+		.label {
+			margin-right: 20px;
+			line-height: 35px;
+			font-size: 14px;
+			font-weight: bold;
+			color: var(--textColor);
+			width: 40%;
+			display: flex;
+			align-items: flex-end;
+			justify-content: flex-end;
+		}
+	}
+}

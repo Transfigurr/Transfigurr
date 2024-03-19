@@ -17,7 +17,6 @@ const Queue = () => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [content, setContent] = useState<any>({});
 	const queueArray = Array.from(Object.values(queue?.queue || []));
-
 	return (
 		<div className={styles.queue}>
 			<QueueToolbar
@@ -41,7 +40,8 @@ const Queue = () => {
 								<thead>
 									<tr className={styles.headRow}>
 										<th></th>
-										<th>Series</th>
+										<th>Title</th>
+										<th>Type</th>
 										<th>Episode</th>
 										<th>Profile</th>
 										<th>Stage</th>
@@ -56,14 +56,29 @@ const Queue = () => {
 										</td>
 										<td className={styles.name}>
 											<a
-												href={"/series/" + queue?.current?.series_id}
+												href={
+													queue.current?.series_id
+														? "/series/" + queue.current?.series_id
+														: "/movies/" + queue.current?.id
+												}
 												className={styles.name}
 											>
-												{queue?.current?.series_id}
+												{queue.current?.series_id
+													? queue.current?.series_id
+													: queue.current?.id}
 											</a>
 										</td>
 										<td>
-											{queue?.current ? (
+											{queue?.current && (
+												<>
+													{queue?.current && queue?.current?.series_id
+														? "Series"
+														: "Movie"}
+												</>
+											)}
+										</td>
+										<td>
+											{queue?.current && queue?.current?.series_id ? (
 												<>
 													{queue?.current?.season_number}x
 													{queue?.current?.episode_number}
@@ -73,13 +88,24 @@ const Queue = () => {
 											)}
 										</td>
 										<td>
-											{profiles &&
-											series &&
-											series[queue?.current?.series_id] &&
-											profiles[series[queue?.current?.series_id].profile_id]
-												? profiles[series[queue?.current?.series_id].profile_id]
-														.codec
-												: ""}
+											{queue?.current?.series_id ? (
+												<>
+													{profiles &&
+													series &&
+													series[queue?.current?.series_id] &&
+													profiles[series[queue?.current?.series_id].profile_id]
+														? profiles[
+																series[queue?.current?.series_id].profile_id
+														  ].name
+														: ""}
+												</>
+											) : (
+												<>
+													{profiles && profiles[queue?.current?.profile_id]
+														? profiles[queue?.current?.profile_id].name
+														: ""}
+												</>
+											)}
 										</td>
 										<td>
 											{settings?.queue_status == "active"

@@ -8,8 +8,8 @@ import ContinuingIcon from "../../svgs/play_arrow.svg?react";
 import StoppedIcon from "../../svgs/stop.svg?react";
 import { Tooltip } from "react-tooltip";
 const MassEditorTable = ({
-	sortedSeries,
-	selectedSeries,
+	sortedMedia,
+	selectedMedia,
 	selectAll,
 	handleSelectAllChange,
 	handleCheckboxChange,
@@ -26,7 +26,7 @@ const MassEditorTable = ({
 						/>
 					</th>
 					<th></th>
-					<th>Series</th>
+					<th>Title</th>
 					<th>Profile</th>
 					<th>Path</th>
 					<th>Space Saved</th>
@@ -34,18 +34,18 @@ const MassEditorTable = ({
 				</tr>
 			</thead>
 			<tbody>
-				{sortedSeries?.map((s: any, index: any) => (
+				{sortedMedia?.map((media: any, index: any) => (
 					<tr className={styles.row} key={index}>
 						<td className={styles.inputCell}>
 							<InputCheckbox
-								checked={selectedSeries.some(
-									(series: any) => series.id === s.id
+								checked={selectedMedia.some(
+									(series: any) => series.id === media.id
 								)}
-								onChange={() => handleCheckboxChange(s)}
+								onChange={() => handleCheckboxChange(media)}
 							/>
 						</td>
 						<td className={styles.iconCell}>
-							{s?.monitored ? (
+							{media?.monitored ? (
 								<BookmarkFilled
 									data-tooltip-id="monitoredTooltip"
 									className={styles.svg}
@@ -56,7 +56,7 @@ const MassEditorTable = ({
 									className={styles.svg}
 								/>
 							)}
-							{s?.status !== "Ended" ? (
+							{media?.status !== "Ended" ? (
 								<ContinuingIcon
 									data-tooltip-id="continuingTooltip"
 									className={styles.svg}
@@ -81,14 +81,24 @@ const MassEditorTable = ({
 							<Tooltip id="stoppedTooltip" place="top" content="Stopped" />
 						</td>
 						<td>
-							<a href={"/series/" + s?.id} className={styles.name}>
-								{s?.id}
+							<a
+								href={
+									(media?.missing_episodes == undefined
+										? "/movies/"
+										: "/series/") + media?.id
+								}
+								className={styles.name}
+							>
+								{media?.id}
 							</a>
 						</td>
-						<td>{profiles ? profiles[s.profile_id]?.name : ""}</td>
-						<td>/series/{s.id}</td>
-						<td>{formatSize(s.space_saved)}</td>
-						<td>{formatSize(s.size)}</td>
+						<td>{profiles ? profiles[media.profile_id]?.name : ""}</td>
+						<td>
+							/{media?.missing_episodes == undefined ? "movies" : "series"}/
+							{media.id}
+						</td>
+						<td>{formatSize(media.space_saved)}</td>
+						<td>{formatSize(media.size)}</td>
 					</tr>
 				))}
 			</tbody>

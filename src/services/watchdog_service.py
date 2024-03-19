@@ -12,33 +12,22 @@ logger = logging.getLogger('logger')
 
 
 class FileChangeHandler(FileSystemEventHandler):
+
+    def __init__(self, media_type):
+        self.media_type = media_type
+
     def on_created(self, event):
         try:
             logger.debug("Watchdog detected a file creation", extra={'service': 'Watchdog'})
             self.wait_until_done(event.src_path)
-            series = get_series_name(event.src_path)
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-            if series:
-                loop.run_until_complete(scan_service.enqueue(series))
-            else:
-                pass
-                loop.run_until_complete(scan_service.enqueue_all())
-            loop.close()
+            self.handle_change(event)
         except Exception as e:
             logger.error(f'An error occurred while handling a file creation: {e}', extra={'service': 'Watchdog'})
 
     def on_deleted(self, event):
         try:
             logger.debug('Watchdog detected a file deletion.', extra={'service': 'Watchdog'})
-            series = get_series_name(event.src_path)
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-            if series:
-                loop.run_until_complete(scan_service.enqueue(series))
-            else:
-                loop.run_until_complete(scan_service.enqueue_all())
-            loop.close()
+            self.handle_change(event)
         except Exception as e:
             logger.error(f'An error occurred while handling a file deletion: {e}', extra={'service': 'Watchdog'})
 
@@ -46,14 +35,7 @@ class FileChangeHandler(FileSystemEventHandler):
         try:
             logger.debug('Watchdog detected a file modification.', extra={'service': 'Watchdog'})
             self.wait_until_done(event.src_path)
-            series = get_series_name(event.src_path)
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-            if series:
-                loop.run_until_complete(scan_service.enqueue(series))
-            else:
-                loop.run_until_complete(scan_service.enqueue_all())
-            loop.close()
+            self.handle_change(event)
         except Exception as e:
             logger.error(f'An error occurred while handling a file modification: {e}', extra={'service': 'Watchdog'})
 
@@ -73,9 +55,32 @@ class FileChangeHandler(FileSystemEventHandler):
         except Exception as e:
             logger.error(f"An error occurred while waiting for file initialization: {e}", extra={'service': 'Watchdog'})
 
+    def handle_change(self, event):
+        media = None
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        if self.media_type == 'series':
+            media = get_series_name(event.src_path)
+            if media:
+                loop.run_until_complete(scan_service.enqueue(media, 'series'))
+            else:
+                loop.run_until_complete(scan_service.enqueue_all_series())
+        else:
+            media = get_movie_name(event.src_path)
+            if media:
+                loop.run_until_complete(scan_service.enqueue(media, 'movie'))
+            else:
+                loop.run_until_complete(scan_service.enqueue_all_movies())
+        loop.close()
+
 
 def get_series_name(path):
     match = re.search(r'/series/([^/]*)', path)
+    return match.group(1) if match else None
+
+
+def get_movie_name(path):
+    match = re.search(r'/movies/([^/]*)', path)
     return match.group(1) if match else None
 
 
@@ -89,11 +94,11 @@ def get_episode_name(path):
     return match.group(3) if match else None
 
 
-def start_watchdog(directory):
+def start_watchdog(directory, content_type):
     try:
         logger.debug(f"Starting the file watchdog for {directory}", extra={'service': 'Watchdog'})
         observer = PollingObserver()
-        handler = FileChangeHandler()
+        handler = FileChangeHandler(content_type)
         observer.schedule(handler, directory, recursive=True)
         observer.start()
     except Exception as e:

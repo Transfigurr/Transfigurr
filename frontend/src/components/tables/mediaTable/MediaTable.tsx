@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { formatSize } from "../../../utils/format";
 import Table from "../../table/Table";
 import { Tooltip } from "react-tooltip";
-const MediaTable = ({ settings, profiles, sortedSeries }: any) => {
+const MediaTable = ({ settings, profiles, sortedMedia }: any) => {
 	const progress = (series: any) => {
 		return (
 			((series?.episode_count - series?.missing_episodes) /
@@ -32,9 +32,12 @@ const MediaTable = ({ settings, profiles, sortedSeries }: any) => {
 				<thead>
 					<tr>
 						<th></th>
-						<th>Series</th>
-						{settings?.media_table_showNetwork == "1" && <th>Network</th>}
+						<th>Title</th>
+						{settings?.media_table_showType == "1" && <th>Type</th>}
 						{settings?.media_table_showProfile == "1" && <th>Profile</th>}
+						{settings?.media_table_showNetwork == "1" && (
+							<th>Network / Studio</th>
+						)}
 						{settings?.media_table_showSeasons == "1" && <th>Seasons</th>}
 						{settings?.media_table_showEpisodes == "1" && <th>Episodes</th>}
 						{settings?.media_table_showEpisodeCount == "1" && (
@@ -50,10 +53,10 @@ const MediaTable = ({ settings, profiles, sortedSeries }: any) => {
 					</tr>
 				</thead>
 				<tbody>
-					{sortedSeries.map((series: any, key: number) => (
+					{sortedMedia.map((media: any, key: number) => (
 						<tr className={styles.row} key={key}>
 							<td className={styles.iconCell}>
-								{series?.monitored ? (
+								{media?.monitored ? (
 									<BookmarkFilled
 										data-tooltip-id="monitoredTooltip"
 										className={styles.svg}
@@ -64,7 +67,7 @@ const MediaTable = ({ settings, profiles, sortedSeries }: any) => {
 										className={styles.svg}
 									/>
 								)}
-								{series?.status !== "Ended" ? (
+								{media?.status !== "Ended" ? (
 									<ContinuingIcon
 										data-tooltip-id="continuingTooltip"
 										className={styles.svg}
@@ -93,58 +96,62 @@ const MediaTable = ({ settings, profiles, sortedSeries }: any) => {
 								<Tooltip id="stoppedTooltip" place="top" content="Stopped" />
 							</td>
 							<td>
-								<Link to={"/series/" + series?.id} className={styles.name}>
-									{series?.id}
+								<Link to={"/series/" + media?.id} className={styles.name}>
+									{media?.name ? media?.name : media?.id}
 								</Link>
 							</td>
+							<td>{media?.episode_count == undefined ? "Movie" : "Series"}</td>
 							{settings?.media_table_showProfile == "1" && (
-								<td>{profiles ? profiles[series.profile_id]?.name : ""}</td>
+								<td>{profiles ? profiles[media.profile_id]?.name : ""}</td>
 							)}
 							{settings?.media_table_showNetwork == "1" && (
-								<td>{series?.networks}</td>
+								<td>
+									{media?.episode_count == undefined
+										? media?.studio
+										: media?.networks}
+								</td>
 							)}
 							{settings?.media_table_showSeasons == "1" && (
-								<td>{series?.seasons_count}</td>
+								<td>{media?.seasons_count}</td>
 							)}
 							{settings?.media_table_showEpisodes == "1" && (
 								<td>
-									<div className={styles.progressBar}>
-										<div
-											className={styles.progress}
-											style={{
-												backgroundColor: backgroundColor(series),
-												width: progress(series),
-											}}
-										></div>
-
-										<div className={styles.detailText}>
-											{series?.episode_count - series?.missing_episodes}/
-											{series?.episode_count}
+									{media?.episode_count != undefined && (
+										<div className={styles.progressBar}>
+											<div
+												className={styles.progress}
+												style={{
+													backgroundColor: backgroundColor(media),
+													width: progress(media),
+												}}
+											/>
+											<div className={styles.detailText}>
+												{media?.episode_count - media?.missing_episodes}/
+												{media?.episode_count}
+											</div>
 										</div>
-									</div>
+									)}
 								</td>
 							)}
 							{settings?.media_table_showEpisodeCount == "1" && (
-								<td>{series?.episode_count}</td>
+								<td>{media?.episode_count}</td>
 							)}
 							{settings?.media_table_showYear == "1" && (
-								<td>{series?.first_air_date}</td>
+								<td>{media?.release_date}</td>
 							)}
 							{settings?.media_table_showPath == "1" && (
-								<td>/series/{series.id}</td>
+								<td>/series/{media.id}</td>
 							)}
 							{settings?.media_table_showSpaceSaved == "1" && (
-								<td>{formatSize(series.space_saved)}</td>
+								<td>{formatSize(media.space_saved)}</td>
 							)}
 							{settings?.media_table_showSizeOnDisk == "1" && (
-								<td>{formatSize(series.size)}</td>
+								<td>{formatSize(media.size)}</td>
 							)}
 							{settings?.media_table_showSizeSaved == "1" && (
-								<td>{formatSize(series.space_saved)}</td>
+								<td>{formatSize(media.space_saved)}</td>
 							)}
-							{settings?.media_table_showGenre == "1" && (
-								<td>{series.genre}</td>
-							)}
+							{settings?.media_table_showGenre == "1" && <td>{media.genre}</td>}
 						</tr>
 					))}
 				</tbody>

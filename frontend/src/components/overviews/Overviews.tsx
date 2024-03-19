@@ -1,12 +1,12 @@
 import styles from "./Overviews.module.scss";
 import Overview from "../overview/Overview";
 
-const Overviews = ({ sortedSeries, settings, profiles }: any) => {
+const Overviews = ({ sortedMedia, settings, profiles }: any) => {
 	return (
 		<div className={styles.overviews}>
-			{sortedSeries.map((series: any, index: number) => (
+			{sortedMedia.map((media: any, index: number) => (
 				<Overview
-					series={series}
+					media={media}
 					settings={settings}
 					profiles={profiles}
 					key={index}

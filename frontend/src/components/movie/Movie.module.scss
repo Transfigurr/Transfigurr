@@ -1,0 +1,147 @@
+.movie {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	height: 100%;
+
+	.movieContent {
+		overflow-y: scroll;
+		scrollbar-width: none;
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		.header {
+			width: 100%;
+			height: 425px;
+			display: flex;
+			align-items: center;
+			justify-content: flex-start;
+			position: relative;
+
+			.backdrop {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				object-position: top left;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			.filter {
+				position: absolute;
+				height: 100%;
+				width: 100%;
+				background: black;
+				opacity: 0.7;
+			}
+			.content {
+				display: flex;
+				flex-direction: row;
+				align-items: flex-start;
+				justify-content: flex-start;
+				position: absolute;
+				padding: 30px;
+				.poster {
+					width: 250px;
+					height: 368px;
+					margin-right: 35px;
+				}
+				.details {
+					display: flex;
+					flex-direction: column;
+					flex-grow: 1;
+					.titleRow {
+						color: white;
+						height: 60px;
+						font-size: 50px;
+						margin-bottom: 5px;
+						display: flex;
+						padding-right: 25px;
+						align-items: center;
+
+						.headerIcon {
+							fill: var(--white);
+							display: flex;
+							align-items: center;
+							justify-content: center;
+						}
+					}
+					.tags {
+						color: white;
+						display: flex;
+						flex-direction: row;
+						flex-wrap: wrap;
+						.tag {
+							display: flex;
+							align-items: center;
+							justify-content: center;
+							margin: 5px 10px 5px 0px;
+							padding: 3px 7px;
+							font-weight: bold;
+							font-size: 17px;
+							font-weight: 300;
+							background-color: #4f566f;
+							border-radius: 2px;
+							border: 1px solid #4f566f;
+							.icon {
+								display: flex;
+								align-items: center;
+								justify-content: center;
+								fill: var(--white);
+								padding-right: 5px;
+							}
+						}
+					}
+					.movieDetails {
+						color: white;
+						font-size: 20px;
+						margin-bottom: 8px;
+						.runtime {
+							margin-right: 15px;
+						}
+						.genre {
+							margin-right: 15px;
+						}
+						.runYears {
+							margin-right: 15px;
+						}
+					}
+					.overview {
+						color: white;
+						line-height: 1.5;
+						font-size: 15px;
+					}
+				}
+			}
+		}
+
+		.fileContainer {
+			display: flex;
+			flex-direction: column;
+			color: var(--textColor);
+			border: 1px solid var(--borderColor);
+			font-size: 14px;
+			padding: 20px;
+			margin: 20px;
+
+			.fileHeader {
+				display: flex;
+				flex-direction: row;
+				border-bottom: 1px solid var(--borderColor);
+			}
+			.fileContent {
+				display: flex;
+				flex-direction: row;
+			}
+		}
+	}
+}
+.svg {
+	height: 20px;
+	fill: white;
+}
+
+.monitoredSVG {
+	height: 55px;
+}

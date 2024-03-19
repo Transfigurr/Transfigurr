@@ -98,7 +98,7 @@ const HeaderComponent = () => {
 				</div>
 			</div>
 			<div className={styles.right}>
-				<div className={styles.profile}>
+				<div className={styles.profile} ref={dropdownRef}>
 					<div
 						className={styles.svg}
 						onClick={() => setOpenDropdown(!openDropdown)}
@@ -107,7 +107,7 @@ const HeaderComponent = () => {
 					</div>
 
 					{openDropdown ? (
-						<div className={styles.dropdown} ref={dropdownRef}>
+						<div className={styles.dropdown}>
 							<div className={styles.item} onClick={restart}>
 								<div className={styles.profilesvg}>
 									<RestartIcon className={styles.actionSVG} />

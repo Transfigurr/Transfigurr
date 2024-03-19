@@ -108,6 +108,17 @@ const MediaModal = ({ isOpen, setIsOpen, content, setContent, type }: any) => {
 					{type === "table" && (
 						<>
 							<InputContainer
+								label="Show Type"
+								type="checkbox"
+								checked={Boolean(Number(content?.media_table_showType))}
+								onChange={(e: any) =>
+									setContent({
+										...content,
+										media_table_showType: e.target.checked,
+									})
+								}
+							/>
+							<InputContainer
 								label="Show Network"
 								type="checkbox"
 								checked={Boolean(Number(content?.media_table_showNetwork))}

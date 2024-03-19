@@ -10,7 +10,7 @@ import FolderIcon from "../svgs/folder.svg?react";
 import SeasonIcon from "../svgs/circle.svg?react";
 import { formatSize } from "../../utils/format";
 
-const Overview = ({ series, settings, profiles }: any) => {
+const Overview = ({ media, settings, profiles }: any) => {
 	const size = settings?.media_overview_posterSize;
 	let posterWidth = "128px";
 	let posterHeight = "260px";
@@ -25,6 +25,7 @@ const Overview = ({ series, settings, profiles }: any) => {
 		posterHeight = "324px";
 	}
 	const [imgSrc, setImgSrc] = useState<string | null>("");
+	const type = media.episode_count != undefined ? "series" : "movies";
 
 	useEffect(() => {
 		const fetchImage = async () => {
@@ -34,7 +35,7 @@ const Overview = ({ series, settings, profiles }: any) => {
 				if ("caches" in window) {
 					cache = await caches.open("image-cache");
 					cachedResponse = await cache.match(
-						`/api/poster/series/${series?.id}`
+						`/api/poster/${type}/${media?.id}`
 					);
 				}
 
@@ -42,7 +43,7 @@ const Overview = ({ series, settings, profiles }: any) => {
 					const blob = await cachedResponse.blob();
 					setImgSrc(URL.createObjectURL(blob));
 				} else {
-					const response = await fetch(`/api/poster/series/${series?.id}`, {
+					const response = await fetch(`/api/poster/${type}/${media?.id}`, {
 						headers: {
 							Authorization: `Bearer ${localStorage.getItem("token")}`,
 						},
@@ -57,7 +58,7 @@ const Overview = ({ series, settings, profiles }: any) => {
 					const blob = await response.blob();
 					setImgSrc(URL.createObjectURL(blob));
 					if (cache) {
-						cache.put(`/api/poster/series/${series?.id}`, clonedResponse);
+						cache.put(`/api/poster/series/${media?.id}`, clonedResponse);
 					}
 				}
 			} catch (e) {
@@ -66,24 +67,33 @@ const Overview = ({ series, settings, profiles }: any) => {
 		};
 
 		fetchImage();
-	}, [series?.id]);
-	const progress =
-		((series?.episode_count - series?.missing_episodes) /
-			series?.episode_count || 0) *
-			100 +
-		"%";
+	}, [media?.id, type]);
+	const progress = () => {
+		if (media?.missing_episodes == undefined) {
+			return media?.missing == true ? "0%" : "100%";
+		}
+		return media?.episode_count === 0
+			? "100%"
+			: ((media?.episode_count - media?.missing_episodes) /
+					media?.episode_count || 0) *
+					100 +
+					"%";
+	};
 	const backgroundColor = () => {
-		if (progress === "100%") {
-			return series?.status === "Ended"
+		if (progress() === "100%") {
+			if (media?.missing_episodes == undefined) {
+				return "rgb(39, 194, 76)";
+			}
+			return media?.status === "Ended"
 				? "rgb(39, 194, 76)"
 				: "rgb(93, 156, 236)";
 		} else {
-			return series?.monitored ? "rgb(240, 80, 80)" : "rgb(255, 165, 0)";
+			return media?.monitored ? "rgb(240, 80, 80)" : "rgb(255, 165, 0)";
 		}
 	};
 	return (
 		<div className={styles.overview}>
-			<Link to={`/series/${series?.id}`} className={styles.link}>
+			<Link to={`${type}/${media?.id}`} className={styles.poster}>
 				<div className={styles.posterContainer}>
 					<img
 						className={styles.poster}
@@ -97,17 +107,23 @@ const Overview = ({ series, settings, profiles }: any) => {
 								className={styles.progress}
 								style={{
 									backgroundColor: backgroundColor(),
-									width: progress,
+									width: progress(),
 									height:
 										settings.media_overview_detailedProgressBar == "1"
 											? "15px"
 											: "5px",
 								}}
-							></div>
-							{settings?.media_overview_detailedProgressBar == "1" && (
+							/>
+							{settings?.media_poster_detailedProgressBar == "1" && (
 								<div className={styles.detailText}>
-									{series?.episode_count - series?.missing_episodes}/
-									{series?.episode_count}
+									{media?.episode_count == undefined ? (
+										<>{media?.missing ? "0/1" : "1/1"}</>
+									) : (
+										<>
+											{media?.episode_count - media?.missing_episodes}/
+											{media?.episode_count}
+										</>
+									)}
 								</div>
 							)}
 						</div>
@@ -116,58 +132,61 @@ const Overview = ({ series, settings, profiles }: any) => {
 			</Link>
 			<div className={styles.infoContainer}>
 				<div className={styles.title}>
-					<Link to={`/series/${series?.id}`} className={styles.link}>
-						{series?.title ? series?.title : series.id}
+					<Link to={`/${type}/${media?.id}`} className={styles.link}>
+						{media?.name ? media?.name : media.id}
 					</Link>
 				</div>
 				<div className={styles.seriesData}>
 					<div className={styles.overview}>
-						<Link to={`/series/${series?.id}`} className={styles.link}>
-							{series?.overview}
+						<Link to={`/${type}/${media?.id}`} className={styles.link}>
+							{media?.overview}
 						</Link>
 					</div>
 					<div className={styles.tags}>
 						<ul>
 							{settings?.media_overview_showMonitored == "1" && (
 								<li className={styles.tag}>
-									{series?.monitored ? (
+									{media?.monitored ? (
 										<MonitoredIcon className={styles.svg} />
 									) : (
 										<UnmonitoredIcon className={styles.svg} />
 									)}
-									{series?.monitored ? "Monitored" : "Unmonitored"}
+									{media?.monitored ? "Monitored" : "Unmonitored"}
 								</li>
 							)}
 							{settings?.media_overview_showNetwork == "1" && (
 								<li className={styles.tag}>
 									<NetworkIcon className={styles.svg} />
-									{series?.networks}
+									{media?.missing_episodes != undefined
+										? media?.networks
+										: media?.studio}
 								</li>
 							)}
 							{settings?.media_overview_showProfile == "1" && (
 								<li className={styles.tag}>
 									<ProfileIcon className={styles.svg} />
-									{profiles && series?.profile_id in profiles
-										? profiles[series?.profile_id]?.name
+									{profiles && media?.profile_id in profiles
+										? profiles[media?.profile_id]?.name
 										: ""}
 								</li>
 							)}
-							{settings?.media_overview_showSeasonCount == "1" && (
-								<li className={styles.tag}>
-									<SeasonIcon className={styles.svg} />
-									{series?.seasons_count} Seasons
-								</li>
-							)}
+							{settings?.media_overview_showSeasonCount == "1" &&
+								media?.seasons_count != undefined && (
+									<li className={styles.tag}>
+										<SeasonIcon className={styles.svg} />
+										{media?.seasons_count} Season
+										{media?.seasons_count != 1 && "s"}
+									</li>
+								)}
 							{settings?.media_overview_showPath == "1" && (
 								<li className={styles.tag}>
-									<FolderIcon className={styles.svg} />
-									/series/{series?.id}
+									<FolderIcon className={styles.svg} />/{type}/{media?.id}
 								</li>
 							)}
 							{settings?.media_overview_showSizeOnDisk == "1" && (
 								<li className={styles.tag}>
 									<DriveIcon className={styles.svg} />
-									{formatSize(series?.size)}
+									{formatSize(media?.size)}
 								</li>
 							)}
 						</ul>

@@ -2,28 +2,36 @@ import styles from "./Poster.module.scss";
 import { useContext, useEffect, useState } from "react";
 import { WebSocketContext } from "../../contexts/webSocketContext";
 import { Link } from "react-router-dom";
-const PosterComponent = ({ name, posterWidth, posterHeight }: any) => {
+const PosterComponent = ({ media, posterWidth, posterHeight }: any) => {
 	const wsContext = useContext(WebSocketContext);
-	const series = wsContext?.data?.series[name];
 	const profiles = wsContext?.data?.profiles;
 	const settings = wsContext?.data?.settings;
-	const progress =
-		((series?.episode_count - series?.missing_episodes) /
-			series?.episode_count || 0) *
-			100 +
-		"%";
+	const type = media?.episode_count != undefined ? "series" : "movies";
+	const progress = () => {
+		if (media?.episode_count == undefined) {
+			return media?.missing == true ? "0%" : "100%";
+		}
+		return media?.episode_count === 0
+			? "100%"
+			: ((media?.episode_count - media?.missing_episodes) /
+					media?.episode_count || 0) *
+					100 +
+					"%";
+	};
 	const backgroundColor = () => {
-		if (progress === "100%") {
-			return series?.status === "Ended"
+		if (progress() === "100%") {
+			if (media?.missing_episodes == undefined) {
+				return "rgb(39, 194, 76)";
+			}
+			return media?.status === "Ended"
 				? "rgb(39, 194, 76)"
 				: "rgb(93, 156, 236)";
 		} else {
-			return series?.monitored ? "rgb(240, 80, 80)" : "rgb(255, 165, 0)";
+			return media?.monitored ? "rgb(240, 80, 80)" : "rgb(255, 165, 0)";
 		}
 	};
 
 	const [imgSrc, setImgSrc] = useState<string | null>("");
-
 	useEffect(() => {
 		const fetchImage = async () => {
 			try {
@@ -32,7 +40,7 @@ const PosterComponent = ({ name, posterWidth, posterHeight }: any) => {
 				if ("caches" in window) {
 					cache = await caches.open("image-cache");
 					cachedResponse = await cache.match(
-						`/api/poster/series/${series?.id}`
+						`/api/poster/${type}/${media?.id}`
 					);
 				}
 
@@ -40,7 +48,7 @@ const PosterComponent = ({ name, posterWidth, posterHeight }: any) => {
 					const blob = await cachedResponse.blob();
 					setImgSrc(URL.createObjectURL(blob));
 				} else {
-					const response = await fetch(`/api/poster/series/${series?.id}`, {
+					const response = await fetch(`/api/poster/${type}/${media?.id}`, {
 						headers: {
 							Authorization: `Bearer ${localStorage.getItem("token")}`,
 						},
@@ -55,7 +63,7 @@ const PosterComponent = ({ name, posterWidth, posterHeight }: any) => {
 					const blob = await response.blob();
 					setImgSrc(URL.createObjectURL(blob));
 					if (cache) {
-						cache.put(`/api/poster/series/${series?.id}`, clonedResponse);
+						cache.put(`/api/poster/${type}/${media?.id}`, clonedResponse);
 					}
 				}
 			} catch (e) {
@@ -64,19 +72,19 @@ const PosterComponent = ({ name, posterWidth, posterHeight }: any) => {
 		};
 
 		fetchImage();
-	}, [series?.id]);
+	}, [media?.id, type]);
 	return (
 		<div
 			className={styles.cardArea}
 			style={{ maxWidth: posterWidth, maxHeight: posterHeight }}
 		>
-			<Link to={`series/${name}`} className={styles.poster}>
+			<Link to={`${type}/${media?.id}`} className={styles.poster}>
 				<div className={styles.card}>
 					<div className={styles.cardContent}>
 						<img
 							className={styles.img}
 							src={imgSrc || "/poster.png"}
-							alt={name}
+							alt={media?.name}
 							style={{ maxWidth: posterWidth, maxHeight: posterHeight }}
 						/>
 						<div className={styles.footer}>
@@ -85,35 +93,40 @@ const PosterComponent = ({ name, posterWidth, posterHeight }: any) => {
 									className={styles.progress}
 									style={{
 										backgroundColor: backgroundColor(),
-										width: progress,
+										width: progress(),
 										height:
 											settings.media_poster_detailedProgressBar == "1"
 												? "15px"
 												: "5px",
 									}}
-								></div>
-
+								/>
 								{settings?.media_poster_detailedProgressBar == "1" && (
 									<div className={styles.detailText}>
-										{series?.episode_count - series?.missing_episodes}/
-										{series?.episode_count}
+										{media?.episode_count == undefined ? (
+											<>{media?.missing ? "0/1" : "1/1"}</>
+										) : (
+											<>
+												{media?.episode_count - media?.missing_episodes}/
+												{media?.episode_count}
+											</>
+										)}
 									</div>
 								)}
 							</div>
 							{settings?.media_poster_showTitle == "1" && (
 								<div className={styles.name}>
-									{series?.name ? series?.name : series?.id}
+									{media?.name ? media?.name : media?.id}
 								</div>
 							)}
 							{settings?.media_poster_showMonitored == "1" && (
 								<div className={styles.status}>
-									{series?.monitored ? "Monitored" : "Unmonitored"}
+									{media?.monitored ? "Monitored" : "Unmonitored"}
 								</div>
 							)}
 							{settings?.media_poster_showProfile == "1" && (
 								<div className={styles.profile}>
-									{profiles && series?.profile_id in profiles
-										? profiles[series?.profile_id]?.name
+									{profiles && media?.profile_id in profiles
+										? profiles[media?.profile_id]?.name
 										: ""}
 								</div>
 							)}

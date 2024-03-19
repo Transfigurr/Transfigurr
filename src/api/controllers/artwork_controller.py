@@ -15,3 +15,17 @@ async def get_series_poster(series_id: str):
     if not file_path.exists() or file_path.is_dir():
         raise HTTPException(status_code=404, detail="Poster not found")
     return FileResponse(str(file_path), media_type="image/webp")
+
+
+async def get_movie_backdrop(series_id: str):
+    file_path = Path(f"config/artwork/movies/{series_id}/backdrop.webp")
+    if not file_path.exists() or file_path.is_dir():
+        raise HTTPException(status_code=404, detail="Backdrop not found")
+    return FileResponse(str(file_path), media_type="image/webp")
+
+
+async def get_movie_poster(series_id: str):
+    file_path = Path(f"config/artwork/movies/{series_id}/poster.webp")
+    if not file_path.exists() or file_path.is_dir():
+        raise HTTPException(status_code=404, detail="Poster not found")
+    return FileResponse(str(file_path), media_type="image/webp")

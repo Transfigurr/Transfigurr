@@ -31,15 +31,25 @@ async def refresh_all_metadata():
 
 
 async def refresh_series_metadata(series_id):
-    await metadata_service.enqueue(series_id)
+    await metadata_service.enqueue(series_id, 'series')
     return
 
 
-async def scan_all_series():
+async def scan_all_media():
     await scan_service.enqueue_all()
     return
 
 
 async def scan_series(series_id):
-    await scan_service.enqueue(series_id)
+    await scan_service.enqueue(series_id, 'series')
+    return
+
+
+async def scan_movie(movie_id):
+    await scan_service.enqueue(movie_id, 'movie')
+    return
+
+
+async def refresh_movie_metadata(movie_id):
+    await metadata_service.enqueue(movie_id, 'movie')
     return

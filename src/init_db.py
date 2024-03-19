@@ -7,6 +7,7 @@ from src.models.history import History  # noqa
 from src.models.episode import Episode  # noqa
 from src.models.season import Season  # noqa
 from src.models.series import Series  # noqa
+from src.models.movie import Movie  # noqa
 from src.models.setting import Setting  # noqa
 from src.models.profile import Profile  # noqa
 from src.models.profile_codec import Profile_Codec  # noqa
