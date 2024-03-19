@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import styles from "./Series.module.scss";
+import styles from "./Movie.module.scss";
 import Drive from "../svgs/hard_drive.svg?react";
 import Profile from "../svgs/person.svg?react";
 import Monitored from "../svgs/bookmark_filled.svg?react";
@@ -7,36 +7,34 @@ import Unmonitored from "../svgs/bookmark_unfilled.svg?react";
 import Continuing from "../svgs/play_arrow.svg?react";
 import Ended from "../svgs/stop.svg?react";
 import Network from "../svgs/tower.svg?react";
-import Season from "../season/Season";
 import { WebSocketContext } from "../../contexts/webSocketContext";
-import SeriesModal from "../modals/seriesModal/SeriesModal";
-import SeriesToolbar from "../toolbars/seriesToolbar/SeriesToolbar";
 import { formatSize } from "../../utils/format";
 import FolderIcon from "../svgs/folder.svg?react";
+import MovieToolbar from "../toolbars/movieToolbar/MovieToolbar";
+import MovieModal from "../modals/movieModal/MovieModal";
 
-const Series = ({ series_name }: any) => {
+const Movie = ({ movie_name }: any) => {
 	const wsContext = useContext(WebSocketContext);
 	const profiles = wsContext?.data?.profiles;
-	const series: any =
-		wsContext?.data?.series && profiles
-			? wsContext?.data?.series[series_name]
+	const movie: any =
+		wsContext?.data?.movies && profiles
+			? wsContext?.data?.movies[movie_name]
 			: {};
 	const system = wsContext?.data?.system;
 	const [content, setContent] = useState<any>({});
 	const handleEditClick = () => {
 		setIsModalOpen(true);
-		setContent(series);
+		setContent(movie);
 	};
 	const [selected, setSelected] = useState<string | null>(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const status = series?.status;
-	const network = series?.networks;
-	const genre = series?.genre;
-	const firstAirDate = series?.release_date?.split("-")[0].trim();
-	const lastAirDate = series?.last_air_date?.split("-")[0].trim();
-	const overview = series?.overview;
+	const status = movie?.status;
+	const genre = movie?.genre;
+	const firstAirDate = movie?.release_date?.split("-")[0].trim();
+	const lastAirDate = movie?.last_air_date?.split("-")[0].trim();
+	const overview = movie?.overview;
 	const runYears =
-		status === "Ended" ? firstAirDate + "-" + lastAirDate : firstAirDate + "-";
+		status === "Ended" ? firstAirDate + "-" + lastAirDate : firstAirDate;
 	const [backdropSrc, setBackdropSrc] = useState<string | null>("");
 	const [posterSrc, setPosterSrc] = useState<string | null>("");
 	const loaded = useRef(false);
@@ -55,7 +53,7 @@ const Series = ({ series_name }: any) => {
 				if ("caches" in window) {
 					cache = await caches.open("image-cache");
 					cachedResponse = await cache.match(
-						`/api/${path}/series/${series?.id}`
+						`/api/${path}/movies/${movie?.id}`
 					);
 				}
 
@@ -63,7 +61,7 @@ const Series = ({ series_name }: any) => {
 					const blob = await cachedResponse.blob();
 					setSrc(URL.createObjectURL(blob));
 				} else {
-					const response = await fetch(`/api/${path}/series/${series?.id}`, {
+					const response = await fetch(`/api/${path}/movies/${movie?.id}`, {
 						headers: {
 							Authorization: `Bearer ${localStorage.getItem("token")}`,
 						},
@@ -76,7 +74,7 @@ const Series = ({ series_name }: any) => {
 					const blob = await response.blob();
 					setSrc(URL.createObjectURL(blob));
 					if (cache) {
-						cache.put(`/api/${path}/series/${series?.id}`, clonedResponse);
+						cache.put(`/api/${path}/movie/${movie?.id}`, clonedResponse);
 					}
 				}
 			} catch (e) {
@@ -84,30 +82,29 @@ const Series = ({ series_name }: any) => {
 			}
 		};
 
-		if (series?.id && series?.id !== "") {
+		if (movie?.id && movie?.id !== "") {
 			fetchImage("backdrop", setBackdropSrc);
 			fetchImage("poster", setPosterSrc);
 			loaded.current = true;
 		}
-	}, [series?.id]);
+	}, [movie?.id]);
 	return (
-		<div className={styles.series}>
-			<SeriesToolbar
-				series={series}
+		<div className={styles.movie}>
+			<MovieToolbar
 				system={system}
 				selected={selected}
 				setSelected={setSelected}
 				handleEditClick={handleEditClick}
-				series_name={series_name}
+				movie_name={movie_name}
 			/>
-			<SeriesModal
+			<MovieModal
 				isOpen={isModalOpen}
 				setIsOpen={setIsModalOpen}
 				content={content}
 				setContent={setContent}
 				profiles={profiles}
 			/>
-			<div className={styles.seriesContent}>
+			<div className={styles.movieContent}>
 				<div className={styles.header}>
 					<img
 						className={styles.backdrop}
@@ -124,18 +121,18 @@ const Series = ({ series_name }: any) => {
 						<div className={styles.details}>
 							<div className={styles.titleRow}>
 								<div className={styles.headerIcon}>
-									{series?.monitored ? (
+									{movie?.monitored ? (
 										<Monitored className={styles.monitoredSVG} />
 									) : (
 										<Unmonitored className={styles.monitoredSVG} />
 									)}
 								</div>
 
-								{series?.name ? series?.name : series?.id}
+								{movie?.name ? movie?.name : movie?.id}
 							</div>
-							<div className={styles.seriesDetails}>
+							<div className={styles.movieDetails}>
 								<span className={styles.runtime}>
-									{series?.runtime ? series?.runtime : "-"} Minutes
+									{movie?.runtime ? movie?.runtime : "-"} Minutes
 								</span>
 								{genre ? <span className={styles.genre}>{genre}</span> : <></>}
 								{status ? (
@@ -149,32 +146,32 @@ const Series = ({ series_name }: any) => {
 									<div className={styles.icon}>
 										<FolderIcon className={styles.svg} />
 									</div>
-									{"/series/" + series?.id}
+									{"/movies/" + movie?.id}
 								</div>
 
 								<div className={styles.tag}>
 									<div className={styles.icon}>
 										<Drive className={styles.svg} />
 									</div>
-									{formatSize(series?.size)}
+									{formatSize(movie?.size)}
 								</div>
 								<div className={styles.tag}>
 									<div className={styles.icon}>
 										<Profile className={styles.svg} />
 									</div>
-									{profiles && series?.profile_id in profiles
-										? profiles[series?.profile_id]?.name
+									{profiles && movie?.profile_id in profiles
+										? profiles[movie?.profile_id]?.name
 										: ""}
 								</div>
 								<div className={styles.tag}>
 									<div className={styles.icon}>
-										{series?.monitored ? (
+										{movie?.monitored ? (
 											<Monitored className={styles.svg} />
 										) : (
 											<Unmonitored className={styles.svg} />
 										)}
 									</div>
-									{series?.monitored ? "Monitored" : "Unmonitored"}
+									{movie?.monitored ? "Monitored" : "Unmonitored"}
 								</div>
 								{status ? (
 									<div className={styles.tag}>
@@ -190,12 +187,12 @@ const Series = ({ series_name }: any) => {
 								) : (
 									<></>
 								)}
-								{network ? (
+								{movie?.studio ? (
 									<div className={styles.tag}>
 										<div className={styles.icon}>
 											<Network className={styles.svg} />
 										</div>
-										{network}
+										{movie?.studio}
 									</div>
 								) : (
 									<></>
@@ -205,21 +202,26 @@ const Series = ({ series_name }: any) => {
 						</div>
 					</div>
 				</div>
-				<div className={styles.seasonsContainer}>
-					{Object.values(series?.seasons || {})
-						.reverse()
-						.map((season: any) => {
-							return (
-								<Season
-									season={season}
-									monitored={series?.monitored}
-									key={season?.id}
-								/>
-							);
-						})}
+				<div className={styles.fileContainer}>
+					<table>
+						<thead>
+							<tr>
+								<th>Filename</th>
+								<th>Video Codec</th>
+								<th>Size</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>{movie?.filename}</td>
+								<td>{movie?.video_codec}</td>
+								<td>{formatSize(movie?.size)}</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</div>
 	);
 };
-export default Series;
+export default Movie;

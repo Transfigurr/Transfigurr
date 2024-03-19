@@ -1,8 +1,9 @@
 import logging
 import os
+from src.api.controllers.movie_controller import get_movie, remove_movie
 from src.api.controllers.series_controller import get_all_series, get_full_series
 from src.api.controllers.series_controller import remove_episode, remove_season, remove_series
-from src.utils.folders import get_series_folder
+from src.utils.folders import get_movies_folder, get_series_folder
 logger = logging.getLogger('logger')
 
 
@@ -35,4 +36,16 @@ async def validate_series(series_id):
                     await remove_season(season["id"])
     except Exception as e:
         logger.error(f"An error occurred while validating {series_id}: {e}", extra={'service': 'Scan'})
+    return
+
+
+async def validate_movie(movie_id):
+    try:
+        logger.info(f"Validating movie: {movie_id}", extra={'service': 'Scan'})
+        movie = await get_movie(movie_id)
+        series_path = os.path.join(await get_movies_folder(), movie_id)
+        if not os.path.isdir(series_path) or not os.path.isfile(os.path.join(movie['path'])):
+            await remove_movie(movie_id)
+    except Exception as e:
+        logger.error(f"An error occurred while validating {movie_id}: {e}", extra={'service': 'Scan'})
     return

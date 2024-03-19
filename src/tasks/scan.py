@@ -5,7 +5,8 @@ from src.api.controllers.episode_controller import (
     get_episode,
     set_episode,
 )
-from src.api.controllers.profile_controller import get_all_profiles, get_profile
+from src.api.controllers.movie_controller import get_movie, set_movie
+from src.api.controllers.profile_controller import get_profile
 from src.api.controllers.season_controller import set_season
 from src.api.controllers.series_controller import (
     get_all_series,
@@ -13,6 +14,7 @@ from src.api.controllers.series_controller import (
     set_series,
 )
 from src.api.controllers.settings_controller import get_all_settings
+from src.models.movie import Movie
 from src.services.encode_service import encode_service
 from src.api.controllers.system_controller import set_system
 from src.utils.folders import (
@@ -151,14 +153,15 @@ async def scan_series(series_id):
                     missing_metadata = True
                 series.episode_count += 1
                 await set_episode(asdict(episode))
-                await scan_queue(asdict(episode), asdict(series), profile)
+                if episode.video_codec != profile["codec"] and profile["codec"] != 'Any' and series.monitored:
+                    await encode_service.enqueue(asdict(episode))
         for season in seasons:
             series.seasons_count += 1
             await set_season(asdict(seasons[season]))
 
         await set_series(asdict(series))
         if missing_metadata:
-            await metadata_service.enqueue(series_id)
+            await metadata_service.enqueue(series_id, 'series')
     except Exception as e:
         logger.error(f"An error occurred scanning series {series_id}: {e}", extra={'service': 'Scan'})
     return
@@ -232,16 +235,48 @@ async def scan_system():
     return
 
 
-async def scan_queue(episode, series, profile):
+async def scan_movie(movie_id):
     try:
-        monitored = series['monitored']
-        if not monitored:
+        logger.info(f"Scanning movie: {movie_id}", extra={'service': 'Scan'})
+        movie: Movie = Movie(**await get_movie(movie_id))
+        movies_path = os.path.join(await get_movies_folder(), movie_id)
+        if not os.path.isdir(movies_path):
             return
-        profiles = await get_all_profiles()
-        profile = profiles[series['profile_id']]
-        targets = profile['codecs']
-        wanted = profile['codec']
-        if (episode['video_codec'] in targets or 'Any' in targets) and wanted != 'Any' and episode['video_codec'] != wanted:
-            await encode_service.enqueue(episode)
+        missing_metadata = False
+        movie.id = movie_id
+        settings = await get_all_settings()
+        if not movie or movie.profile_id is None:
+            movie.profile_id = settings["default_profile"]
+        if not movie or movie.monitored is None:
+            movie.monitored = 0
+        if not movie.name:
+            missing_metadata = True
+        profile = await get_profile(movie.profile_id)
+        for root, dirs, files in os.walk(movies_path):
+            for file in files:
+                if movie.name is None:
+                    missing_metadata = True
+                movie.filename = file
+                movie.path = os.path.join(root, file)
+                analysis_data = await analyze_media_file(movie.path)
+                movie.video_codec = analysis_data
+                size = os.path.getsize(movie.path)
+                if movie.original_size is None:
+                    movie.original_size = size
+
+                if movie.size is None or movie.size != size:
+                    movie.original_size = movie.size
+                    movie.space_saved = 0
+                if movie.video_codec != profile["codec"] and profile["codec"] != 'Any':
+                    movie.missing = True
+                else:
+                    movie.missing = False
+                movie.size = size
+        await set_movie(asdict(movie))
+        if movie.missing and movie.monitored:
+            await encode_service.enqueue(asdict(movie))
+        if missing_metadata:
+            await metadata_service.enqueue(movie_id, 'movie')
     except Exception as e:
-        logger.error(f"An error occurred while scanning for the queue {e}", extra={'service': 'Scan'})
+        logger.error(f"An error occurred scanning series {movie_id}: {e}", extra={'service': 'Scan'})
+    return

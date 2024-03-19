@@ -18,7 +18,7 @@ async def get_series_route(series_id: str, user: str = Depends(login_with_token)
 
 
 async def after_update(series_id: str, user: str = Depends(login_with_token)):
-    await scan_service.enqueue(series_id)
+    await scan_service.enqueue(series_id, 'series')
 
 
 @router.put('/api/series/{series_id}', tags=["Series"], name="Upsert Series")

@@ -11,15 +11,8 @@ from src.utils.db import engine, instance_to_dict
 async def get_all_historys():
     async with AsyncSession(engine) as async_session:
         res = await async_session.execute(select(History))
-        history = {}
         historys = [instance_to_dict(profile) for profile in res.scalars().all()]
-        for h in historys:
-            history[h['id']] = h
-            episode = await get_episode(h['episode_id'])
-            profile = await get_profile(h['profile_id'])
-            history[h['id']]['episode'] = episode
-            history[h['id']]['profile'] = profile
-        return history
+        return historys
 
 
 async def get_history(history_id):
@@ -35,14 +28,8 @@ async def get_history(history_id):
         return res
 
 
-async def set_history(episode, profile):
+async def set_history(history):
     async with AsyncSession(engine) as async_session:
-        history = {
-            'episode_id': episode['id'],
-            'profile_id': profile['id'],
-            'prev_codec': episode['video_codec'],
-            'new_codec': profile['codec']
-        }
         obj = History(**history)
         async_session.add(obj)
         await async_session.commit()

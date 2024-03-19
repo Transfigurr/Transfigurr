@@ -1,7 +1,7 @@
 import styles from "./Posters.module.scss";
 import PosterComponent from "../poster/Poster";
 
-const Posters = ({ sortedSeries, settings }: any) => {
+const Posters = ({ sortedMedia, settings }: any) => {
 	const size = settings?.media_poster_posterSize;
 	let posterWidth = "128px";
 	let posterHeight = "260px";
@@ -19,10 +19,10 @@ const Posters = ({ sortedSeries, settings }: any) => {
 	return (
 		<div className={styles.postersView}>
 			<div className={styles.content}>
-				{sortedSeries.map((series: any) => (
+				{sortedMedia.map((media: any) => (
 					<PosterComponent
-						name={series.id}
-						key={series.id}
+						media={media}
+						key={media.id}
 						posterWidth={posterWidth}
 						posterHeight={posterHeight}
 					/>

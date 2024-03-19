@@ -25,7 +25,7 @@ const MediaToolbar = ({
 	};
 
 	const onRefresh = async () => {
-		await fetch(`/api/actions/refresh/series/metadata`, {
+		await fetch(`/api/actions/refresh/metadata`, {
 			method: "POST",
 			headers: {
 				Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -34,7 +34,7 @@ const MediaToolbar = ({
 	};
 
 	const onUpdate = async () => {
-		await fetch(`/api/actions/scan/series`, {
+		await fetch(`/api/actions/scan`, {
 			method: "POST",
 			headers: {
 				Authorization: `Bearer ${localStorage.getItem("token")}`,

@@ -1,20 +1,19 @@
-import styles from "./SeriesToolbar.module.scss";
+import styles from "./MovieToolbar.module.scss";
 import ToolBarItem from "../../toolBarItem/ToolBarItem";
 import ToolBar from "../../toolBar/ToolBar";
 import SyncIcon from "../../svgs/cached.svg?react";
 import EditIcon from "../../svgs/edit.svg?react";
 import LoadingIcon from "../../svgs/loading.svg?react";
 import RssFeedIcon from "../../svgs/rss_feed.svg?react";
-const SeriesToolbar = ({
+const MovieToolbar = ({
 	system,
 	selected,
 	setSelected,
-	series,
 	handleEditClick,
-	series_name,
+	movie_name,
 }: any) => {
 	const handleScanClick = async () => {
-		await fetch(`/api/actions/scan/series/${series_name}`, {
+		await fetch(`/api/actions/scan/movies/${movie_name}`, {
 			method: "POST",
 			headers: {
 				Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -23,7 +22,7 @@ const SeriesToolbar = ({
 	};
 
 	const handleMetadataClick = async () => {
-		await fetch(`/api/actions/refresh/metadata/series/${series_name}`, {
+		await fetch(`/api/actions/refresh/metadata/movies/${movie_name}`, {
 			method: "POST",
 			headers: {
 				Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -37,7 +36,7 @@ const SeriesToolbar = ({
 			icon={
 				<SyncIcon
 					className={
-						system?.scan_running && system?.scan_target == series?.id
+						system?.scan_running == "1" && system?.scan_target == movie_name
 							? styles.spinning
 							: styles.svg
 					}
@@ -52,7 +51,7 @@ const SeriesToolbar = ({
 			key="metadata"
 			icon={
 				system?.metadata_running == "1" &&
-				system?.metadata_target == series?.id ? (
+				system?.metadata_target == movie_name ? (
 					<LoadingIcon className={styles.loading} />
 				) : (
 					<RssFeedIcon className={styles.svg} />
@@ -73,4 +72,4 @@ const SeriesToolbar = ({
 	];
 	return <ToolBar leftToolBarItems={leftToolBarItems} />;
 };
-export default SeriesToolbar;
+export default MovieToolbar;

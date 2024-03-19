@@ -52,4 +52,5 @@ async def startup():
     asyncio.create_task(scan_service.process())
     asyncio.create_task(metadata_service.process())
     asyncio.create_task(encode_service.process())
-    start_watchdog(await get_root_folder() + '/series')
+    start_watchdog(await get_root_folder() + '/series', 'series')
+    start_watchdog(await get_root_folder() + '/movies', 'movies')

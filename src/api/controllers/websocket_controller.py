@@ -7,6 +7,7 @@ from websockets import ConnectionClosedError, ConnectionClosedOK
 from src.api.controllers.history_controller import get_all_historys
 from src.api.controllers.profile_controller import get_all_profiles
 from src.api.controllers.series_controller import get_all_series
+from src.api.controllers.movie_controller import get_all_movies
 from src.api.controllers.settings_controller import get_all_settings
 from src.api.controllers.system_controller import get_all_system
 from src.api.controllers.codec_controller import get_all_codecs, get_all_containers, get_all_encoders
@@ -32,6 +33,7 @@ async def websocket_controller(websocket: WebSocket):
         await websocket.accept()
         task_dict = {
             'series': get_all_series,
+            'movies': get_all_movies,
             'profiles': get_all_profiles,
             'settings': get_all_settings,
             'system': get_all_system,

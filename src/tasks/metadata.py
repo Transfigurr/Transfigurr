@@ -6,6 +6,7 @@ from fastapi import APIRouter
 import httpx
 from unidecode import unidecode
 from src.api.controllers.episode_controller import set_episode
+from src.api.controllers.movie_controller import get_movie, set_movie
 from src.api.controllers.series_controller import (
     get_all_series,
     get_full_series,
@@ -13,18 +14,54 @@ from src.api.controllers.series_controller import (
     set_series,
 )
 from src.api.controllers.settings_controller import get_all_settings
-from src.utils.folders import get_series_artwork_folder
+from src.models.movie import Movie
 from src.models.episode import Episode
 from src.models.series import Series
 from PIL import Image
 from io import BytesIO
 
+from src.utils.folders import get_config_folder
+
 router = APIRouter()
 
 SERIES_URL = "https://api.themoviedb.org/3/search/tv"
+MOVIES_URL = "https://api.themoviedb.org/3/search/movie"
 ARTWORK_URL = "https://image.tmdb.org/t/p/original"
 
 logger = logging.getLogger('logger')
+
+
+async def parse_movie(movie_id, HEADER):
+    try:
+        async with httpx.AsyncClient() as client:
+            search_params = {"query": unidecode(movie_id)}
+            movie_search_response = await client.get(MOVIES_URL, params=search_params, headers=HEADER)
+            if movie_search_response.status_code != 200:
+                return
+            movie_search_array = movie_search_response.json()
+            movie: Movie = Movie(**await get_movie(movie_id))
+            if not movie_search_array.get("results"):
+                return
+            movie_best_match = movie_search_array["results"][0]
+            movie_url = (
+                f"https://api.themoviedb.org/3/movie/{movie_best_match.get('id')}"
+            )
+            movie_response = await client.get(
+                movie_url, headers=HEADER
+            )
+            if movie_response.status_code != 200:
+                return
+            movie_data = movie_response.json()
+            movie.name = movie_data.get("title")
+            movie.overview = movie_data.get("overview")
+            movie.genre = movie_data.get("genres")[0]["name"]
+            movie.status = movie_data.get("status")
+            movie.release_date = movie_data.get("release_date")
+            movie.runtime = movie_data.get("runtime")
+            await set_movie(asdict(movie))
+    except Exception as e:
+        logger.error(f"An error occurred while parsing the movie: {e}", extra={'service': 'Metadata'})
+    return movie_data
 
 
 async def parse_series(series_id, HEADER):
@@ -50,7 +87,7 @@ async def parse_series(series_id, HEADER):
             series_data = series_response.json()
             series.name = series_data.get("name")
             series.overview = series_data.get("overview")
-            series.first_air_date = series_data.get("first_air_date")
+            series.release_date = series_data.get("first_air_date")
             series.last_air_date = series_data.get("last_air_date")
             series.genre = series_data.get("genres")[0]["name"]
             series.networks = series_data.get("networks")[0]["name"]
@@ -58,7 +95,6 @@ async def parse_series(series_id, HEADER):
             series.runtime = series_data['last_episode_to_air']['runtime']
             await set_series(asdict(series))
     except Exception as e:
-        print(e)
         logger.error(f"An error occurred while parsing the series: {e}", extra={'service': 'Metadata'})
     return series_data
 
@@ -78,18 +114,18 @@ async def get_all_series_metadata():
     return
 
 
-async def download_series_artwork(series_data, series_id):
-    series_folder = os.path.join(await get_series_artwork_folder(), series_id)
-    os.makedirs(series_folder, exist_ok=True)
+async def download_media_artwork(media_data, media_id, folder):
+    media_folder = os.path.join(folder, media_id)
+    os.makedirs(media_folder, exist_ok=True)
     async with httpx.AsyncClient() as client:
         # Download poster
         try:
-            poster_path = series_data.get("poster_path")
+            poster_path = media_data.get("poster_path")
             if not poster_path:
                 logger.error("No poster path provided.", extra={'service': 'Metadata'})
             else:
                 poster_url = f"https://image.tmdb.org/t/p/original{poster_path}"
-                poster_path = os.path.join(series_folder, "poster.webp")
+                poster_path = os.path.join(media_folder, "poster.webp")
                 if not os.path.exists(poster_path):
                     response = await client.get(poster_url)
                     if response.status_code != 200:
@@ -102,13 +138,13 @@ async def download_series_artwork(series_data, series_id):
 
         # Download backdrop
         try:
-            backdrop_path = series_data.get("backdrop_path")
+            backdrop_path = media_data.get("backdrop_path")
             if not backdrop_path:
                 logger.debug("No backdrop path provided.", extra={'service': 'Metadata'})
             else:
                 backdrop_url = f"https://image.tmdb.org/t/p/original{backdrop_path}"
                 backdrop_file_path = os.path.join(
-                    series_folder, "backdrop.webp")
+                    media_folder, "backdrop.webp")
                 if not os.path.exists(backdrop_file_path):
                     response = await client.get(backdrop_url)
                     if response.status_code != 200:
@@ -154,7 +190,7 @@ async def get_series_metadata(series_id):
         series_data = await parse_series(series_id, HEADER)
         if not series_data:
             return
-        await download_series_artwork(series_data, series_id)
+        await download_media_artwork(series_data, series_id, await get_config_folder() + '/artwork/series')
         series = await get_full_series(series_id)
         if not series:
             return
@@ -166,5 +202,19 @@ async def get_series_metadata(series_id):
                 await parse_episode(
                     series, season, series_data, season_number, episode_number, HEADER
                 )
+    except Exception as e:
+        logger.error(f"An error occurred: {e}", extra={'service': 'Metadata'})
+
+
+async def get_movie_metadata(movie_id):
+    try:
+        settings = await get_all_settings()
+        TMDB_SETTING = settings['TMDB']
+        TMDB = base64.b64decode(TMDB_SETTING).decode('utf-8')
+        HEADER = {"Authorization": 'Bearer ' + TMDB}
+        movie_data = await parse_movie(movie_id, HEADER)
+        if not movie_data:
+            return
+        await download_media_artwork(movie_data, movie_id, await get_config_folder() + '/artwork/movies')
     except Exception as e:
         logger.error(f"An error occurred: {e}", extra={'service': 'Metadata'})

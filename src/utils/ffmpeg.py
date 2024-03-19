@@ -9,8 +9,9 @@ import subprocess
 import time
 import ffmpeg
 import logging
-from src.api.controllers.episode_controller import get_episode, set_episode
+from src.api.controllers.episode_controller import set_episode
 from src.api.controllers.history_controller import set_history
+from src.api.controllers.movie_controller import set_movie
 from src.api.controllers.profile_controller import get_all_profiles
 from src.api.controllers.series_controller import get_series
 
@@ -324,21 +325,23 @@ def create_ffmpeg_command(input_file, output_file, codec_profile):
     return command
 
 
-async def process_episode(e):
+async def process_episode(media_file):
     from src.services.encode_service import encode_service
-
     try:
-        if not e:
+        if not media_file:
             return
         encode_service.stage = "Analyzing"
-        episode = await get_episode(e["id"])
-        series = await get_series(episode["series_id"])
         profiles = await get_all_profiles()
-        codec_profile = profiles[series["profile_id"]]
-        extension = codec_profile["extension"]
+        codec_profile = None
+        if 'series_id' in media_file:
+            series = await get_series(media_file["series_id"])
+            codec_profile = profiles[series["profile_id"]]
+        else:
+            codec_profile = profiles[media_file.get("profile_id")]
 
-        file_name = os.path.splitext(episode["filename"])[0]
-        input_file = episode['path']
+        extension = codec_profile["extension"]
+        file_name = os.path.splitext(media_file["filename"])[0]
+        input_file = media_file.get('path')
         output_file = os.path.join(
             await get_transcode_folder(), f"{file_name}.{extension}"
         )
@@ -365,7 +368,7 @@ async def process_episode(e):
 
         output_filename = f"{file_name}.{extension}"
 
-        input_filename = episode["filename"]
+        input_filename = media_file["filename"]
 
         parent_path = input_file.split('/')
         parent_path.pop()
@@ -389,17 +392,42 @@ async def process_episode(e):
 
         await asyncio.sleep(5)
         new_size = os.path.getsize(new_path)
-        episode["space_saved"] = episode["original_size"] - new_size
-        episode["size"] = new_size
-        await set_episode(episode)
+        media_file["size"] = new_size
+        if 'series_id' in media_file:
+            await set_episode(media_file)
+            h = {
+                "media_id": media_file["id"],
+                "name": media_file["series_id"],
+                "type": "episode",
+                "season_number": media_file["season_number"],
+                "episode_number": media_file["episode_number"],
+                "profile_id": codec_profile['id'],
+                "prev_codec": video_stream,
+                "new_codec": codec_profile["codec"],
+                "prev_size": media_file["original_size"],
+                "new_size": new_size,
 
-        await set_history(episode, codec_profile)
+            }
+            await set_history(h)
+        else:
+            await set_movie(media_file)
+            h = {
+                "media_id": media_file["id"],
+                "name": media_file["id"],
+                "type": "movie",
+                "profile_id": codec_profile["id"],
+                "prev_codec": video_stream,
+                "new_codec": codec_profile["codec"],
+                "prev_size": media_file["original_size"],
+                "new_size": new_size,
+            }
+            await set_history(h)
 
         encode_service.stage = "Idle"
         encode_service.current_progress = 0
         encode_service.current_eta = 0
     except Exception as e:
-        logger.error(f"An error occurred processing {input_file}: {e}", extra={'service': 'Encode'})
+        logger.error(f"An error occurred processing {media_file}: {e}", extra={'service': 'Encode'})
     return
 
 

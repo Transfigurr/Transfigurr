@@ -48,9 +48,9 @@ const QueueTable = ({ queueArray, profiles, series, settings }: any) => {
 			<thead>
 				<tr>
 					<th></th>
-					<th>Series</th>
+					<th>Title</th>
+					<th>Type</th>
 					<th>Episode</th>
-					<th>Episode Title</th>
 					<th>Profile</th>
 					<th>Codec</th>
 					<th>Future Codec</th>
@@ -64,21 +64,40 @@ const QueueTable = ({ queueArray, profiles, series, settings }: any) => {
 							<QueueIcon className={styles.svg} />
 						</td>
 						<td>
-							<a href={"/series/" + q?.series_id} className={styles.name}>
-								{q?.series_id}
+							<a
+								href={
+									q?.series_id ? "/series/" + q?.series_id : "/movies/" + q?.id
+								}
+								className={styles.name}
+							>
+								{q?.series_id ? q?.series_id : q?.id}
 							</a>
 						</td>
+						<td>{q?.series_id ? "Series" : "Movie"}</td>
 						<td>
-							{q.season_number}x{q.episode_number}
+							{q?.series_id && (
+								<>
+									{q.season_number}x{q.episode_number}
+								</>
+							)}
 						</td>
-						<td>{q.episode_name}</td>
 						<td>
-							{profiles &&
-							series &&
-							series[q?.series_id] &&
-							profiles[series[q?.series_id].profile_id]
-								? profiles[series[q?.series_id].profile_id].name
-								: ""}
+							{q?.series_id ? (
+								<>
+									{profiles &&
+									series &&
+									series[q?.series_id] &&
+									profiles[series[q?.series_id].profile_id]
+										? profiles[series[q?.series_id].profile_id].name
+										: ""}
+								</>
+							) : (
+								<>
+									{profiles && profiles[q?.profile_id]
+										? profiles[q?.profile_id].name
+										: ""}
+								</>
+							)}
 						</td>
 						<td className={styles.codecRow}>
 							<Codec codec={q.video_codec} />
@@ -86,12 +105,22 @@ const QueueTable = ({ queueArray, profiles, series, settings }: any) => {
 						<td className={styles.codecRow}>
 							<Codec
 								codec={
-									profiles &&
-									series &&
-									series[q?.series_id] &&
-									profiles[series[q?.series_id].profile_id]
-										? profiles[series[q?.series_id].profile_id].codec
-										: ""
+									q?.series_id ? (
+										<>
+											{profiles &&
+											series &&
+											series[q?.series_id] &&
+											profiles[series[q?.series_id].profile_id]
+												? profiles[series[q?.series_id].profile_id].codec
+												: ""}
+										</>
+									) : (
+										<>
+											{profiles && profiles[q?.profile_id]
+												? profiles[q?.profile_id].codec
+												: ""}
+										</>
+									)
 								}
 							/>
 						</td>

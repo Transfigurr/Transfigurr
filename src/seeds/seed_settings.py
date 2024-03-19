@@ -104,6 +104,10 @@ default_settings = [
         "value": True
     },
     {
+        "id": "media_table_showType",
+        "value": True
+    },
+    {
         "id": "media_table_showSizeOnDisk",
         "value": True
     },
