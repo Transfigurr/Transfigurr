@@ -1,10 +1,12 @@
 
 from src.api.controllers.settings_controller import get_all_settings
 from src.models.profile import Profile
+from src.models.profile_audio_language import Profile_Audio_Language
 from src.models.profile_codec import Profile_Codec
 from sqlalchemy import delete, insert
 from sqlalchemy.future import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from src.models.profile_subtitle_language import Profile_Subtitle_Language
 from src.utils.db import engine, instance_to_dict
 
 
@@ -15,6 +17,10 @@ async def get_all_profiles():
         p = {}
         for profile in profiles:
             profile_codecs = await async_session.execute(select(Profile_Codec).where(Profile_Codec.profile_id == profile['id']))
+            profile_audio_languages = await async_session.execute(select(Profile_Audio_Language).where(Profile_Audio_Language.profile_id == profile['id']))
+            profile_subtitle_languages = await async_session.execute(select(Profile_Subtitle_Language).where(Profile_Subtitle_Language.profile_id == profile['id']))
+            profile['audio_languages'] = [(instance_to_dict(obj))['language'] for obj in profile_audio_languages.scalars().all()]
+            profile['subtitle_languages'] = [(instance_to_dict(obj))['language'] for obj in profile_subtitle_languages.scalars().all()]
             profile['codecs'] = [(instance_to_dict(obj))['codec_id'] for obj in profile_codecs.scalars().all()]
             p[profile['id']] = profile
         return p
@@ -31,6 +37,8 @@ async def get_profile(profile_id):
 
 async def set_profile(profile):
     codec_ids = profile.pop('codecs', [])
+    audio_languages = profile.pop('audio_languages', [])
+    subtitle_languages = profile.pop('subtitle_languages', [])
     profile_id = 0
     async with AsyncSession(engine) as async_session:
         if 'id' in profile:
@@ -60,6 +68,19 @@ async def set_profile(profile):
             await async_session.execute(stmt)
         await async_session.commit()
 
+    async with AsyncSession(engine) as async_session:
+        await async_session.execute(delete(Profile_Audio_Language).where(Profile_Audio_Language.profile_id == profile_id))
+        for language in audio_languages:
+            stmt = insert(Profile_Audio_Language).values(profile_id=profile_id, language=language)
+            await async_session.execute(stmt)
+        await async_session.commit()
+
+    async with AsyncSession(engine) as async_session:
+        await async_session.execute(delete(Profile_Subtitle_Language).where(Profile_Subtitle_Language.profile_id == profile_id))
+        for language in subtitle_languages:
+            stmt = insert(Profile_Subtitle_Language).values(profile_id=profile_id, language=language)
+            await async_session.execute(stmt)
+        await async_session.commit()
     return
 
 
@@ -70,4 +91,7 @@ async def delete_profile(profile_id):
         return
     async with AsyncSession(engine) as async_session:
         await async_session.execute(delete(Profile).where(Profile.id == profile_id))
+        await async_session.execute(delete(Profile_Codec).where(Profile_Codec.profile_id == profile_id))
+        await async_session.execute(delete(Profile_Audio_Language).where(Profile_Audio_Language.profile_id == profile_id))
+        await async_session.execute(delete(Profile_Subtitle_Language).where(Profile_Subtitle_Language.profile_id == profile_id))
         await async_session.commit()

@@ -15,6 +15,8 @@ from src.models.user import User  # noqa
 from src.seeds.seed_system import seed_system  # noqa
 from src.seeds.seed_settings import seed_settings  # noqa
 from src.seeds.seed_profiles import seed_profiles  # noqa
+from src.seeds.seed_profile_audio_languages import seed_profile_audio_languages  # noqa
+from src.seeds.seed_profile_subtitle_languages import seed_profile_subtitle_languages  # noqa
 from src.seeds.seed_profile_codecs import seed_profile_codecs  # noqa
 from sqlalchemy import create_engine, inspect  # noqa
 from src.models.base import Base  # noqa
@@ -33,6 +35,8 @@ def init_db():
     settings = False
     system = False
     profile_codecs = False
+    profile_audio_languages = False
+    profile_subtitle_languages = False
 
     inspector = inspect(engine)
     tables = inspector.get_table_names()
@@ -44,6 +48,10 @@ def init_db():
         system = True
     if 'profile_codec' not in tables:
         profile_codecs = True
+    if 'profile_audio_language' not in tables:
+        profile_audio_languages = True
+    if 'profile_subtitle_language' not in tables:
+        profile_subtitle_languages = True
 
     Base.metadata.create_all(engine)
     Session = sessionmaker(bind=engine)
@@ -56,6 +64,10 @@ def init_db():
         seed_system(session)
     if profile_codecs:
         seed_profile_codecs(session)
+    if profile_audio_languages:
+        seed_profile_audio_languages(session)
+    if profile_subtitle_languages:
+        seed_profile_subtitle_languages(session)
     session.commit()
 
 

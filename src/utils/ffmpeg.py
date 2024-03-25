@@ -233,7 +233,16 @@ def create_ffmpeg_filter(flipping, rotation, cropping, limit, anamorphic, fill, 
     return filters
 
 
-def create_ffmpeg_command(input_file, output_file, codec_profile):
+def get_stream_indices(probe, codec_type, language):
+    indices = []
+    for stream in probe['streams']:
+        if stream['codec_type'] == codec_type and 'tags' in stream and 'language' in stream['tags'] and stream['tags']['language'] == language:
+            indices.append(str(stream['index']))
+
+    return indices
+
+
+def create_ffmpeg_command(input_file, output_file, codec_profile, has_audio, has_subtitle, probe):
 
     container = codec_profile["container"]
     pass_thru_common_metadata = codec_profile["pass_thru_common_metadata"]
@@ -276,7 +285,43 @@ def create_ffmpeg_command(input_file, output_file, codec_profile):
 
     if encoder:
         command += ["-vcodec", encoder]
+        command += ["-map", "0:v"]
 
+    if has_audio:
+        if "all" in codec_profile.get("audio_languages", []):
+            command += ["-map", "0:a"]
+        else:
+            for lang in codec_profile.get("audio_languages", []):
+                audio_indices = get_stream_indices(probe, 'audio', lang)
+                for index in audio_indices:
+                    command += ["-map", f"0:{index}"]
+            if codec_profile.get('map_untagged_audio_tracks', False):
+                untagged_audio_indices = get_stream_indices(probe, 'audio', '')
+                for index in untagged_audio_indices:
+                    command += ["-map", f"0:{index}"]
+
+    if has_subtitle:
+        if "all" in codec_profile.get("subtitle_languages", []):
+            if container == 'matroska':
+                command += ["-scodec", "srt", "-map", "0:s"]
+            else:
+                command += ["-scodec", "mov_text", "-map", "0:s"]
+        else:
+            for lang in codec_profile.get("subtitle_languages", []):
+                subtitle_indices = get_stream_indices(probe, 'subtitle', lang)
+                for index in subtitle_indices:
+                    if container == 'matroska':
+                        command += ["-scodec", "srt", "-map", f"0:{index}"]
+                    else:
+                        command += ["-scodec", "mov_text", "-map", f"0:{index}"]
+
+            if codec_profile.get('map_untagged_subtitle_tracks', False):
+                untagged_subtitle_indices = get_stream_indices(probe, 'subtitle', '')
+                for index in untagged_subtitle_indices:
+                    if container == 'matroska':
+                        command += ["-scodec", "srt", "-map", f"0:{index}"]
+                    else:
+                        command += ["-scodec", "mov_text", "-map", f"0:{index}"]
     if preset:
         if codec == 'av1':
             command += ["-cpu-used", preset]
@@ -431,14 +476,31 @@ async def process_episode(media_file):
     return
 
 
+def has_audio_and_subtitle_streams(probe):
+    has_audio = False
+    has_subtitle = False
+
+    for stream in probe['streams']:
+        if stream['codec_type'] == 'audio':
+            has_audio = True
+        elif stream['codec_type'] == 'subtitle':
+            has_subtitle = True
+
+        if has_audio and has_subtitle:
+            break
+
+    return has_audio, has_subtitle
+
+
 async def run_ffmpeg(input_file, output_file, codec_profile):
     from src.services.encode_service import encode_service
     try:
         loop = asyncio.get_event_loop()
         encode_service.processing = True
         probe = ffmpeg.probe(input_file)
+        has_audio, has_subtitle = has_audio_and_subtitle_streams(probe)
         total_duration = float(probe["format"]["duration"])
-        command = create_ffmpeg_command(input_file, output_file, codec_profile)
+        command = create_ffmpeg_command(input_file, output_file, codec_profile, has_audio, has_subtitle, probe)
         process = await loop.run_in_executor(
             None,
             partial(

@@ -56,3 +56,9 @@ class Profile(Base):
     profile: str = Column(String)
     level: str = Column(String)
     fast_decode: bool = Column(Boolean)
+
+    # Audio
+    map_untagged_audio_tracks: bool = Column(Boolean)
+
+    # Subtitle
+    map_untagged_subtitle_tracks: bool = Column(Boolean)
