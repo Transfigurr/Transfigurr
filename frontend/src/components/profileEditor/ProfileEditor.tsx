@@ -1,5 +1,7 @@
+import ProfileAudio from "../profileAudio/ProfileAudio";
 import ProfileDimensions from "../profileDimensions/ProfileDimensions";
 import ProfileFilters from "../profileFilters/ProfileFilters";
+import ProfileSubtitles from "../profileSubtitles/ProfileSubtitles";
 import ProfileSummary from "../profileSummary/ProfileSummary";
 import ProfileVideo from "../profileVideo/ProfileVideo";
 import styles from "./ProfileEditor.module.scss";
@@ -59,6 +61,28 @@ const ProfileEditor = ({
 				>
 					Video
 				</div>
+				<div
+					className={styles.tab}
+					onClick={() => setTabSelected("audio")}
+					style={
+						tabSelected == "audio"
+							? { backgroundColor: "var(--transfigurrPurple)", color: "white" }
+							: {}
+					}
+				>
+					Audio
+				</div>
+				<div
+					className={styles.tab}
+					onClick={() => setTabSelected("subtitles")}
+					style={
+						tabSelected == "subtitles"
+							? { backgroundColor: "var(--transfigurrPurple)", color: "white" }
+							: {}
+					}
+				>
+					Subtitles
+				</div>
 			</div>
 			{tabSelected === "summary" && (
 				<ProfileSummary
@@ -88,8 +112,12 @@ const ProfileEditor = ({
 					encoders={encoders}
 				/>
 			)}
-			{tabSelected === "audio" && <div className={styles.section}></div>}
-			{tabSelected === "subtitles" && <div className={styles.section}></div>}
+			{tabSelected === "audio" && (
+				<ProfileAudio content={content} setContent={setContent} />
+			)}
+			{tabSelected === "subtitles" && (
+				<ProfileSubtitles content={content} setContent={setContent} />
+			)}
 		</div>
 	);
 };

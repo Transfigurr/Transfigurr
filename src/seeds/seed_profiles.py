@@ -47,7 +47,9 @@ default_profiles = [
         "tune": "none",
         "profile": "auto",
         "level": "auto",
-        "fast_decode": False
+        "fast_decode": False,
+        "map_untagged_audio_tracks": True,
+        "map_untagged_subtitle_tracks": True
     },
     {
         "name": "h264",
@@ -88,7 +90,9 @@ default_profiles = [
         "tune": "none",
         "profile": "auto",
         "level": "auto",
-        "fast_decode": False
+        "fast_decode": False,
+        "map_untagged_audio_tracks": True,
+        "map_untagged_subtitle_tracks": True
     },
     {
         "name": "hevc",
@@ -129,7 +133,9 @@ default_profiles = [
         "tune": "none",
         "profile": "auto",
         "level": "auto",
-        "fast_decode": False
+        "fast_decode": False,
+        "map_untagged_audio_tracks": True,
+        "map_untagged_subtitle_tracks": True
     },
     {
         "name": "mpeg4",
@@ -170,7 +176,9 @@ default_profiles = [
         "tune": "",
         "profile": "",
         "level": "",
-        "fast_decode": False
+        "fast_decode": False,
+        "map_untagged_audio_tracks": True,
+        "map_untagged_subtitle_tracks": True
     },
     {
         "name": "vp8",
@@ -211,7 +219,9 @@ default_profiles = [
         "tune": "none",
         "profile": "auto",
         "level": "auto",
-        "fast_decode": False
+        "fast_decode": False,
+        "map_untagged_audio_tracks": True,
+        "map_untagged_subtitle_tracks": True
     },
     {
         "name": "vp9",
@@ -252,7 +262,9 @@ default_profiles = [
         "tune": "none",
         "profile": "auto",
         "level": "auto",
-        "fast_decode": False
+        "fast_decode": False,
+        "map_untagged_audio_tracks": True,
+        "map_untagged_subtitle_tracks": True
     },
     {
         "name": "av1",
@@ -293,6 +305,8 @@ default_profiles = [
         "tune": "none",
         "profile": "auto",
         "level": "auto",
-        "fast_decode": False
+        "fast_decode": False,
+        "map_untagged_audio_tracks": True,
+        "map_untagged_subtitle_tracks": True
     },
 ]
