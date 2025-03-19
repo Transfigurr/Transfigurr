@@ -3,6 +3,7 @@ FROM node:lts-alpine AS frontend
 WORKDIR /frontend
 COPY frontend/package*.json ./
 RUN npm cache clean --force && npm ci
+RUN npm install -g typescript
 COPY frontend/ ./
 RUN npm run build
 

@@ -53,7 +53,25 @@ type ProbeData struct {
 		BitsPerRawSample   string         `json:"bits_per_raw_sample,omitempty"`
 		NbFrames           string         `json:"nb_frames"`
 		Disposition        map[string]int `json:"disposition"`
-		Tags               struct {
+
+		// Audio-specific fields
+		SampleFmt       string `json:"sample_fmt,omitempty"`
+		SampleRate      string `json:"sample_rate,omitempty"`
+		Channels        int    `json:"channels,omitempty"`
+		ChannelLayout   string `json:"channel_layout,omitempty"`
+		BitsPerSample   int    `json:"bits_per_sample,omitempty"`
+		DmixMode        string `json:"dmix_mode,omitempty"`
+		LtrtCmixLevel   string `json:"ltrt_cmixlev,omitempty"`
+		LtrtSurroundMix string `json:"ltrt_surmixlev,omitempty"`
+		LoroSurroundMix string `json:"loro_surmixlev,omitempty"`
+		LoroCmixLevel   string `json:"loro_cmixlev,omitempty"`
+
+		// Video-specific additional fields
+		FilmGrain    int                      `json:"film_grain,omitempty"`
+		Rotation     string                   `json:"rotation,omitempty"`
+		SideDataList []map[string]interface{} `json:"side_data_list,omitempty"`
+
+		Tags struct {
 			Language             string `json:"language,omitempty"`
 			BPS                  string `json:"BPS,omitempty"`
 			NumberOfFrames       string `json:"NUMBER_OF_FRAMES,omitempty"`
@@ -62,6 +80,35 @@ type ProbeData struct {
 			StatisticsTags       string `json:"_STATISTICS_TAGS,omitempty"`
 			Encoder              string `json:"ENCODER,omitempty"`
 			Duration             string `json:"DURATION,omitempty"`
+			Title                string `json:"title,omitempty"`
+			Handler              string `json:"handler_name,omitempty"`
+			Creation_time        string `json:"creation_time,omitempty"`
 		} `json:"tags"`
 	} `json:"streams"`
+
+	// Chapter information
+	Chapters []struct {
+		ID        int               `json:"id"`
+		TimeBase  string            `json:"time_base"`
+		Start     int64             `json:"start"`
+		StartTime string            `json:"start_time"`
+		End       int64             `json:"end"`
+		EndTime   string            `json:"end_time"`
+		Tags      map[string]string `json:"tags"`
+	} `json:"chapters,omitempty"`
+
+	// Program information
+	Programs []struct {
+		ProgramID  int               `json:"program_id"`
+		ProgramNum int               `json:"program_num"`
+		NbStreams  int               `json:"nb_streams"`
+		StreamIds  []int             `json:"stream_ids,omitempty"`
+		Tags       map[string]string `json:"tags,omitempty"`
+	} `json:"programs,omitempty"`
+
+	// Error information if present
+	Error struct {
+		Code   int    `json:"code,omitempty"`
+		String string `json:"string,omitempty"`
+	} `json:"error,omitempty"`
 }

@@ -18,4 +18,6 @@ type Movie struct {
 	OriginalSize int    `json:"originalSize"`
 	Path         string `json:"path"`
 	Runtime      int    `json:"runtime"`
+	FileID       string `json:"fileId"`
+	File         *File  `json:"file"`
 }

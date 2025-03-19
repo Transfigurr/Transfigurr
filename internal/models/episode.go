@@ -16,4 +16,5 @@ type Episode struct {
 	OriginalSize  int    `json:"originalSize"`
 	Path          string `json:"path"`
 	Missing       bool   `json:"missing"`
+	File          *File  `json:"file"`
 }
