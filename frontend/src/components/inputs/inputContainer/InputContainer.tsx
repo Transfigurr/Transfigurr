@@ -1,6 +1,7 @@
 import InputCheckbox from "../inputCheckbox/InputCheckbox";
 import InputSelect from "../inputSelect/InputSelect";
 import InputText from "../inputText/InputText";
+import GroupedAutocomplete from "../groupedAutocomplete/GroupedAutocomplete";
 import styles from "./InputContainer.module.scss";
 const InputContainer = ({
 	type,
@@ -12,6 +13,8 @@ const InputContainer = ({
 	children,
 	checked,
 	disabled = false,
+	data, // For GroupedAutocomplete
+	placeholder, // For GroupedAutocomplete
 }: any) => {
 	return (
 		<div
@@ -53,6 +56,15 @@ const InputContainer = ({
 								type="input"
 								checked={checked}
 								onChange={onChange}
+								disabled={disabled}
+							/>
+						)}
+						{type === "grouped-autocomplete" && (
+							<GroupedAutocomplete
+								data={data}
+								value={selected}
+								onChange={onChange}
+								placeholder={placeholder}
 								disabled={disabled}
 							/>
 						)}
