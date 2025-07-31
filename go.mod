@@ -24,3 +24,5 @@ require (
 	golang.org/x/time v0.10.0
 
 )
+
+require github.com/cespare/xxhash/v2 v2.3.0 // indirect

@@ -93,6 +93,7 @@ CREATE TABLE IF NOT EXISTS files (
     space_saved INTEGER DEFAULT 0,
     original_size INTEGER DEFAULT 0,
     missing BOOLEAN DEFAULT FALSE,
+    hash TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );

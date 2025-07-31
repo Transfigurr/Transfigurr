@@ -2,10 +2,8 @@ package services
 
 import "transfigurr/internal/models"
 
-type ScanServiceI interface {
+type MetadataServiceI interface {
 	Startup()
 	Enqueue(item models.Item)
 	EnqueueAll()
-	EnqueueAllSeries()
-	EnqueueAllMovies()
 }

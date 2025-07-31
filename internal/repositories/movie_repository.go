@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"log"
 	"transfigurr/internal/models"
+	"transfigurr/internal/utils"
 )
 
 type MovieRepository struct {
@@ -106,6 +107,7 @@ func (repo *MovieRepository) GetMovieById(id string) (models.Movie, error) {
 	}
 	return movie, nil
 }
+
 func (repo *MovieRepository) UpsertMovie(id string, movie models.Movie) (models.Movie, error) {
 	tx, err := repo.DB.Begin()
 	if err != nil {
@@ -113,8 +115,7 @@ func (repo *MovieRepository) UpsertMovie(id string, movie models.Movie) (models.
 	}
 	defer tx.Rollback()
 
-	// Ensure consistent file ID
-	log.Print("IS FILE", movie.File)
+	// Handle file information first if present
 	if movie.File != nil {
 		// Make sure movie.FileID is properly set
 		if movie.FileID == "" {
@@ -122,22 +123,41 @@ func (repo *MovieRepository) UpsertMovie(id string, movie models.Movie) (models.
 		}
 
 		// Ensure the File.Id matches FileID
-		log.Print("Filing", movie.FileID, movie.File.Id)
 		movie.File.Id = movie.FileID
 
-		// Handle file information first
+		// Generate hash for the file if it exists and is accessible
+		if !movie.File.Missing {
+			fileHash, err := utils.GenerateFileHash(movie.File.Path)
+			if err != nil {
+				log.Printf("Failed to generate hash for file %s: %v", movie.File.Path, err)
+				return models.Movie{}, err
+			}
+
+			// Check if a file with this hash already exists
+			var existingHash string
+			err = tx.QueryRow("SELECT hash FROM files WHERE id = ?", movie.FileID).Scan(&existingHash)
+			if err == nil && existingHash != fileHash {
+				// Hash has changed, file has been modified
+				movie.File.Hash = fileHash
+			} else if err == sql.ErrNoRows {
+				// New file
+				movie.File.Hash = fileHash
+			}
+		}
+
+		// Handle file information
 		_, err = tx.Exec(`
-            INSERT INTO files (id, filename, path, video_codec, 
-            size, space_saved, original_size, missing)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            ON CONFLICT(id) DO UPDATE SET
-            filename = ?, path = ?, video_codec = ?,
-            size = ?, space_saved = ?, original_size = ?,
-            missing = ?`,
+			INSERT INTO files (id, filename, path, video_codec, 
+			size, space_saved, original_size, missing, hash)
+			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+			ON CONFLICT(id) DO UPDATE SET
+			filename = ?, path = ?, video_codec = ?,
+			size = ?, space_saved = ?, original_size = ?,
+			missing = ?, hash = ?`,
 			movie.FileID, movie.File.Filename, movie.File.Path, movie.File.VideoCodec,
-			movie.File.Size, movie.File.SpaceSaved, movie.File.OriginalSize, movie.File.Missing,
+			movie.File.Size, movie.File.SpaceSaved, movie.File.OriginalSize, movie.File.Missing, movie.File.Hash,
 			movie.File.Filename, movie.File.Path, movie.File.VideoCodec,
-			movie.File.Size, movie.File.SpaceSaved, movie.File.OriginalSize, movie.File.Missing,
+			movie.File.Size, movie.File.SpaceSaved, movie.File.OriginalSize, movie.File.Missing, movie.File.Hash,
 		)
 		if err != nil {
 			log.Print("file trans err", err)
@@ -147,15 +167,15 @@ func (repo *MovieRepository) UpsertMovie(id string, movie models.Movie) (models.
 
 	// Rest of the method remains unchanged
 	_, err = tx.Exec(`
-        INSERT INTO movies (
-            id, file_id, name, release_date, genre,
-            status, overview, profile_id, monitored,
-            studio, runtime
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ON CONFLICT(id) DO UPDATE SET
-        file_id = ?, name = ?, release_date = ?, genre = ?,
-        status = ?, overview = ?, profile_id = ?, monitored = ?,
-        studio = ?, runtime = ?`,
+		INSERT INTO movies (
+			id, file_id, name, release_date, genre,
+			status, overview, profile_id, monitored,
+			studio, runtime
+		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+		ON CONFLICT(id) DO UPDATE SET
+		file_id = ?, name = ?, release_date = ?, genre = ?,
+		status = ?, overview = ?, profile_id = ?, monitored = ?,
+		studio = ?, runtime = ?`,
 		id, movie.FileID, movie.Name, movie.ReleaseDate, movie.Genre,
 		movie.Status, movie.Overview, movie.ProfileID, movie.Monitored,
 		movie.Studio, movie.Runtime,
