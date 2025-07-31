@@ -1,9 +1,10 @@
 -- Core tables
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE IF NOT EXISTS secrets (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT NOT NULL,
     password TEXT NOT NULL,
     secret TEXT NOT NULL,
+    tmdb_key TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
@@ -83,6 +84,19 @@ CREATE TABLE IF NOT EXISTS profile_codecs (
     FOREIGN KEY (profile_id) REFERENCES profiles(id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS files (
+    id TEXT PRIMARY KEY,
+    filename TEXT NOT NULL,
+    path TEXT NOT NULL,
+    video_codec TEXT,
+    size INTEGER DEFAULT 0,
+    space_saved INTEGER DEFAULT 0,
+    original_size INTEGER DEFAULT 0,
+    missing BOOLEAN DEFAULT FALSE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS series (
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
@@ -121,6 +135,7 @@ CREATE TABLE IF NOT EXISTS seasons (
 
 CREATE TABLE IF NOT EXISTS episodes (
     id TEXT PRIMARY KEY,
+    file_id TEXT,
     series_id TEXT NOT NULL,
     season_id TEXT NOT NULL,
     episode_number INTEGER NOT NULL,
@@ -139,10 +154,12 @@ CREATE TABLE IF NOT EXISTS episodes (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (series_id) REFERENCES series(id) ON DELETE CASCADE,
     FOREIGN KEY (season_id) REFERENCES seasons(id) ON DELETE CASCADE
+    FOREIGN KEY (file_id) REFERENCES files(id) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS movies (
     id TEXT PRIMARY KEY,
+    file_id TEXT,
     name TEXT NOT NULL,
     release_date TEXT,
     genre TEXT,
@@ -162,6 +179,7 @@ CREATE TABLE IF NOT EXISTS movies (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (profile_id) REFERENCES profiles(id)
+    FOREIGN KEY (file_id) REFERENCES files(id) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS history (
@@ -193,15 +211,74 @@ CREATE TABLE IF NOT EXISTS events (
 );
 
 CREATE TABLE IF NOT EXISTS settings (
-    id TEXT PRIMARY KEY,
-    value TEXT NOT NULL,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    theme TEXT NOT NULL DEFAULT 'auto',
+    default_profile INTEGER NOT NULL DEFAULT 1,
+    queue_status TEXT NOT NULL DEFAULT 'active',
+    queue_startup_state TEXT NOT NULL DEFAULT 'previous',
+    log_level TEXT NOT NULL DEFAULT 'info',
+    media_view TEXT NOT NULL DEFAULT 'posters',
+    media_sort TEXT NOT NULL DEFAULT 'title',
+    media_sort_direction TEXT NOT NULL DEFAULT 'ascending',
+    media_filter TEXT NOT NULL DEFAULT 'all',
+    mass_editor_sort TEXT NOT NULL DEFAULT 'title',
+    mass_editor_sort_direction TEXT NOT NULL DEFAULT 'ascending',
+    mass_editor_filter TEXT NOT NULL DEFAULT 'all',
+    media_poster_size TEXT NOT NULL DEFAULT 'medium',
+    media_poster_detailed_progress_bar BOOLEAN NOT NULL DEFAULT FALSE,
+    media_poster_show_title BOOLEAN NOT NULL DEFAULT TRUE,
+    media_poster_show_monitored BOOLEAN NOT NULL DEFAULT TRUE,
+    media_poster_show_profile BOOLEAN NOT NULL DEFAULT TRUE,
+    media_table_show_network BOOLEAN NOT NULL DEFAULT FALSE,
+    media_table_show_profile BOOLEAN NOT NULL DEFAULT TRUE,
+    media_table_show_seasons BOOLEAN NOT NULL DEFAULT TRUE,
+    media_table_show_episodes BOOLEAN NOT NULL DEFAULT TRUE,
+    media_table_show_episode_count BOOLEAN NOT NULL DEFAULT FALSE,
+    media_table_show_year BOOLEAN NOT NULL DEFAULT TRUE,
+    media_table_show_type BOOLEAN NOT NULL DEFAULT TRUE,
+    media_table_show_size_on_disk BOOLEAN NOT NULL DEFAULT TRUE,
+    media_table_show_size_saved BOOLEAN NOT NULL DEFAULT TRUE,
+    media_table_show_genre BOOLEAN NOT NULL DEFAULT FALSE,
+    media_overview_poster_size TEXT NOT NULL DEFAULT 'medium',
+    media_overview_detailed_progress_bar BOOLEAN NOT NULL DEFAULT FALSE,
+    media_overview_show_monitored BOOLEAN NOT NULL DEFAULT TRUE,
+    media_overview_show_network BOOLEAN NOT NULL DEFAULT TRUE,
+    media_overview_show_profile BOOLEAN NOT NULL DEFAULT TRUE,
+    media_overview_show_season_count BOOLEAN NOT NULL DEFAULT TRUE,
+    media_overview_show_path BOOLEAN NOT NULL DEFAULT FALSE,
+    media_overview_show_size_on_disk BOOLEAN NOT NULL DEFAULT TRUE,
+    queue_filter TEXT NOT NULL DEFAULT 'all',
+    queue_page_size INTEGER NOT NULL DEFAULT 12,
+    history_filter TEXT NOT NULL DEFAULT 'all',
+    history_page_size INTEGER NOT NULL DEFAULT 15,
+    events_filter TEXT NOT NULL DEFAULT 'all',
+    events_page_size INTEGER NOT NULL DEFAULT 15,
+    port INTEGER NOT NULL DEFAULT 7889,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS systems (
-    id TEXT PRIMARY KEY,
-    value TEXT NOT NULL,
+-- Create system_stats table
+CREATE TABLE IF NOT EXISTS system_stats (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    start_time DATETIME,
+    series_count INTEGER DEFAULT 0,
+    episode_count INTEGER DEFAULT 0,
+    files_count INTEGER DEFAULT 0,
+    size_on_disk INTEGER DEFAULT 0,
+    space_saved INTEGER DEFAULT 0,
+    monitored_count INTEGER DEFAULT 0,
+    unmonitored_count INTEGER DEFAULT 0,
+    ended_count INTEGER DEFAULT 0,
+    continuing_count INTEGER DEFAULT 0,
+    series_total_space INTEGER DEFAULT 0,
+    series_free_space INTEGER DEFAULT 0,
+    movies_total_space INTEGER DEFAULT 0,
+    movies_free_space INTEGER DEFAULT 0,
+    config_total_space INTEGER DEFAULT 0,
+    config_free_space INTEGER DEFAULT 0,
+    transcode_total_space INTEGER DEFAULT 0,
+    transcode_free_space INTEGER DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );

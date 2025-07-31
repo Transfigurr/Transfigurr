@@ -8,43 +8,59 @@ import (
 	"transfigurr/internal/types"
 )
 
-func SetupRouter(mux *http.ServeMux, services *types.Services, repositories *types.Repositories) {
-	// API Routes prefix handler
-	// apiHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	//     // CORS middleware could go here
-	//     w.Header().Set("Access-Control-Allow-Origin", "*")``
-	//     w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-	//     w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
-
-	//     if r.Method == "OPTIONS" {
-	//         w.WriteHeader(http.StatusOK)
-	//         return
-	//     }
-	// })
-
-	user, err := repositories.UserRepo.GetUser()
-	if err != nil {
-		log.Print("Failed to get user")
+func Chain(handler http.Handler, middlewares ...func(http.Handler) http.Handler) http.Handler {
+	for _, middleware := range middlewares {
+		handler = middleware(handler)
 	}
-	jwtSecret := []byte(user.Secret)
+	return handler
+}
 
-	// Public Routes
-	mux.Handle("/api/auth/", http.HandlerFunc(handlers.HandleAuth(repositories.AuthRepo)))
+func SetupRouter(mux *http.ServeMux, services *types.Services, repositories *types.Repositories) {
+	secrets, err := repositories.SecretsRepo.GetSecrets()
+	log.Print(secrets, err, "secrets")
+	if err != nil {
+		log.Panic("Failed to get secret")
+	}
+	jwtSecret := []byte(secrets.Secret)
+
+	// Public Routes with higher rate limits
+	publicRateLimit := middleware.RateLimit(middleware.PublicConfig)
+
+	authHandler := Chain(
+		http.HandlerFunc(handlers.HandleAuth(repositories.SecretsRepo)),
+		publicRateLimit,
+	)
+	mux.Handle("/api/auth/", authHandler)
+
+	// Static file serving with public rate limits
 	assetsHandler, rootHandler := handlers.HandleStatic("./frontend/dist")
-	mux.Handle("/assets/", http.HandlerFunc(assetsHandler))
-	mux.Handle("/", http.HandlerFunc(rootHandler))
+	mux.Handle("/assets/", publicRateLimit(http.HandlerFunc(assetsHandler)))
+	mux.Handle("/", publicRateLimit(http.HandlerFunc(rootHandler)))
 
-	// Protected Routes
-	mux.Handle("/api/series/", middleware.Protected(http.HandlerFunc(handlers.HandleSeries(repositories.SeriesRepo, repositories.SeasonRepo, repositories.EpisodeRepo, services.ScanService)), jwtSecret))
-	mux.Handle("/api/movies/", middleware.Protected(http.HandlerFunc(handlers.HandleMovies(services.ScanService, repositories.MovieRepo)), jwtSecret))
-	mux.Handle("/api/settings/", middleware.Protected(http.HandlerFunc(handlers.HandleSettings(repositories.SettingRepo)), jwtSecret))
-	mux.Handle("/api/system/", middleware.Protected(http.HandlerFunc(handlers.HandleSystem(repositories.SystemRepo)), jwtSecret))
-	mux.Handle("/api/profiles/", middleware.Protected(http.HandlerFunc(handlers.HandleProfiles(services.ScanService, repositories.ProfileRepo, repositories.MovieRepo, repositories.SeriesRepo)), jwtSecret))
-	mux.Handle("/api/history/", middleware.Protected(http.HandlerFunc(handlers.HandleHistory(repositories.HistoryRepo)), jwtSecret))
-	mux.Handle("/api/events/", middleware.Protected(http.HandlerFunc(handlers.HandleEvents(repositories.EventRepo)), jwtSecret))
-	mux.Handle("/api/codecs/", middleware.Protected(http.HandlerFunc(handlers.HandleCodecs(repositories.CodecRepo)), jwtSecret))
-	mux.Handle("/api/actions/", middleware.Protected(http.HandlerFunc(handlers.HandleActions(services.ScanService, services.MetadataService)), jwtSecret))
-	mux.Handle("/api/artwork/", middleware.Protected(http.HandlerFunc(handlers.HandleArtwork()), jwtSecret))
-	mux.Handle("/api/events/stream", middleware.Protected(handlers.HandleEventStream(services.EncodeService, repositories), jwtSecret))
+	// Protected Routes with stricter rate limits
+	protectedRateLimit := middleware.RateLimit(middleware.DefaultConfig)
 
+	// Helper function to apply both auth and rate limiting
+	protected := func(handler http.HandlerFunc) http.Handler {
+		return Chain(
+			handler,
+			protectedRateLimit,
+			func(h http.Handler) http.Handler {
+				return middleware.AuthMiddleware(h.ServeHTTP, jwtSecret)
+			},
+		)
+	}
+
+	// Protected routes
+	mux.Handle("/api/series/", protected(handlers.HandleSeries(repositories.SeriesRepo, repositories.SeasonRepo, repositories.EpisodeRepo, services.ScanService)))
+	mux.Handle("/api/movies/", protected(handlers.HandleMovies(services.ScanService, repositories.MovieRepo)))
+	mux.Handle("/api/settings/", protected(handlers.HandleSettings(repositories.SettingRepo)))
+	mux.Handle("/api/system_stats/", protected(handlers.HandleSystem(repositories.SystemStatsRepo)))
+	mux.Handle("/api/profiles/", protected(handlers.HandleProfiles(services.ScanService, repositories.ProfileRepo, repositories.MovieRepo, repositories.SeriesRepo)))
+	mux.Handle("/api/history/", protected(handlers.HandleHistory(repositories.HistoryRepo)))
+	mux.Handle("/api/events/", protected(handlers.HandleEvents(repositories.EventRepo)))
+	mux.Handle("/api/codecs/", protected(handlers.HandleCodecs(repositories.CodecRepo)))
+	mux.Handle("/api/actions/", protected(handlers.HandleActions(services.ScanService, services.MetadataService)))
+	mux.Handle("/api/artwork/", protected(handlers.HandleArtwork()))
+	mux.Handle("/api/events/stream", protected(handlers.HandleEventStream(services.EncodeService, repositories)))
 }

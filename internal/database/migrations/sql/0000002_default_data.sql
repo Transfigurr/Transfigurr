@@ -53,55 +53,115 @@ INSERT INTO profiles (
 'constant quality', 22, 15000, 0, '7', 'none', 'auto', 'auto', 0, 1, 1);
 
 -- Default Settings
-INSERT INTO settings (id, value) VALUES
-('theme', 'auto'),
-('defaultProfile', '1'),
-('queueStatus', 'active'),
-('queueStartupState', 'previous'),
-('logLevel', 'info'),
-('mediaView', 'posters'),
-('mediaSort', 'title'),
-('massEditorSort', 'title'),
-('massEditorSortDirection', 'ascending'),
-('massEditorFilter', 'all'),
-('mediaSortDirection', 'ascending'),
-('mediaFilter', 'all'),
-('TMDB', 'ZXlKaGJHY2lPaUpJVXpJMU5pSjkuZXlKaGRXUWlPaUprT1RCalpqQmhaREEyT0dJd01XVXpNVFkxTWpjNVltWXpPRE0xWmpRNU9TSXNJbk4xWWlJNklqWTFOR0UxWVRReE5qZGlOakV6TURFeFpqUXdaV0ZpWVNJc0luTmpiM0JsY3lJNld5SmhjR2xmY21WaFpDSmRMQ0oyWlhKemFXOXVJam94ZlEuNU1LVjViaXV0RmZvQkRuMk14aFMxQU1wbV9DTmE4QTh4WE5XTkFKUVNnTQ=='),
-('mediaPosterPosterSize', 'medium'),
-('mediaPosterDetailedProgressBar', 'false'),
-('mediaPosterShowTitle', 'true'),
-('mediaPosterShowMonitored', 'true'),
-('mediaPosterShowProfile', 'true'),
-('mediaTableShowNetwork', 'false'),
-('mediaTableShowProfile', 'true'),
-('mediaTableShowSeasons', 'true'),
-('mediaTableShowEpisodes', 'true'),
-('mediaTableShowEpisodeCount', 'false'),
-('mediaTableShowYear', 'true'),
-('mediaTableShowType', 'true'),
-('mediaTableShowSizeOnDisk', 'true'),
-('mediaTableShowSizeSaved', 'true'),
-('mediaTableShowGenre', 'false'),
-('mediaOverviewPosterSize', 'medium'),
-('mediaOverviewDetailedProgressBar', 'false'),
-('mediaOverviewShowMonitored', 'true'),
-('mediaOverviewShowNetwork', 'true'),
-('mediaOverviewShowProfile', 'true'),
-('mediaOverviewShowSeasonCount', 'true'),
-('mediaOverviewShowPath', 'false'),
-('mediaOverviewShowSizeOnDisk', 'true'),
-('queueFilter', 'all'),
-('queuePageSize', '12'),
-('historyFilter', 'all'),
-('historyPageSize', '15'),
-('eventsFilter', 'all'),
-('eventsPageSize', '15'),
-('port', '7889');
+INSERT INTO settings (
+    theme,
+    default_profile,
+    queue_status,
+    queue_startup_state,
+    log_level,
+    media_view,
+    media_sort,
+    media_sort_direction,
+    media_filter,
+    mass_editor_sort,
+    mass_editor_sort_direction,
+    mass_editor_filter,
+    media_poster_size,
+    media_poster_detailed_progress_bar,
+    media_poster_show_title,
+    media_poster_show_monitored,
+    media_poster_show_profile,
+    media_table_show_network,
+    media_table_show_profile,
+    media_table_show_seasons,
+    media_table_show_episodes,
+    media_table_show_episode_count,
+    media_table_show_year,
+    media_table_show_type,
+    media_table_show_size_on_disk,
+    media_table_show_size_saved,
+    media_table_show_genre,
+    media_overview_poster_size,
+    media_overview_detailed_progress_bar,
+    media_overview_show_monitored,
+    media_overview_show_network,
+    media_overview_show_profile,
+    media_overview_show_season_count,
+    media_overview_show_path,
+    media_overview_show_size_on_disk,
+    queue_filter,
+    queue_page_size,
+    history_filter,
+    history_page_size,
+    events_filter,
+    events_page_size,
+    port,
+    created_at,
+    updated_at
+) VALUES (
+    'auto',                  -- theme
+    1,                      -- default_profile
+    'active',               -- queue_status
+    'previous',             -- queue_startup_state
+    'info',                 -- log_level
+    'posters',              -- media_view
+    'title',                -- media_sort
+    'ascending',            -- media_sort_direction
+    'all',                  -- media_filter
+    'title',                -- mass_editor_sort
+    'ascending',            -- mass_editor_sort_direction
+    'all',                  -- mass_editor_filter
+    'medium',               -- media_poster_size
+    FALSE,                  -- media_poster_detailed_progress_bar
+    TRUE,                   -- media_poster_show_title
+    TRUE,                   -- media_poster_show_monitored
+    TRUE,                   -- media_poster_show_profile
+    FALSE,                  -- media_table_show_network
+    TRUE,                   -- media_table_show_profile
+    TRUE,                   -- media_table_show_seasons
+    TRUE,                   -- media_table_show_episodes
+    FALSE,                  -- media_table_show_episode_count
+    TRUE,                   -- media_table_show_year
+    TRUE,                   -- media_table_show_type
+    TRUE,                   -- media_table_show_size_on_disk
+    TRUE,                   -- media_table_show_size_saved
+    FALSE,                  -- media_table_show_genre
+    'medium',               -- media_overview_poster_size
+    FALSE,                  -- media_overview_detailed_progress_bar
+    TRUE,                   -- media_overview_show_monitored
+    TRUE,                   -- media_overview_show_network
+    TRUE,                   -- media_overview_show_profile
+    TRUE,                   -- media_overview_show_season_count
+    FALSE,                  -- media_overview_show_path
+    TRUE,                   -- media_overview_show_size_on_disk
+    'all',                  -- queue_filter
+    12,                     -- queue_page_size
+    'all',                  -- history_filter
+    15,                     -- history_page_size
+    'all',                  -- events_filter
+    15,                     -- events_page_size
+    7889,                   -- port
+    CURRENT_TIMESTAMP,      -- created_at
+    CURRENT_TIMESTAMP       -- updated_at
+);
 
--- Default User with generated secret
+-- Default Secrets with generated secret
 WITH generated_secret AS (
     SELECT lower(hex(randomblob(32))) as secret
 )
-INSERT INTO users (username, password, secret, created_at, updated_at)
-SELECT '', '', secret, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+INSERT INTO secrets (
+    username,
+    password,
+    secret,
+    tmdb_key,
+    created_at,
+    updated_at
+)
+SELECT 
+    'admin',                -- default username
+    '',                     -- empty password (to be set on first login)
+    secret,                 -- generated secret
+    'ZXlKaGJHY2lPaUpJVXpJMU5pSjkuZXlKaGRXUWlPaUprT1RCalpqQmhaREEyT0dJd01XVXpNVFkxTWpjNVltWXpPRE0xWmpRNU9TSXNJbk4xWWlJNklqWTFOR0UxWVRReE5qZGlOakV6TURFeFpqUXdaV0ZpWVNJc0luTmpiM0JsY3lJNld5SmhjR2xmY21WaFpDSmRMQ0oyWlhKemFXOXVJam94ZlEuNU1LVjViaXV0RmZvQkRuMk14aFMxQU1wbV9DTmE4QTh4WE5XTkFKUVNnTQ==',  -- tmdb_api_key
+    CURRENT_TIMESTAMP,      -- created_at
+    CURRENT_TIMESTAMP       -- updated_at
 FROM generated_secret;

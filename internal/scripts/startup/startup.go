@@ -125,7 +125,7 @@ func Startup() (sqlDB *sql.DB, servicesContainer *types.Services, repos *types.R
 	currentDir := getParentDir()
 
 	// Write uptime to db
-	if err := writeUptimeToDB(repos.SystemRepo); err != nil {
+	if err := writeUptimeToDB(repos.SystemStatsRepo); err != nil {
 		return
 	}
 
@@ -137,7 +137,7 @@ func Startup() (sqlDB *sql.DB, servicesContainer *types.Services, repos *types.R
 	seriesWatchdogService.Startup(filepath.Join(currentDir, "series"), "series")
 
 	// scan system
-	utils.ScanSystem(repos.SeriesRepo, repos.SystemRepo)
+	utils.ScanSystem(repos.SeriesRepo, repos.SystemStatsRepo)
 
 	return sqlDB, servicesContainer, repos
 }
